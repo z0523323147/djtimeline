@@ -11,6 +11,9 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   await expect(page.getByText('126 tracks', { exact: false }).first()).toBeVisible();
   await expect(page.getByLabel('Choose a time & genre section')).toHaveCount(0);
   await expect(page.locator('.selected-card')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Genre details +', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.map-row')).toHaveCount(3);
+  await page.getByRole('button', { name: 'Genre details +', exact: true }).click();
   await expect(page.locator('.macro-map')).toBeVisible();
   await expect(page.locator('.genre-captions')).toHaveCount(0);
   await expect(page.locator('svg .segment .map-label').filter({ hasText: /^House$/ }).first()).toBeVisible();

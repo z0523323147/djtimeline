@@ -14,7 +14,7 @@ Completed stories: E7-S1–S4, E1-S1–S2, E5-S1. The migrated source preserves 
 - Browser coverage includes import/cancel/invalid input, `.txt` files, edit/save/reload, multilingual names, combined filters, corrected Google links, final-section Enter/Space activation, rapid-switch button alternatives, hostile text rendering, corrupt imported data, storage denial, clipboard fallback success, and clipboard failure feedback.
 - Offline contexts disable networking. Request observation across every workflow reports no network or sibling assets; only the HTML document itself is requested. No app page errors were observed.
 - The 4:00 Hip hop cap inside the final SVG bar opens `Me pregunto` without inventing an ending time. Tests assert it is inside the chart rather than a separate button. Every section also has a full-size button in **Browse all sections**.
-- Two unchanged offline builds produce identical 77,952-byte files. SHA-256: `2441c287952b49481f5dbdd262563bbc73166d99a6bbc427fee24b638126da33`.
+- Two unchanged offline builds produce identical 77,952-byte files. SHA-256: `439d8bf426218c2a495ba577640e8b9110a88e135e3035104b9143743a4084cb`.
 
 Bundled model: 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, 2 ideas. Existing imported-note and correction keys are preserved; scoped title corrections reload correctly.
 
@@ -28,6 +28,8 @@ GitHub Actions repeats installation, checks, builds, tests, and reproducibility 
 
 The structural validator is a packaging guard, not a general HTML security auditor; runtime request checks and untrusted-text browser tests complement it. Google link parameters are tested without performing a real audio download or navigating to Google.
 
-Genre detail mode is verified in all six browser projects: House at 1:30 and subsequent EDM appear inside the bars. Tests assert the inter-row genre captions are absent. Tighter row scopes preserve source diagram coordinates, with source boundaries above the bars. Genre details is shown by default with a compact macro overview above it. Updated screenshots were captured and visually inspected at settled phone/desktop viewports.
+Genre detail mode is verified in all six browser projects: House at 1:30 and subsequent EDM appear inside the bars. Tests assert the inter-row genre captions are absent. Tighter row scopes preserve source diagram coordinates, with source boundaries above the bars. Genre details is optional, with a compact macro overview above it when enabled. Updated screenshots were captured and visually inspected at settled phone/desktop viewports.
 
-Follow-up: every detailed bar displays a short source change time by default, including uncertain Afro tech/EDM ranges. All six browser projects assert each bar has both labels. Hebrew-leading track titles retain automatic RTL direction and use left alignment, verified in multilingual edit workflows; bundled Hebrew tracks were visually reviewed. Astro/Svelte checks and 15 Node/42 browser tests pass.
+Follow-up: every detailed bar displays a short source change time when Genre details is enabled, including uncertain Afro tech/EDM ranges. All six browser projects assert each bar has both labels. Hebrew-leading track titles retain automatic RTL direction and use left alignment, verified in multilingual edit workflows; bundled Hebrew tracks were visually reviewed. Astro/Svelte checks and 15 Node/42 browser tests pass.
+
+Preference update: Genre details starts off. Browser coverage checks the initial three-row compact timeline and expands details before checking complete genre/time labels.

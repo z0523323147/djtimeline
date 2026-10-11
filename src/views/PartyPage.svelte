@@ -6,7 +6,7 @@
   export let active: boolean;
   export let select: (id: number, trackId?: number) => void;
   let mapWidth = 600;
-  let showGenres = true;
+  let showGenres = false;
   $: diagramWidth = Math.max(220, mapWidth - 16);
   $: bands = timeBands(model);
   $: zoomBands = genreBands(model, Math.max(160, diagramWidth - 116));
