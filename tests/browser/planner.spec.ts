@@ -11,10 +11,17 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   await expect(page.getByText('126 tracks', { exact: false }).first()).toBeVisible();
   await expect(page.getByLabel('Choose a time & genre section')).toHaveCount(0);
   await expect(page.locator('.selected-card')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Genre details +', exact: true })).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('.map-row')).toHaveCount(3);
-  await page.getByRole('button', { name: 'Genre details +', exact: true }).click();
-  await expect(page.locator('.macro-map')).toBeVisible();
+  await expect(page.locator('.mobile-tabs')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Genre details/ })).toHaveCount(0);
+  const layout = await page.locator('main').evaluate(el => {
+    const overview = el.querySelector('.overview')!.getBoundingClientRect(), tracks = el.querySelector('.workspace')!.getBoundingClientRect();
+    return tracks.top > overview.bottom;
+  });
+  expect(layout).toBeTruthy();
+  await expect(page.locator('.tick').first()).toHaveText('12:30');
+  await expect(page.locator('.map-row').last().locator('.tick').last()).toHaveText('4:00');
+  expect(await page.locator('.map-row').first().locator('.tick').count()).toBeGreaterThan(5);
+  await expect(page.locator('.selection-mark')).toHaveCount(0);
   await expect(page.locator('.genre-captions')).toHaveCount(0);
   await expect(page.locator('svg .segment .map-label').filter({ hasText: /^House$/ }).first()).toBeVisible();
   await expect(page.locator('svg .segment .map-label').filter({ hasText: /^Edm$/ }).first()).toBeVisible();
@@ -24,13 +31,12 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   }
   await expect(page.locator('.change-time').filter({ hasText: '~1:23–1:30' })).toHaveCount(1);
   await expect(page.locator('.change-time').filter({ hasText: '~1:30–1:40' })).toHaveCount(1);
-  await page.getByRole('button', { name: 'Genre details −', exact: true }).click();
-  await expect(page.locator('.map-row').first().locator('.flow-band')).toHaveCount(1);
   const final = page.getByRole('button', { name: 'Hip hop, 4:00, open 1 tracks', exact: true });
   await expect(page.locator('svg .terminal-section')).toHaveCount(1);
   await expect(page.locator('button.terminal-section')).toHaveCount(0);
   await final.scrollIntoViewIfNeeded(); await final.focus(); await final.press('Enter');
   await expect(page.locator('#detail-title')).toHaveText('Hip hop');
+  await expect(page.locator('.terminal-section')).toHaveClass(/lit/);
   await expect(page.locator('#detail-title')).toBeFocused();
   await expect(page.locator('#tracks .title')).toHaveText('Me pregunto');
   const copy = page.getByRole('button', { name: 'Copy Me pregunto', exact: true });
@@ -50,7 +56,6 @@ test('import, cancel, correction, encoded search, combined filters and reload', 
   await page.getByRole('button', { name: 'Import notes', exact: true }).click();
   await page.getByRole('button', { name: 'Use these notes', exact: true }).click();
   await expect(page.locator('header')).toContainText('3 tracks');
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await page.getByRole('button', { name: 'Edit שלום & Café', exact: true }).click();
   await page.getByLabel('Correct track name').fill('מתוק & Вечер (mix)');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
@@ -67,7 +72,6 @@ test('import, cancel, correction, encoded search, combined filters and reload', 
   await expect(page.locator('#tracks .title')).toHaveText('מתוק & Вечер (mix)');
   await page.reload();
   await expect(page.locator('header')).toContainText('3 tracks');
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await expect(page.locator('#tracks .title')).toHaveText('מתוק & Вечер (mix)');
 });
 test('storage and clipboard denial stay usable, invalid import leaves set intact', async ({ page }, info) => {
@@ -77,7 +81,6 @@ test('storage and clipboard denial stay usable, invalid import leaves set intact
     document.execCommand = () => false;
   });
   await page.goto(url(info.project.name));
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await page.getByRole('button', { name: 'Edit Shakira beautiful life 116 bpm', exact: true }).click();
   await page.getByLabel('Correct track name').fill('Session correction');
   await page.getByRole('button', { name: 'Save', exact: true }).click();

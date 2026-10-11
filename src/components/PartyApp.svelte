@@ -12,7 +12,7 @@
   let raw = example;
   let model = parseNotes(raw);
   let selected = 0, filters = emptyFilters();
-  let view = 'party', notice = '', storageAvailable = true;
+  let notice = '', storageAvailable = true;
   let heading: HTMLHeadingElement | undefined;
   let dialog: HTMLDialogElement;
   let importText = '', importError = '';
@@ -31,12 +31,14 @@
   }
   async function select(id: number, trackId?: number) {
     if (!model.sections[id]) return;
-    selected = id; filters = emptyFilters(); view = 'tracks';
+    selected = id; filters = emptyFilters();
     await tick(); heading?.focus({ preventScroll: true });
     const list = document.getElementById('tracks');
     const row = trackId ? list?.querySelector<HTMLElement>(`[data-track="${trackId}"]`) : null;
     const top = list && row ? row.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop : 0;
     list?.scrollTo({ top });
+    if (window.innerWidth < 850 || window.innerHeight < 700) document.getElementById('detail')?.scrollIntoView({ block: 'start' });
+    else heading?.scrollIntoView({ block: 'nearest' });
   }
   function save(id: number, title: string) {
     model.tracks.find(t => t.id === id)!.title = title;
@@ -61,7 +63,7 @@
     if (next.length > 500000) { importError = 'Keep your notes under 500,000 characters.'; return; }
     const parsed = parseNotes(next);
     if (!parsed.tracks.length) { importError = 'Add at least one track name to your notes.'; return; }
-    raw = next; model = parsed; selected = 0; filters = emptyFilters(); view = 'party';
+    raw = next; model = parsed; selected = 0; filters = emptyFilters();
     storageAvailable = true;
     try { loadCorrections(localStorage, raw, model); } catch { storageAvailable = false; }
     try { localStorage.setItem(importedKey, raw); } catch { storageAvailable = false; }
@@ -69,12 +71,11 @@
     notify(`Imported ${model.tracks.length} tracks.${storageAvailable ? ' Saved on this browser.' : ' Available for this session.'}`);
   }
 </script>
-<div class="app" data-view={view}>
+<div class="app">
   <a class="skip" href="#detail">Skip to track details</a>
   <header><div><h1><span class="logo">◈</span> Party map</h1><p>{model.blocks[0]?.time ?? 'No time'} → {model.blocks.at(-1)?.time ?? 'No time'} · {model.tracks.length} tracks</p></div>
     <div class="header-actions"><button onclick={() => { importError = ''; dialog.showModal(); }}>Import notes</button></div>
   </header>
-  <div class="mobile-tabs" role="group" aria-label="Choose view"><button aria-pressed={view === 'party'} onclick={() => view = 'party'}>The party</button><button aria-pressed={view === 'tracks'} onclick={() => view = 'tracks'}>Tracks</button></div>
   <main>
     <PartyPage {model} {selected} active={filterActive(filters)} {select} />
     <TracksPage {model} {selected} bind:filters {storageAvailable} {select} {save} {copy} bind:heading />

@@ -5,7 +5,7 @@ Applies to this entire project. Read [README.md](README.md), [plan.md](plan.md),
 ## Product
 
 - Build a DJ preparation tool: see the whole party first, then inspect tracks.
-- Preserve the accepted dark layout: desktop overview beside tracks; mobile Party/Tracks views.
+- Preserve the dark single-page layout: full-width timeline above tracks on desktop and mobile; no Party/Tracks tabs or detail-mode toggle.
 - Make hip-hop entry/exit changes immediately understandable; retain genre section details.
 - Keep copy, edit, Google download search, and pasted/.txt import working.
 - Prefer plain user-facing wording, readable text, and large controls over dense dashboards.

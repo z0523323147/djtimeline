@@ -1,6 +1,6 @@
 # Product backlog
 
-Updated: 2026-10-11. Seven stories are **Done**: E7-S1–S4, E1-S1–S2, and E5-S1. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-11. Eight stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, and E8-S3. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
@@ -249,7 +249,7 @@ AC:
 - Bundled data retains 126 tracks, 25 blocks, 26 sections, and marker counts defined in E5-S1.
 - Import, edit, reload, copy, encoded Download search, and combined filters behave equivalently in the port.
 - Click/tap/keyboard selection opens the corresponding tracks and preserves focus and selected state.
-- Desktop retains overview beside a generous track pane; phones retain separate Party/Tracks views.
+- Website and offline build share the same timeline and track components. The current layout stacks timeline above tracks on all screen sizes.
 - Both builds consume the same parser, state logic, components, CSS tokens, and example data.
 - E1 terminal-section and narrow-target defects are fixed through their own AC; parity does not require perpetuating those defects.
 
@@ -293,9 +293,8 @@ AC:
 
 ## E8 — Linear-inspired DJ interface · P1
 
-Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Browse all sections** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
+Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Jump to a section or recorded time** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
 
-Additional correction: **Genre details** uses tighter time scopes to put full names inside the bars, including House/EDM in the 1:30 block. Inter-row genre notes are removed. The final 4:00 Hip hop track is selectable inside the last bar with an open-ended arrow. Genre details is optional, with a compact macro overview above it when enabled; both modes are verified in hosted/offline phone, desktop, and short-height tests.
 
 ### E8-S1 — Introduce coherent tokens and calm layout hierarchy · P1 · Todo
 
@@ -340,4 +339,27 @@ E7-S1 → E7-S2 with E5-S1 → E7-S3 → E1-S1 → E1-S2 → E7-S4 → E8-S1 →
 
 A story is Done only after its AC pass and the relevant validation evidence is recorded. Priority belongs to the work, not to the order in which its section appears here.
 
-UX follow-up completed: genre/time labels in every detailed bar when enabled, compact whole-party preview, and consistent Hebrew/English track alignment. Existing regression workflows verify labels and RTL alignment in both builds at all three viewport sizes.
+
+### E8-S3 — Timeline above tracks with readable genre bars · P1 · Done
+
+As a DJ, I want one page with the party timeline above my tracks, clear time rulers, and an obvious selected bar.
+
+Subtasks:
+
+- [x] Replace desktop split and mobile tabs with a shared stacked page.
+- [x] Remove the Genre details mode and inter-row genre notes.
+- [x] Place genre names and recorded change times/ranges inside every bar.
+- [x] Add complete estimated rulers and an open-ended final section.
+- [x] Replace black selection underline with bright fill, outline, and glow.
+- [x] Adapt keyboard, mobile, offline, and navigation regression checks.
+
+AC:
+
+- The timeline is above tracks at desktop, phone, and short viewport sizes.
+- No Party/Tracks tabs or Genre details toggle appear.
+- All bundled genre bars contain readable names and change times/ranges; scale endpoints cover 12:30 through 4:00.
+- Selecting a bar illuminates it and opens the correct tracks below.
+- Phone users can pan the timeline without page overflow; full-size navigation alternatives remain.
+- Existing import/edit/copy/search and direct-file offline workflows pass.
+
+Evidence: docs/verification.md. Wider import-preview, shortcuts, and enlarged-text work remain under the existing Todo stories.

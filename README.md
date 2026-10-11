@@ -29,11 +29,11 @@ pnpm preview
 
 ## Features
 
-- Three-band party overview with clickable genre sections, pink hip-hop, and amber peaks.
-- **Genre details** is optional: every bar has a genre name and change time, with a compact whole-party overview above. Uncertain changes show their known range with ~.
+- Full-width party timeline above the track list, with a compact whole-party overview, pink hip-hop, and amber peaks.
+- Every bar contains its genre and change time. A complete estimated ruler labels each time range; ~ preserves uncertainty from the notes.
 - The final section stays inside the last timeline bar; an arrow indicates its ending time is missing.
-- Clickable timeline navigation and a collapsed Browse all sections list with full-size buttons for brief switches.
-- Desktop overview beside a generous track pane; dedicated Party/Tracks views on phones.
+- Selected bars brighten with a luminous outline. A collapsed section/time jump list provides large navigation targets.
+- One page on desktop and phones. The bounded timeline can scroll horizontally on narrow screens, keeping text readable and tracks below.
 - Recorded time navigation and a hip-hop entry/exit list, with honest labels for uncertain changes.
 - Search with combined genre, peak, download, and idea filters.
 - Copy a track, edit its name, and search Google using its corrected title.

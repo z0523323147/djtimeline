@@ -5,11 +5,10 @@ const url = (name: string) => name.startsWith('offline') ? pathToFileURL(resolve
 test('small-section alternatives select rapid switches without overlapping', async ({ page, context }, info) => {
   if (info.project.name.startsWith('offline')) await context.setOffline(true);
   await page.goto(url(info.project.name));
-  await page.getByText('Browse all sections', { exact: true }).click();
+  await page.getByText('Jump to a section or recorded time', { exact: true }).click();
   const buttons = page.locator('.section-buttons button');
   await expect(buttons).toHaveCount(26);
   for (const id of [11, 12, 22, 23, 24]) {
-    if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'The party', exact: true }).click();
     const button = buttons.nth(id);
     await button.scrollIntoViewIfNeeded();
     const box = await button.boundingBox();
@@ -27,10 +26,8 @@ test('text-file import renders hostile text safely and handles repeated markers'
   await page.getByLabel('Or load a .txt file').setInputFiles({ name: 'set.txt', mimeType: 'text/plain', buffer: Buffer.from(`4:00\n(House)\n${title}\n4:00\n(Hip hop)\nВечер`) });
   await expect(page.getByLabel('Set notes', { exact: true })).toHaveValue(new RegExp('Вечер'));
   await page.getByRole('button', { name: 'Use these notes', exact: true }).click();
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await expect(page.locator('#tracks .title')).toHaveText(title);
   await expect(page.locator('#tracks img')).toHaveCount(0);
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'The party', exact: true }).click();
   await expect(page.locator('.terminal-section')).toHaveCount(2);
   await page.locator('.terminal-section').nth(1).focus();
   await page.locator('.terminal-section').nth(1).press('Space');
@@ -49,7 +46,6 @@ test('successful clipboard fallback and corrupt saved data', async ({ page, cont
   });
   await page.goto(url(info.project.name));
   await expect(page.locator('header')).toContainText('126 tracks');
-  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await page.getByRole('button', { name: 'Copy Shakira beautiful life 116 bpm', exact: true }).click();
   await expect(page.locator('#notice')).toHaveText('Track name copied.');
   await expect(page.locator('html')).toHaveAttribute('data-copied', 'Shakira beautiful life 116 bpm');
@@ -57,7 +53,7 @@ test('successful clipboard fallback and corrupt saved data', async ({ page, cont
 
 test('source time navigation reveals the first track of that block', async ({ page }, info) => {
   await page.goto(url(info.project.name));
-  await page.getByText('All times from your notes', { exact: true }).click();
+  await page.getByText('Jump to a section or recorded time', { exact: true }).click();
   await page.locator('.time-jumps').getByRole('button', { name: '3:25', exact: true }).click();
   await expect(page.locator('#detail-title')).toHaveText('Hip hop');
   await expect(page.locator('#tracks .title').filter({ hasText: 'Тимоти - в клубе' })).toBeInViewport();

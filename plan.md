@@ -4,7 +4,7 @@ Updated: 2026-10-11. Build a browser-local DJ planner with Astro and Svelte, pro
 
 ## Product direction
 
-Show the whole party first, then let the DJ inspect a genre section. Keep hip-hop switches immediately recognizable, distinguish recorded times from uncertain ranges, and make copy/edit/Google search easy. Preserve the accepted desktop split and dedicated mobile Party/Tracks views.
+Show the whole party first, then let the DJ inspect a genre section. Keep hip-hop switches immediately recognizable, distinguish recorded times from uncertain ranges, and make copy/edit/Google search easy. Use one page with a full-width timeline above the tracks on desktop and phones.
 
 ## Implemented foundation
 
@@ -55,7 +55,7 @@ Adapt Linear's aligned panels, quiet surfaces, clear hierarchy, and restrained c
 - Define spacing, type, radii, surface, accent, and focus tokens consistently.
 - Align pane headers, filters, and track actions; keep track names at least 16px and controls at least 44px tall.
 - Keep pink hip-hop and amber peaks meaningful, with text/accessibility labels alongside color.
-- Keep large Party/Tracks mobile views and a generous desktop track pane.
+- Keep a full-width timeline above a generous track list; use horizontal panning on narrow screens.
 - Keep row actions directly accessible on touch devices, with predictable keyboard focus.
 - Use plain copy for uncertain times, local saving, and import replacement.
 - Honor reduced motion and validate enlarged text and short viewports.
@@ -68,9 +68,9 @@ Time and genre persist until replaced. Only a whole-line genre declaration chang
 
 No chart estimate becomes an exact source timestamp. Final sections use an explicit end marker without invented duration; untimed and repeated markers remain browsable. Every brief section also has a full-size button alternative without overlapping chart targets or stretching durations.
 
-The clickable timeline is the main navigation. The redundant time/genre dropdown and selected-section card are removed; **Browse all sections** is a collapsed fallback for short sections. Continuous teal/pink overview runs and amber peak runs render without internal divider seams. Detailed genres retain their individual click/keyboard targets and labels; selected sections use an underline, with an outline on hover/focus.
+The clickable timeline is the main navigation. A compact whole-party strip stays above the labeled bars. One collapsed section/time jump list provides larger alternatives. Selection brightens the bar with a luminous outline; the previous black underline is removed.
 
-The compact timeline is the default. Turning on Genre details adds a small whole-party overview above the detailed bars. **Genre details** uses tighter time scopes so full genre names fit inside the bars. Source times or known ranges label each row boundary; genre notes between rows are removed. The final 4:00 Hip hop section is an integrated cap on the last bar, with an arrow indicating an unrecorded ending. Its cap width is a navigation affordance, not an inferred duration.
+The timeline has one presentation: no Genre details mode or Party/Tracks tabs. Time scopes adapt to fit names and change times inside every bar. Each row includes an estimated ruler with regular five- or ten-minute marks and both endpoints. A bounded scroll region keeps the track area nearby. Phones pan the timeline horizontally rather than shrinking the labels. Diagram placement stays approximate; uncertain changes retain the source range. The 4:00 Hip hop cap has no invented ending time.
 
 Imports and corrections are untrusted text. Keep copy and Google search tied to the current title. Storage is scoped to the browser/origin, with session-only feedback when unavailable; legacy data remains compatible on the same origin.
 
@@ -83,3 +83,5 @@ Imports and corrections are untrusted text. Keep copy and Google search tied to 
 - M4: Multiple named sets — optional, validate demand before implementation.
 
 Next execution order: E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1. Finish and verify each story's acceptance criteria before marking it Done.
+
+Design review: Linear’s homepage and product examples (https://linear.app/) informed the neutral dark surfaces, restrained borders, clear hierarchy, quiet row actions, and selected-state emphasis. This is a local adaptation for DJ preparation.
