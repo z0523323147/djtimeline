@@ -1,33 +1,43 @@
 # Party Map — DJ Set Timeline
 
-A standalone DJ set planner that turns rough text notes into an interactive party timeline. See the flow of the night, inspect genre sections, and prepare your track library.
+A browser-local DJ planner: see the whole party, open a genre section, and prepare its tracks. Built with Astro and Svelte, with a static website and a single-file offline edition from the same source.
 
 ![Party Map desktop preview](party-map-preview.png)
 
-## Run it
+## Develop
 
-Open **[dj-set-timeline-v2.html](dj-set-timeline-v2.html)** in a modern browser. No build step or dependency installation is required.
+Use Node.js 22.12+ (tested with 24.14.1) and pnpm 12.11.2, pinned in `package.json`.
 
-For a localhost preview, run this command from the project folder with Node.js installed:
-
-```powershell
-node -e 'const http=require("http"),fs=require("fs");http.createServer((req,res)=>{res.setHeader("Content-Type","text/html; charset=utf-8");res.end(fs.readFileSync("dj-set-timeline-v2.html"));}).listen(4173,"127.0.0.1",()=>console.log("http://127.0.0.1:4173"));'
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-Open `http://127.0.0.1:4173` and stop the preview with Ctrl+C. If that port is already occupied, choose another unused port. This small preview server serves the app for every request; it is not a deployment server.
+Open the local URL printed by Astro. If pnpm is not installed, run `npm exec --yes --package=pnpm@12.11.2 -- pnpm install --frozen-lockfile`, then use the same prefix for the commands below. Optional: set `ASTRO_TELEMETRY_DISABLED=1` to disable Astro telemetry.
 
-The app works offline after opening. **Download** opens a Google search and requires an internet connection. Clipboard and storage availability depend on the browser; localhost and directly opened files can behave differently.
+## Build and share
 
-## What you can do
+```sh
+pnpm build
+pnpm preview
+```
 
-- See the party across three time bands, with hip-hop in pink and peaks marked in amber.
-- Click or tap a timeline section to open its tracks; Enter and Space also work.
-- Browse exact genres, source time markers, and hip-hop entry/exit changes.
-- Search the whole set and combine genre, peak, download, and idea filters.
-- Copy a track name, correct it, and keep corrections locally when storage is available.
-- Use **Download** to search Google for the current track name plus `download`; it does not download an audio file itself.
-- Import a new set by pasting notes or choosing a `.txt` file.
-- Use overview/track panes on desktop and dedicated **The party** / **Tracks** views on mobile.
+- `dist/site/` — static website with bundled assets; serve the entire folder.
+- `dist/party-map.html` — standalone offline app. Open this file directly, or send it without any accompanying files.
+
+`pnpm build:site` and `pnpm build:offline` rebuild either output independently and preserve the other. The offline build compiles the shared Svelte root into one embedded classic script with embedded CSS and example notes. It requires no server, CDN, fonts, service worker, or sibling assets. Download search intentionally opens Google and requires internet access.
+
+## Features
+
+- Three-band party overview with clickable genre sections, pink hip-hop, and amber peaks.
+- Explicit final-section controls when an ending time is missing.
+- Large section picker and an expandable list of full-size section buttons for brief switches.
+- Desktop overview beside a generous track pane; dedicated Party/Tracks views on phones.
+- Recorded time navigation and a hip-hop entry/exit list, with honest labels for uncertain changes.
+- Search with combined genre, peak, download, and idea filters.
+- Copy a track, edit its name, and search Google using its corrected title.
+- Import pasted notes or a `.txt` file. Names support Hebrew, Russian, and English.
+- Browser-local notes and corrections, with explicit session-only feedback when saving fails.
 
 ## Notes format
 
@@ -42,78 +52,52 @@ Another track --
 Track title (remix)
 ```
 
-- **Times:** a whole line such as `12:30` or `1:50`. Subsequent tracks inherit that time until another marker appears.
-- **Genres:** a whole parenthesized line, optionally followed by `הפגזות`. Genre state persists across time markers. Parentheses inside a track name remain part of that name.
-- **Downloads:** two or more consecutive hyphens, such as `--` or `---`.
-- **Ideas:** `///`.
-- **Peaks:** a standalone `הפגזות` starts a peak section. A genre declaration resets that state unless it also contains the peak marker. An inline peak marker affects only its track.
-- Blank and marker-only lines do not create tracks. Displayed names have marker strings removed.
+Times and genres persist until replaced. Only a whole parenthesized line declares a genre; parentheses inside names remain intact. `--` or longer marks a download; `///` marks an idea. A standalone `הפגזות` starts a peak section; declaring a genre resets it unless the declaration also has that marker. An inline peak marker affects only that track. Blank and marker-only lines do not create tracks.
 
-Times follow the order of the notes, including a sequential 12-hour rollover such as `12:30 → 1:01`. The app does not assign AM/PM. If a genre changes between two recorded times, it displays a range; positions inside that range are approximate diagram placement, not precise playback times. When a genre declaration precedes a new time marker and its first track follows that marker, the section begins at that track's time.
+Time markers follow source order with sequential 12-hour rollover, without assuming AM/PM. Changes between markers show the known interval rather than an invented exact minute. Diagram positions inside that interval are approximate. A final section has no invented duration. Untimed or one-marker imports remain browsable.
 
-**Import notes** replaces the active set after you select **Use these notes**. Cancel leaves the current set intact. File imports are limited to 500,000 bytes; pasted notes are limited to 500,000 JavaScript string units. Notes must contain at least one track. A single time marker or no time markers is accepted, with a simplified browsing view.
+Import replaces the active set only after **Use these notes**. Cancel and invalid input preserve it. Limits: 500,000 bytes per file, 500,000 JavaScript string units for pasted text, and at least one track.
 
 ## Local data
 
-Imported notes and title corrections are saved in browser local storage when available. They are scoped to the browser and origin: another browser, port, hosted URL, or file context may have different saved data. This is local persistence, with no account, server database, or cross-device sync.
+Imported notes use the existing `party-map-imported-notes` storage key. Corrections retain the original content-based `party-map-v2-*` keys, so existing saved names remain compatible when migrating on the same origin. Storage is scoped to a browser and origin; changing ports, browsers, hosted URLs, or file contexts can change what is available.
 
-Importing and editing do not rewrite the HTML file. If saving fails, changes remain available for the session and the UI reports the limitation. Google receives a track-name query only when its search link is opened.
+Imports and edits do not rewrite the HTML. Unavailable storage leaves changes usable for the session. The app attempts a clipboard fallback and reports failure honestly. No accounts or cross-device sync are involved. Google receives a track query only when its link is opened.
 
-## Project files
-
-- `dj-set-timeline-v2.html` — active application; its internal version comment is v3.0.
-- `dj-set-timeline.html`, `dj-set-timeline2.html`, `dj-set-timeline-v1.html` — historical iterations.
-- `party-map-preview.png` — desktop screenshot.
-- `party-map-mobile.png` — mobile screenshot.
-- [AGENTS.md](AGENTS.md) — project instructions for development agents.
-- [plan.md](plan.md) — milestones, current baseline, and decisions.
-- [backlog.md](backlog.md) — epics, stories, subtasks, priorities, and acceptance criteria.
-- [SKILLS.md](SKILLS.md) — five recommended reusable skill workflows.
-- [SUBAGENTS.md](SUBAGENTS.md) — five recommended specialist roles.
-- `package.json` — executable build/validation scripts, compatible with pnpm.
-- `scripts/` — offline packaging, structural validation, and six Node tests.
-- `dist/party-map.html` — generated standalone offline artifact (ignored by Git).
-
-The skill and subagent documents are recommendations. They do not install skills or register runtime agents.
-
-## Development and validation
-
-The current stack is semantic HTML, inline CSS, modern JavaScript, SVG, browser clipboard APIs, file reading, and local storage. Data passes through parsing, model construction, filtering, persistence, and rendering. Imported titles are rendered as text.
-
-Six automated packaging tests now exist; parser/browser regression automation and CI are still planned. With Node.js 22+ and pnpm installed:
+## Validate
 
 ```sh
-pnpm build:offline
+pnpm check
+pnpm build
 pnpm check:offline
 pnpm test
+pnpm exec playwright install chromium
+pnpm test:e2e
+node scripts/check-reproducible.mjs
 ```
 
-The build currently validates and copies the existing self-contained app to `dist/party-map.html`; it requires no framework dependencies. It checks embedded scripts and rejects several external asset patterns. These structural checks do not audit runtime network requests or replace browser tests. The scripts were run successfully through npm on the development machine because pnpm is not installed there.
+The current suite contains 13 Node tests and 42 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
 
-Astro routes, Svelte page views, a shared offline IIFE entry, and Linear-inspired design refinements are the next migration, detailed in [plan.md](plan.md) and E7/E8 in [backlog.md](backlog.md). Framework dependencies and routes have not yet been added; the current build is not an Astro compilation.
+Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
 
-A separate basic syntax check, with Node.js installed, is:
+The bundled set remains **126 tracks, 25 blocks, 26 sections, 42 download choices, 25 peak tracks, and 2 ideas**.
 
-```powershell
-node -e 'const fs=require("fs"),vm=require("vm");const html=fs.readFileSync("dj-set-timeline-v2.html","utf8");new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);console.log("JavaScript syntax OK");'
-```
+## Source
 
-Syntax checking does not verify behavior. For changes, exercise timeline click/tap/keyboard selection, mixed-language text, combined filters, import/cancel/reload, editing, copy, and Google links. Check phone and desktop layouts, plus storage failure and direct-file behavior when relevant.
+- `src/pages/index.astro` — static `/` route and document shell.
+- `src/components/PartyApp.svelte` — shared state and app composition.
+- `src/views/` — Party and Tracks views.
+- `src/lib/` — parser, timeline, filters, storage, and clipboard adapters.
+- `src/data/example-notes.txt` — one bundled data source.
+- `src/styles/` — shared tokens and styles.
+- `src/offline/main.ts` and `scripts/` — standalone compilation and validation.
+- `tests/` — model and browser regression checks.
+- `dj-set-timeline-v2.html` — preserved pre-migration baseline; other root HTML files are historical iterations.
+- [AGENTS.md](AGENTS.md), [plan.md](plan.md), [backlog.md](backlog.md) — instructions, architecture, and prioritized work.
+- [SKILLS.md](SKILLS.md), [SUBAGENTS.md](SUBAGENTS.md) — recommended workflows/roles, not installed runtime configuration.
 
-The bundled set currently contains **126 tracks, 25 time blocks, and 26 genre sections**, including 42 download choices, 25 peak tracks, and 2 ideas. Development checks included the in-app browser at 390×844 and 1280×900; other browsers have not been formally certified.
+## Remaining work
 
-## Current limitations
+Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Multiple named sets remain an optional extension.
 
-- The final 4:00 section has no inferred duration and is currently omitted from chart segments; it remains accessible through the section picker and time navigation.
-- Short timeline sections can be narrower than a comfortable phone tap target. The section picker provides an alternative.
-- Corrected-set export and restoring the example set through the UI are planned, not implemented.
-- Browser-local data can be cleared or become unavailable; no portable backup workflow exists yet.
-- The chart uses a simplified color scheme; detailed genre names appear through section browsing and labels where space permits.
-
-See [backlog.md](backlog.md) for the prioritized work addressing these limits.
-
-## GitHub sharing
-
-The repository is [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No hosted deployment is configured. The active HTML can be shared as a standalone file or served by a static host. A GitHub Pages entry point and release naming are planned in E5-S2.
-
-Contributions should preserve the single-file offline deliverable and the overview-first workflow while moving development into shared Astro/Svelte source. Start with [AGENTS.md](AGENTS.md) and select a story from the backlog. No license file has been selected for this project yet.
+Repository: [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No hosted deployment or license is configured.

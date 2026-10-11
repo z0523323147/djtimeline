@@ -1,14 +1,30 @@
 {
   "name": "party-map",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Browser-local DJ timeline with a self-contained offline HTML build",
-  "engines": { "node": ">=22" },
+  "packageManager": "pnpm@12.11.2",
+  "engines": { "node": ">=22.12.0" },
   "scripts": {
-    "build": "node scripts/build-offline.mjs",
+    "dev": "astro dev",
+    "build": "pnpm build:site && pnpm build:offline",
+    "build:site": "astro build",
+    "preview": "astro preview",
+    "check": "astro check && svelte-check --tsconfig ./tsconfig.json",
     "build:offline": "node scripts/build-offline.mjs",
     "check:offline": "node scripts/check-offline.mjs dist/party-map.html",
-    "test": "node --test scripts/offline.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.ts scripts/offline.test.mjs",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": { "astro": "7.3.8", "@astrojs/svelte": "9.0.1", "svelte": "5.57.2" },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/node": "24.19.2",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "@playwright/test": "1.64.0",
+    "svelte-check": "4.7.6",
+    "typescript": "6.0.3",
+    "vite": "8.3.4"
   }
 }

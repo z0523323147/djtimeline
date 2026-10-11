@@ -12,9 +12,9 @@ Applies to this entire project. Read [README.md](README.md), [plan.md](plan.md),
 
 ## Source and architecture
 
-- The current app is `dj-set-timeline-v2.html`; its internal version comment is v3.0.
+- The active app is shared Astro/Svelte source in `src/`. `dj-set-timeline-v2.html` is the preserved pre-migration baseline (internal v3.0).
 - The other HTML files are historical iterations. Do not edit them unless requested.
-- Astro/Svelte migration is authorized in plan.md: Astro routes/static shell, Svelte interactive page views, and shared DOM-independent logic.
+- Astro owns routes/static shell; Svelte owns interactive page views; parsing/model/filter logic remains DOM-independent.
 - Keep the offline deliverable one HTML file with inline CSS/JS and no required sibling assets; development dependencies are allowed.
 - Build website and offline outputs from the same Svelte components; do not duplicate app logic or depend on external island chunks in the offline file.
 - Parse notes into structured tracks, blocks, and sections before rendering.
@@ -49,4 +49,4 @@ Applies to this entire project. Read [README.md](README.md), [plan.md](plan.md),
 
 - [SKILLS.md](SKILLS.md) and [SUBAGENTS.md](SUBAGENTS.md) contain recommendations, not installed runtime configuration.
 - Do not launch subagents automatically because their roles are documented; delegate only when authorized.
-- When delegation is authorized, assign bounded file ownership and one integrator; the current HTML remains the baseline until shared-source parity passes.
+- When delegation is authorized, assign bounded file ownership and one integrator; preserve the shared website/offline source and regression coverage.

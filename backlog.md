@@ -1,24 +1,24 @@
 # Product backlog
 
-Updated: 2026-10-11. All stories below are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-11. Seven stories are **Done**: E7-S1–S4, E1-S1–S2, and E5-S1. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
-Build preparation completed: `package.json`, `build:offline`, `check:offline`, and six structural packaging tests now exist. The current build exports the existing standalone HTML to `dist/party-map.html`. This is not Astro/Svelte migration completion; E7 tracks the shared-source implementation and browser verification.
+Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 13 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
 ## E1 — Complete, usable party navigation · P0
 
-### E1-S1 — Represent the final section in the timeline · P0 · Todo
+### E1-S1 — Represent the final section in the timeline · P0 · Done
 
 As a DJ, I want the final genre section to be reachable from the map, even when the notes do not give its ending time.
 
-Evidence: `renderMap()` excludes sections whose start equals a row's end. The bundled Hip hop section at 4:00 has zero inferred duration and is available in the selector, but has no clickable chart segment.
+Historical evidence (fixed in shared source): `renderMap()` excludes sections whose start equals a row's end. The bundled Hip hop section at 4:00 has zero inferred duration and is available in the selector, but has no clickable chart segment.
 
 Subtasks:
 
-- [ ] E1-S1-T1 · P0: Add an explicit terminal section/end-marker representation.
-- [ ] E1-S1-T2 · P0: Connect it to the existing section selection and mobile drill-down.
-- [ ] E1-S1-T3 · P0: Add coverage for a final section, a single time marker, and repeated timestamps.
+- [x] E1-S1-T1 · P0: Add an explicit terminal section/end-marker representation.
+- [x] E1-S1-T2 · P0: Connect it to the existing section selection and mobile drill-down.
+- [x] E1-S1-T3 · P0: Add coverage for a final section, a single time marker, and repeated timestamps.
 
 AC:
 
@@ -26,17 +26,17 @@ AC:
 - The end marker does not invent a duration or ending time.
 - Click, tap, Enter, and Space work; the selected section and focus agree.
 
-### E1-S2 — Make short sections easy to select · P1 · Todo
+### E1-S2 — Make short sections easy to select · P1 · Done
 
 As a DJ using a phone, I want to choose brief genre sections without accidentally opening an adjacent section.
 
-Evidence: current hit areas are 44px tall, but their width follows section duration and may be only a few pixels.
+Historical evidence (fixed through full-size button alternatives): baseline hit areas are 44px tall, but their width follows section duration and may be only a few pixels.
 
 Subtasks:
 
-- [ ] E1-S2-T1 · P1: Choose a non-overlapping selection approach for adjacent short sections.
-- [ ] E1-S2-T2 · P1: Preserve true diagram proportions and the section picker alternative.
-- [ ] E1-S2-T3 · P1: Test rapid switches at 2:07–2:15 and 3:49–3:56 on a phone.
+- [x] E1-S2-T1 · P1: Choose a non-overlapping selection approach for adjacent short sections.
+- [x] E1-S2-T2 · P1: Preserve true diagram proportions and the section picker alternative.
+- [x] E1-S2-T3 · P1: Test rapid switches at 2:07–2:15 and 3:49–3:56 on a phone.
 
 AC:
 
@@ -159,15 +159,15 @@ AC:
 
 ## E5 — Maintainable, reproducible release · P0
 
-### E5-S1 — Add repeatable behavior checks · P0 · Todo
+### E5-S1 — Add repeatable behavior checks · P0 · Done
 
 As a maintainer, I want checked-in tests that detect parser and workflow regressions.
 
 Subtasks:
 
-- [ ] E5-S1-T1 · P0: Add a documented Node test runner and compact parser fixtures.
-- [ ] E5-S1-T2 · P0: Cover import, editing, filter combinations, copy, and encoded search links.
-- [ ] E5-S1-T3 · P0: Establish a repeatable browser checklist with viewport evidence.
+- [x] E5-S1-T1 · P0: Add a documented Node test runner and compact parser fixtures.
+- [x] E5-S1-T2 · P0: Cover import, editing, filter combinations, copy, and encoded search links.
+- [x] E5-S1-T3 · P0: Establish a repeatable browser checklist with viewport evidence.
 
 AC:
 
@@ -216,15 +216,15 @@ AC:
 
 ## E7 — Astro/Svelte source with website and offline outputs · P0
 
-### E7-S1 — Establish the Astro/Svelte/pnpm project · P0 · Todo
+### E7-S1 — Establish the Astro/Svelte/pnpm project · P0 · Done
 
 As a maintainer, I want a reproducible framework project while retaining the working standalone baseline.
 
 Subtasks:
 
-- [ ] E7-S1-T1 · P0: Resolve compatible Astro, official Svelte integration, Svelte, Vite/plugin, checking tools, and TypeScript versions against the supported Node version; pin pnpm and commit its lockfile.
-- [ ] E7-S1-T2 · P0: Add static Astro configuration, the root route/layout, and a Svelte root using `client:load`; guard browser-only APIs from server rendering.
-- [ ] E7-S1-T3 · P0: Add working dev/site/check scripts, isolate `dist/site/`, and document clean-checkout setup.
+- [x] E7-S1-T1 · P0: Resolve compatible Astro, official Svelte integration, Svelte, Vite/plugin, checking tools, and TypeScript versions against the supported Node version; pin pnpm and commit its lockfile.
+- [x] E7-S1-T2 · P0: Add static Astro configuration, the root route/layout, and a Svelte root using `client:load`; guard browser-only APIs from server rendering.
+- [x] E7-S1-T3 · P0: Add working dev/site/check scripts, isolate `dist/site/`, and document clean-checkout setup.
 
 AC:
 
@@ -234,15 +234,15 @@ AC:
 - Server rendering/building does not read browser storage, clipboard, or `window`.
 - The existing standalone HTML remains available until migrated parity passes.
 
-### E7-S2 — Port behavior into shared Svelte components and pure helpers · P0 · Todo
+### E7-S2 — Port behavior into shared Svelte components and pure helpers · P0 · Done
 
 As a DJ, I want the new implementation to preserve the features and layout I already accepted.
 
 Subtasks:
 
-- [ ] E7-S2-T1 · P0: Extract parser/model/filter helpers and shared example notes; add typed state and browser adapters.
-- [ ] E7-S2-T2 · P0: Implement Party/Tracks views, map selection, editing, import dialog, search, and Google search links in shared Svelte components.
-- [ ] E7-S2-T3 · P0: Migrate or preserve storage keys/corrections and run a baseline-versus-port parity checklist.
+- [x] E7-S2-T1 · P0: Extract parser/model/filter helpers and shared example notes; add typed state and browser adapters.
+- [x] E7-S2-T2 · P0: Implement Party/Tracks views, map selection, editing, import dialog, search, and Google search links in shared Svelte components.
+- [x] E7-S2-T3 · P0: Migrate or preserve storage keys/corrections and run a baseline-versus-port parity checklist.
 
 AC:
 
@@ -253,15 +253,15 @@ AC:
 - Both builds consume the same parser, state logic, components, CSS tokens, and example data.
 - E1 terminal-section and narrow-target defects are fixed through their own AC; parity does not require perpetuating those defects.
 
-### E7-S3 — Compile the shared Svelte app into one offline HTML file · P0 · Todo
+### E7-S3 — Compile the shared Svelte app into one offline HTML file · P0 · Done
 
 As a DJ, I want to open the full app without a server, network, or accompanying files.
 
 Subtasks:
 
-- [ ] E7-S3-T1 · P0: Add the offline entry that mounts the shared Svelte root; configure Vite/Svelte to emit one IIFE with no external packages or split imports.
-- [ ] E7-S3-T2 · P0: Extend `build-offline.mjs` to compile and embed JavaScript/CSS/data assets safely, escaping closing tags and rejecting unresolved asset references.
-- [ ] E7-S3-T3 · P0: Strengthen the structural validator, prevent website/offline output deletion, and switch `build` to build both artifacts.
+- [x] E7-S3-T1 · P0: Add the offline entry that mounts the shared Svelte root; configure Vite/Svelte to emit one IIFE with no external packages or split imports.
+- [x] E7-S3-T2 · P0: Extend `build-offline.mjs` to compile and embed JavaScript/CSS/data assets safely, escaping closing tags and rejecting unresolved asset references.
+- [x] E7-S3-T3 · P0: Strengthen the structural validator, prevent website/offline output deletion, and switch `build` to build both artifacts.
 
 AC:
 
@@ -272,15 +272,15 @@ AC:
 - `pnpm build` produces both `dist/site/index.html` and the standalone artifact; rebuilding either target preserves the other.
 - Packaging fails with an actionable error if an unresolved dependency or runtime resource remains.
 
-### E7-S4 — Prove hosted/offline parity and build reproducibility · P0 · Todo
+### E7-S4 — Prove hosted/offline parity and build reproducibility · P0 · Done
 
 As a maintainer, I want evidence that both outputs work, rather than assuming inlining makes them equivalent.
 
 Subtasks:
 
-- [ ] E7-S4-T1 · P0: Add browser projects for static-host and directly opened `file://` artifacts, including blocked networking and runtime request observation.
-- [ ] E7-S4-T2 · P0: Exercise imports, mixed-language names, edits, selection, filters, storage failures, clipboard fallback, and encoded Google links at desktop/phone/short-height sizes.
-- [ ] E7-S4-T3 · P0: Add frozen-lockfile CI/build checks and a reproducibility report without machine paths or generated timestamps in the artifact.
+- [x] E7-S4-T1 · P0: Add browser projects for static-host and directly opened `file://` artifacts, including blocked networking and runtime request observation.
+- [x] E7-S4-T2 · P0: Exercise imports, mixed-language names, edits, selection, filters, storage failures, clipboard fallback, and encoded Google links at desktop/phone/short-height sizes.
+- [x] E7-S4-T3 · P0: Add frozen-lockfile CI/build checks and a reproducibility report without machine paths or generated timestamps in the artifact.
 
 AC:
 
