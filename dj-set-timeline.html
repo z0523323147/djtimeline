@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DJ Set Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08060f;--panel:#110e1d;--line:#2b2545;--txt:#ece9f7;--mut:#8f89aa;--pink:#ff2bd6;--cyan:#22e6ff;--lime:#b6ff3b;--fire:#ff9a2e;--red:#ff4d5e}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(900px 520px at 10% -10%,#2b0f48 0,transparent 60%),radial-gradient(800px 500px at 100% 0,#04283a 0,transparent 55%),var(--bg);background-attachment:fixed;color:var(--txt);font:15px/1.4 Inter,system-ui,sans-serif;min-height:100vh}
+header{max-width:860px;margin:auto;padding:30px 16px 14px}
+h1{font:800 clamp(26px,6vw,44px)/1.05 Unbounded,sans-serif;letter-spacing:-.03em;background:linear-gradient(90deg,var(--pink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);margin-top:8px;font-size:13px}
+.bar{position:sticky;top:0;z-index:10;background:rgba(8,6,15,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 16px}
+.bar>div{max-width:860px;margin:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input,select,button{font:inherit;color:var(--txt);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
+input{flex:1 1 210px}
+select{flex:1 1 150px;max-width:230px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button{cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+.f{--c:var(--cyan);display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
+.f small{color:var(--mut);font-size:12px}
+.f:hover{border-color:var(--c)}
+.f[aria-pressed=true]{border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--panel));box-shadow:0 0 14px color-mix(in srgb,var(--c) 40%,transparent)}
+.f[aria-pressed=true] small{color:var(--txt)}
+#reset{background:none;border-color:transparent;color:var(--mut)}
+#reset:hover{color:var(--txt)}
+#count{width:100%;font-size:12px;color:var(--mut)}
+main{max-width:860px;margin:auto;padding:22px 16px 90px}
+.block{position:relative;padding-left:30px;margin-bottom:30px}
+.block::before{content:"";position:absolute;left:7px;top:18px;bottom:-30px;width:2px;background:linear-gradient(var(--pink),var(--cyan));opacity:.4}
+.block:last-child::before{bottom:0}
+.time{display:flex;align-items:baseline;gap:12px;font:800 clamp(24px,5vw,34px) Unbounded,sans-serif;letter-spacing:-.02em;text-shadow:0 0 22px rgba(255,43,214,.55)}
+.time::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--pink);box-shadow:0 0 14px var(--pink)}
+.time small{font:500 13px Inter,sans-serif;color:var(--mut);text-shadow:none;letter-spacing:0}
+.gh{display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:600;font-size:13px;color:hsl(var(--h) 100% 72%)}
+.gh::before{content:"";width:8px;height:8px;border-radius:50%;background:hsl(var(--h) 100% 62%);box-shadow:0 0 10px hsl(var(--h) 100% 62%)}
+.trk{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-left:3px solid hsl(var(--h) 100% 62%);border-radius:8px;padding:10px 12px;margin-top:6px}
+.trk.peak{border-color:rgba(255,154,46,.5);border-left-color:var(--fire);box-shadow:0 0 18px rgba(255,154,46,.16)}
+.trk.bad .name{opacity:.55}
+.name{flex:1 1 220px;min-width:0;overflow-wrap:anywhere;unicode-bidi:plaintext;text-align:start}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.b{display:inline-flex;gap:5px;align-items:center;border:1px solid;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.b.peak{color:var(--fire);border-color:rgba(255,154,46,.55);background:rgba(255,154,46,.1)}
+.b.lib{color:var(--lime);border-color:rgba(182,255,59,.5);background:rgba(182,255,59,.08)}
+.b.bad{color:var(--red);border-color:rgba(255,77,94,.55);background:rgba(255,77,94,.1)}
+.empty{text-align:center;color:var(--mut);padding:60px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:520px){.bar{padding:8px 12px}.block{padding-left:26px}.f{flex:1 1 auto;justify-content:center}select{max-width:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>DJ set timeline</h1>
+  <p class="sub" id="meta"></p>
+</header>
+
+<div class="bar"><div>
+  <input id="q" type="search" placeholder="Search tracks" aria-label="Search tracks">
+  <select id="g" aria-label="Filter by genre"></select>
+  <button class="f" id="fLib" data-k="lib" style="--c:var(--lime)" aria-pressed="false">💾 Add to library <small></small></button>
+  <button class="f" id="fPeak" data-k="peak" style="--c:var(--fire)" aria-pressed="false">🔥 Peak time <small></small></button>
+  <button class="f" id="fBad" data-k="bad" style="--c:var(--red)" aria-pressed="false">👎 Bad choice <small></small></button>
+  <button id="reset" type="button">Clear filters</button>
+  <div id="count" aria-live="polite"></div>
+</div></div>
+
+<main id="out"></main>
+
+<script type="text/plain" id="raw">
+12:30
+Shakira beautiful life 116 bpm
+They not like us 116 bpm
+Tony dark eyes - no body
+Cat dealers - snoop
+dj joga - mi Chicko ---
+Nico de andrea - etnica x mi amore
+12:50
+(Melodic house afro tech)
+Асфальт
+Зима в сердце
+Moscow never sleep
+Грустный денс (afro rech)
+Dj dark - alabina ---
+Toko maya - la sonora
+Inache - andale agasi asparyan
+Freed from desire xtm remix
+1:01
+(Afro tech)
+Карабли ---
+Artic asti гармония x bam bam (לא בם בם של סולטו) ---
+Айдахар
+Салют вера 
+Justin beenr - beauty and a beat
+Eminem - without me remix
+Pitbul blanko remix
+Hot in here maximum risk
+Шелк
+1:16
+Xcho - темная ночь
+Hugel - stay sexy
+1:23
+(Edm)
+Omer adam
+Memories remix
+
+(Afro tech)
+Худи
+bad bunny - nevauol
+Экспонат (x hotell remix)
+1:30
+(House)
+Owek fargo он тебя целует
+Люся чеботина - по барабану ---
+Gaz x we found love
+
+(Edm)
+Spacho & lamur - make u x lior narkis shagaat ---
+Nosa nosa x yama
+dj lindao - Motel de motor
+1:40
+Zarica
+Снова я напиваюсь x argy siera
+Gimme gimme x он тебя целует
+Bmw שחורה tomer shteyman אתניקס
+One more time
+I adore you argy x mor avraami
+1:50
+(Hip hop)
+Te bote
+עומר אדם - ראיתי עולם
+Ido shoam - sha la la ---
+Тимоти - баклажан ---
+5sta familly - зачем
+Single ladies X shape of you
+That way - backstreet boys ---
+1:57
+(House)
+J bavlon - in da getto House remix
+Goldbaum - havhavhav
+
+(Tribal)
+Восточные сказки x majnuna hugel
+Сияй 
+
+(Edm)
+Monaco
+2:07
+Nicky minaj - starship toby nize
+אודיה 10 רמות מעליו
+Sandstorm zans remix
+(Hip hop) 
+Dansa kuduro
+2:15
+(Edm) הפגזות
+Камин remix ---
+solto - Bam bam
+volkoder - Unique moment
+carsen - crank that (solja boy supermen)
+2:24
+(Hip hop)
+שחר סאול דובשניה
+כך זה אופק אדנק x shake it to the max ---
+Yeah
+Macarena
+Malrboro
+2:30
+(House)
+5sta familly - я буду
+Artic asti - лампочки
+I got love
+(Dance) הפגזות
+Osher cohen - שונא את תל אביב x darco we we we
+Hugel movin to the sun
+2:40
+Франциский поцелуй ---
+Amanda
+Osher cohen - מנגן ושר
+Bittuev - Как быть ---
+Rhytm of the night remix
+Салют вера x adriatique racer ---
+Харизма גרסה edm 
+
+(Hip hop)
+
+גל מלכה - בא לה לרקוד ---
+2:50
+Gasolina
+Gyal you a party animal feat daddy yanki ---
+סטאטיק ובנאל רונדלים ---
+החוף של טרמפלטוני ---
+Husband x beyonse crazy in love ---
+Шаде
+3:00
+(Afro tech) 
+Асфальт
+הפגזות
+Baiana x Красиво afro tech ---
+Моргенштер - последняя любовь ---
+топит dj rem remix ---
+3:10
+רולקס וקסקט ---
+Kenobix - head voice
+(Tribal dance)
+Who let the dogs out
+(Hip hop)
+3:17
+Christina aguilera - Jinie in a botle 
+Kazka - plakala
+אדנק טן טן טן ---
+נתנאל דהן - מלכת הקרח --
+Slim shady
+Я ухожу красиво
+Ritmo 
+3:25
+Тимоти - в клубе ---
+Jony - kometa ---
+Fatman scoop - be haitfull x magenta riddm ---
+(Edm) הפגזות
+3:31
+Asher swisa mor avraaminim in
+Я танцую до утра x el sonida shorty ---
+Satisfaction
+כולם גנבים
+Beni al ---
+Si ai ///
+Винтаж - эва x hills ///
+3:40
+(House/ dance)
+По весне ---
+Добро - Юность x fire fire dance remix ---
+השם יתברך תמיד אוהב אותי ---
+Argy - anima x love tonight ---
+3:45
+Space motion - alarma 
+Jedry cohen - hayde ---
+3:49
+(Tribal house)
+Suavemente ---
+stephanie
+(Indie dance)
+morinio - eonovyal ---
+(Tech house)
+Ben adam patumba
+trfn- Milkshake ---
+Darco - baziman ---
+3:56
+Sweet dreams x all i need a love tonight ---
+Max steeler- love tonight ---
+Rasa - marimba ---
+4:00
+(Hip hop)
+Me pregunto
+</script>
+
+<script>
+const PEAK = 'הפגזות';
+const LIB_RE = /(^|\s)-{2,}(?=\s|$)/g;
+const BAD_RE = /\/{3,}/g;
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function normGenre(g) {
+  g = g.trim().replace(/\s*\/\s*/g, '/').replace(/\s+/g, ' ').toLowerCase();
+  return g === 'edm' ? 'EDM' : g.charAt(0).toUpperCase() + g.slice(1);
+}
+
+/* Raw text -> flat array of track objects: {time, genre, name, peak, lib, bad} */
+function parse(raw) {
+  const tracks = [];
+  let time = '', genre = 'No genre noted', peakRun = false;
+  for (let line of raw.split(/\r?\n/)) {
+    line = line.trim();
+    if (!line) continue;
+    if (/^\d{1,2}:\d{2}$/.test(line)) { time = line; continue; }
+    const gm = line.match(/^\(([^)]+)\)\s*(.*)$/);
+    if (gm) { genre = normGenre(gm[1]); peakRun = gm[2].includes(PEAK); continue; }
+    if (line === PEAK) { peakRun = true; continue; }          // peak lasts until the next genre change
+    let peak = peakRun;
+    if (line.includes(PEAK)) { peak = true; line = line.replace(PEAK, ' '); }
+    const lib = new RegExp(LIB_RE).test(line);
+    const bad = new RegExp(BAD_RE).test(line);
+    const name = line.replace(LIB_RE, ' ').replace(BAD_RE, ' ').replace(/\s+/g, ' ').trim();
+    if (!name) continue;
+    tracks.push({ time, genre, name, peak, lib, bad });
+  }
+  return tracks;
+}
+
+const tracks = parse($('raw').textContent);
+const times = [...new Set(tracks.map(t => t.time))];
+const genres = [...new Set(tracks.map(t => t.genre))];
+const HUES = [320, 190, 95, 40, 265, 5, 160, 215, 345, 70];
+const hue = g => HUES[genres.indexOf(g) % HUES.length];
+const active = { lib: false, peak: false, bad: false };
+
+/* Controls */
+$('meta').textContent = `${tracks.length} tracks · ${times[0]} to ${times[times.length - 1]} · ${genres.length} genres`;
+$('g').innerHTML = '<option value="">All genres</option>' + genres.map(g =>
+  `<option value="${esc(g)}">${esc(g)} (${tracks.filter(t => t.genre === g).length})</option>`).join('');
+document.querySelectorAll('.f').forEach(b => {
+  b.querySelector('small').textContent = tracks.filter(t => t[b.dataset.k]).length;
+  b.onclick = () => {
+    active[b.dataset.k] = !active[b.dataset.k];
+    b.setAttribute('aria-pressed', active[b.dataset.k]);
+    render();
+  };
+});
+$('q').oninput = $('g').onchange = render;
+$('reset').onclick = () => {
+  $('q').value = ''; $('g').value = '';
+  document.querySelectorAll('.f').forEach(b => { active[b.dataset.k] = false; b.setAttribute('aria-pressed', false); });
+  render();
+};
+
+function badges(t) {
+  return (t.peak ? '<span class="b peak">🔥 Peak time</span>' : '') +
+         (t.lib ? '<span class="b lib">💾 Add to library</span>' : '') +
+         (t.bad ? '<span class="b bad">👎 Bad choice</span>' : '');
+}
+
+function render() {
+  const q = $('q').value.trim().toLowerCase(), g = $('g').value;
+  const on = Object.keys(active).filter(k => active[k]);   // marker filters combine as "any of"
+  const shown = tracks.filter(t =>
+    (!g || t.genre === g) &&
+    (!q || t.name.toLowerCase().includes(q)) &&
+    (!on.length || on.some(k => t[k])));
+  let html = '';
+  for (const time of times) {
+    const inBlock = shown.filter(t => t.time === time);
+    if (!inBlock.length) continue;
+    html += `<section class="block"><h2 class="time">${esc(time)}<small>${inBlock.length} track${inBlock.length > 1 ? 's' : ''}</small></h2>`;
+    let last = null;
+    for (const t of inBlock) {
+      if (t.genre !== last) { html += `<div class="gh" style="--h:${hue(t.genre)}">${esc(t.genre)}</div>`; last = t.genre; }
+      html += `<article class="trk${t.peak ? ' peak' : ''}${t.bad ? ' bad' : ''}" style="--h:${hue(t.genre)}">` +
+              `<span class="name" dir="auto">${esc(t.name)}</span><span class="tags">${badges(t)}</span></article>`;
+    }
+    html += '</section>';
+  }
+  $('out').innerHTML = html || '<p class="empty">No tracks match these filters. Clear a filter or change your search.</p>';
+  $('count').textContent = `Showing ${shown.length} of ${tracks.length} tracks`;
+}
+render();
+</script>
+</body>
+</html>

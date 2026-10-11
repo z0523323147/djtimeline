@@ -1,0 +1,14 @@
+{
+  "name": "party-map",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-local DJ timeline with a self-contained offline HTML build",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build-offline.mjs",
+    "build:offline": "node scripts/build-offline.mjs",
+    "check:offline": "node scripts/check-offline.mjs dist/party-map.html",
+    "test": "node --test scripts/offline.test.mjs"
+  }
+}

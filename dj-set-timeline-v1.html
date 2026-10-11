@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<!--
+DJ Set Timeline v1.0 — standalone, offline, no dependencies.
+Usage: open this file in a modern browser. Edit RAW_DATA to update the set.
+Parsing: time and genre persist until replaced; only whole-line parentheses
+declare a genre. Parentheses within track titles are preserved. A genre
+declaration resets peak state, unless followed by הפגזות. A standalone
+הפגזות starts a peak section that persists across time changes until the
+next genre. An inline הפגזות tags only that track. Runs of two or more
+hyphens mark downloads; /// marks ideas. Blank and marker-only lines
+never create tracks. Repeated time declarations create distinct blocks.
+Filters combine with AND; search is case-insensitive and accent-insensitive.
+No track names are interpreted as HTML. No personal data is stored or sent.
+-->
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090c14">
+  <meta name="description" content="An offline DJ set timeline with track search, genre filters, peak sections, download choices and personal ideas.">
+  <title>After Hours · DJ Set Timeline</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090c14; --panel: #111722; --raised: #182130;
+      --line: #2c384b; --text: #f3f6fc; --muted: #acb9cd;
+      --cyan: #65e6ec; --fire: #ffbc75; --lime: #c3ef93; --purple: #d4b2ff;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--text); background: var(--bg);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      background-image: radial-gradient(ellipse at 80% 0, #15303680, transparent 55%);
+      min-height: 100vh;
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button, input, select {
+      color: var(--text); background: var(--panel); border: 1px solid var(--line);
+      border-radius: 10px; min-height: 46px;
+    }
+    button { padding: 10px 14px; }
+    button:hover { background: var(--raised); border-color: var(--muted); }
+    :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    .shell { width: min(100% - 40px, 1000px); margin-inline: auto; }
+    .skip { position: fixed; inset-block-start: 8px; inset-inline-start: 8px; transform: translateY(-150%); z-index: 30; background: var(--cyan); color: var(--bg); padding: 12px; border-radius: 8px; }
+    .skip:focus { transform: none; }
+    .hero { padding-block: 48px 28px; }
+    .eyebrow { color: var(--cyan); font-size: 12px; font-weight: 750; letter-spacing: .2em; text-transform: uppercase; margin: 0 0 12px; }
+    h1 { font-size: clamp(36px, 7vw, 64px); line-height: 1.05; letter-spacing: -.055em; margin: 0; }
+    h1 span { color: var(--cyan); }
+    .subtitle { color: var(--muted); margin: 16px 0 24px; max-width: 620px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; }
+    .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 18px; }
+    .stat strong { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .controls { position: sticky; inset-block-start: 0; z-index: 10; background: #090c14f5; border-block: 1px solid var(--line); padding-block: 14px 10px; }
+    @supports (backdrop-filter: blur(16px)) { .controls { background: #090c14e8; backdrop-filter: blur(16px); } }
+    .fields { display: grid; grid-template-columns: 1fr 240px; gap: 12px; }
+    label { display: block; color: var(--muted); font-size: 12px; font-weight: 650; margin-block-end: 5px; }
+    input, select { width: 100%; padding: 10px 12px; }
+    input::placeholder { color: var(--muted); }
+    .toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 12px; }
+    .filter { --accent: var(--cyan); display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; }
+    .filter[data-filter="isBanger"] { --accent: var(--fire); }
+    .filter[data-filter="isToDownload"] { --accent: var(--lime); }
+    .filter[data-filter="isMyIdea"] { --accent: var(--purple); }
+    .filter[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--raised); box-shadow: inset 0 -2px var(--accent); }
+    .counter { font-size: 11px; background: var(--raised); border-radius: 6px; padding: 1px 6px; color: var(--text); }
+    .reset { margin-inline-start: auto; color: var(--muted); font-size: 13px; }
+    .result { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+    main { padding-block: 30px 48px; }
+    .timeline { position: relative; }
+    .timeline::before { content: ""; position: absolute; inset-inline-start: 87px; inset-block: 12px 24px; width: 1px; background: var(--line); }
+    .time-block { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 32px; margin-block-end: 28px; }
+    .time-label { margin: 0; padding-block-start: 12px; font-size: 17px; color: var(--cyan); font-variant-numeric: tabular-nums; }
+    .time-label::after { content: ""; position: absolute; inset-inline-start: 83px; inset-block-start: 19px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 14px #65e6ec55; }
+    .block-body { min-width: 0; }
+    .block-meta { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+    .tracks { padding: 0; margin: 0; list-style: none; display: grid; gap: 8px; }
+    .track { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 10px; padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .track.peak { border-inline-start: 3px solid var(--fire); background: linear-gradient(110deg, #ffbc7509, transparent), var(--panel); }
+    .number { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; padding-block-start: 4px; }
+    .track-title { margin: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; unicode-bidi: plaintext; text-align: start; }
+    .track-info { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-block-start: 8px; }
+    .genre { color: var(--muted); font-size: 11px; padding-inline-end: 5px; }
+    .badge { font-size: 11px; font-weight: 650; padding: 2px 7px; border-radius: 5px; border: 1px solid currentColor; }
+    .badge.fire { color: var(--fire); }
+    .badge.download { color: var(--lime); }
+    .badge.idea { color: var(--purple); }
+    .empty { text-align: center; padding: 48px 20px; background: var(--panel); border: 1px dashed var(--line); border-radius: 14px; }
+    .empty h2 { margin: 0 0 8px; font-size: 22px; }
+    .empty p { color: var(--muted); margin-block-end: 24px; }
+    [hidden] { display: none !important; }
+    footer { color: var(--muted); border-block-start: 1px solid var(--line); padding-block: 20px 32px; font-size: 12px; }
+    @media (max-width: 600px) {
+      .shell { width: calc(100% - 24px); }
+      .hero { padding-block: 30px 22px; }
+      .fields { grid-template-columns: minmax(0, 1fr) minmax(0, .65fr); gap: 8px; }
+      .filter { flex: 1 1 120px; padding-inline: 8px; }
+      .reset { margin-inline-start: 0; }
+      .stat { flex: 1 1 100px; padding: 10px 12px; }
+      .timeline::before { inset-inline-start: 6px; }
+      .time-block { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-inline-start: 24px; }
+      .time-label { padding-block-start: 0; }
+      .time-label::after { inset-inline-start: 2px; inset-block-start: 9px; }
+      .track { padding: 12px; grid-template-columns: 24px minmax(0, 1fr); gap: 6px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: white; color: black; }
+      .controls, .skip, footer { display: none; }
+      .track, .stat { background: white; color: black; break-inside: avoid; }
+      .track-title, .genre, .number, .time-label, .block-meta { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to tracks</a>
+  <header class="hero shell">
+    <p class="eyebrow">Set planner / v1.0</p>
+    <h1>After <span>hours.</span></h1>
+    <p class="subtitle">Your night, track by track. Find the peaks, collect your downloads, and keep your ideas in the mix.</p>
+    <div class="stats" aria-label="Set summary">
+      <div class="stat"><strong id="time-range" dir="ltr">—</strong><span>Set window · as written</span></div>
+      <div class="stat"><strong id="total-tracks">0</strong><span>Tracks in the set</span></div>
+      <div class="stat"><strong id="total-blocks">0</strong><span>Time blocks</span></div>
+      <div class="stat"><strong id="total-genres">0</strong><span>Named genres</span></div>
+    </div>
+  </header>
+  <section class="controls" aria-label="Filter tracks">
+    <div class="shell">
+      <div class="fields">
+        <div><label for="search">Search tracks</label><input id="search" type="search" placeholder="Track or artist…" autocomplete="off" spellcheck="false" dir="auto"></div>
+        <div><label for="genre">Genre</label><select id="genre"><option value="">All genres</option></select></div>
+      </div>
+      <div class="toggles" role="group" aria-label="Track markers">
+        <button type="button" class="filter" data-filter="isBanger" aria-pressed="false"><span aria-hidden="true">🔥</span> Peak time <bdi lang="he">הפגזות</bdi><span class="counter">0</span></button>
+        <button type="button" class="filter" data-filter="isToDownload" aria-pressed="false"><span aria-hidden="true">💾</span> To download<span class="counter">0</span></button>
+        <button type="button" class="filter" data-filter="isMyIdea" aria-pressed="false"><span aria-hidden="true">💡</span> My ideas<span class="counter">0</span></button>
+        <button type="button" id="reset" class="reset">Reset filters</button>
+      </div>
+      <p id="results" class="result" role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+  </section>
+  <main id="main" class="shell" tabindex="-1">
+    <div id="timeline" class="timeline" aria-label="DJ set timeline"></div>
+    <section id="empty" class="empty" hidden><h2>No matching tracks</h2><p>Try another search or reset your filters.</p><button type="button" id="empty-reset">Show all tracks</button></section>
+    <noscript><p>Enable JavaScript to parse the set notes and use the timeline filters.</p></noscript>
+  </main>
+  <footer class="shell">🔥 Peak section · 💾 Add to library / download · 💡 My idea<br>Active filters combine together. Times follow your notes; no AM/PM is assumed.</footer>
+  <script>
+    'use strict';
+
+    const RAW_DATA = `12:30
+Shakira beautiful life 116 bpm
+They not like us 116 bpm
+Tony dark eyes - no body
+Cat dealers - snoop
+dj joga - mi Chicko ---
+Nico de andrea - etnica x mi amore
+12:50
+(Melodic house afro tech)
+Асфальт
+Зима в сердце
+Moscow never sleep
+Грустный денс (afro rech)
+Dj dark - alabina ---
+Toko maya - la sonora
+Inache - andale agasi asparyan
+Freed from desire xtm remix
+1:01
+(Afro tech)
+Карабли ---
+Artic asti гармония x bam bam (לא בם בם של סולטו) ---
+Айдахар
+Салют вера 
+Justin beenr - beauty and a beat
+Eminem - without me remix
+Pitbul blanko remix
+Hot in here maximum risk
+Шелк
+1:16
+Xcho - темная ночь
+Hugel - stay sexy
+1:23
+(Edm)
+Omer adam
+Memories remix
+
+(Afro tech)
+Худи
+bad bunny - nevauol
+Экспонат (x hotell remix)
+1:30
+(House)
+Owek fargo он тебя целует
+Люся чеботина - по барабану ---
+Gaz x we found love
+
+(Edm)
+Spacho & lamur - make u x lior narkis shagaat ---
+Nosa nosa x yama
+dj lindao - Motel de motor
+1:40
+Zarica
+Снова я напиваюсь x argy siera
+Gimme gimme x он тебя целует
+Bmw שחורה tomer shteyman אתניקס
+One more time
+I adore you argy x mor avraami
+1:50
+(Hip hop)
+Te bote
+עומר אדם - ראיתי עולם
+Ido shoam - sha la la ---
+Тимоти - баклажан ---
+5sta familly - зачем
+Single ladies X shape of you
+That way - backstreet boys ---
+1:57
+(House)
+J bavlon - in da getto House remix
+Goldbaum - havhavhav
+
+(Tribal)
+Восточные сказки x majnuna hugel
+Сияй 
+
+(Edm)
+Monaco
+2:07
+Nicky minaj - starship toby nize
+אודיה 10 רמות מעליו
+Sandstorm zans remix
+(Hip hop) 
+Dansa kuduro
+2:15
+(Edm) הפגזות
+Камин remix ---
+solto - Bam bam
+volkoder - Unique moment
+carsen - crank that (solja boy supermen)
+2:24
+(Hip hop)
+שחר סאול דובשניה
+כך זה אופק אדנק x shake it to the max ---
+Yeah
+Macarena
+Malrboro
+2:30
+(House)
+5sta familly - я буду
+Artic asti - лампочки
+I got love
+(Dance) הפגזות
+Osher cohen - שונא את תל אביב x darco we we we
+Hugel movin to the sun
+2:40
+Франциский поцелуй ---
+Amanda
+Osher cohen - מנגן ושר
+Bittuev - Как быть ---
+Rhytm of the night remix
+Салют вера x adriatique racer ---
+Харизма גרסה edm 
+
+(Hip hop)
+
+גל מלכה - בא לה לרקוד ---
+2:50
+Gasolina
+Gyal you a party animal feat daddy yanki ---
+סטאטיק ובנאל רונדלים ---
+החוף של טרמפלטוני ---
+Husband x beyonse crazy in love ---
+Шаде
+3:00
+(Afro tech) 
+Асфальт
+הפגזות
+Baiana x Красиво afro tech ---
+Моргенштер - последняя любовь ---
+топит dj rem remix ---
+3:10
+רולקס וקסקט ---
+Kenobix - head voice
+(Tribal dance)
+Who let the dogs out
+(Hip hop)
+3:17
+Christina aguilera - Jinie in a botle 
+Kazka - plakala
+אדנק טן טן טן ---
+נתנאל דהן - מלכת הקרח --
+Slim shady
+Я ухожу красиво
+Ritmo 
+3:25
+Тимоти - в клубе ---
+Jony - kometa ---
+Fatman scoop - be haitfull x magenta riddm ---
+(Edm) הפגזות
+3:31
+Asher swisa mor avraaminim in
+Я танцую до утра x el sonida shorty ---
+Satisfaction
+כולם גנבים
+Beni al ---
+Si ai ///
+Винтаж - эва x hills ///
+3:40
+(House/ dance)
+По весне ---
+Добро - Юность x fire fire dance remix ---
+השם יתברך תמיד אוהב אותי ---
+Argy - anima x love tonight ---
+3:45
+Space motion - alarma 
+Jedry cohen - hayde ---
+3:49
+(Tribal house)
+Suavemente ---
+stephanie
+(Indie dance)
+morinio - eonovyal ---
+(Tech house)
+Ben adam patumba
+trfn- Milkshake ---
+Darco - baziman ---
+3:56
+Sweet dreams x all i need a love tonight ---
+Max steeler- love tonight ---
+Rasa - marimba ---
+4:00
+(Hip hop)
+Me pregunto`;
+
+    /** Pure parser: transform notes into structured data before any DOM work. */
+    function parseSet(raw) {
+      const tracks = [];
+      let time = 'Unscheduled';
+      let genre = 'Unspecified';
+      let block = 0;
+      let sectionPeak = false;
+      const peakMarker = /הפגזות/gu;
+      const downloadMarker = /-{2,}/gu;
+      const ideaMarker = /\/{3}/gu;
+
+      for (const original of raw.split(/\r?\n/u)) {
+        const line = original.trim();
+        if (!line) continue;
+        if (/^(?:[01]?\d|2[0-3]):[0-5]\d$/u.test(line)) {
+          time = line;
+          block += 1;
+          continue;
+        }
+        const declaration = line.match(/^\(([^()]+)\)\s*(הפגזות)?$/u);
+        if (declaration) {
+          genre = declaration[1].trim();
+          sectionPeak = Boolean(declaration[2]);
+          continue;
+        }
+        if (line === 'הפגזות') {
+          sectionPeak = true;
+          continue;
+        }
+        const isBanger = sectionPeak || line.includes('הפגזות');
+        const isToDownload = /-{2,}/u.test(line);
+        const isMyIdea = line.includes('///');
+        const title = line.replace(peakMarker, '').replace(downloadMarker, '')
+          .replace(ideaMarker, '').replace(/\s+/gu, ' ').trim();
+        if (!title) continue;
+        tracks.push(Object.freeze({ id: tracks.length + 1, block, time, genre,
+          title, isBanger, isToDownload, isMyIdea }));
+      }
+      return Object.freeze(tracks);
+    }
+
+    const normalize = value => value.normalize('NFD').replace(/\p{M}/gu, '')
+      .toLocaleLowerCase().replace(/\s+/gu, ' ').trim();
+
+    function filterTracks(tracks, state) {
+      const query = normalize(state.query);
+      return tracks.filter(track => (!query || normalize(track.title).includes(query))
+        && (!state.genre || track.genre === state.genre)
+        && (!state.isBanger || track.isBanger)
+        && (!state.isToDownload || track.isToDownload)
+        && (!state.isMyIdea || track.isMyIdea));
+    }
+
+    function groupTracks(tracks) {
+      const groups = new Map();
+      for (const track of tracks) {
+        if (!groups.has(track.block)) groups.set(track.block, { time: track.time, tracks: [] });
+        groups.get(track.block).tracks.push(track);
+      }
+      return Array.from(groups.values());
+    }
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function renderTrack(track) {
+      const row = element('li', `track${track.isBanger ? ' peak' : ''}`);
+      row.append(element('span', 'number', String(track.id).padStart(2, '0')));
+      const content = element('div');
+      const title = element('h3', 'track-title', track.title);
+      title.dir = 'auto';
+      const info = element('div', 'track-info');
+      info.append(element('bdi', 'genre', track.genre));
+      if (track.isBanger) info.append(element('span', 'badge fire', '🔥 Peak time'));
+      if (track.isToDownload) info.append(element('span', 'badge download', '💾 To download'));
+      if (track.isMyIdea) info.append(element('span', 'badge idea', '💡 My idea'));
+      content.append(title, info);
+      row.append(content);
+      return row;
+    }
+
+    function initialize(tracks) {
+      const search = document.getElementById('search');
+      const genreSelect = document.getElementById('genre');
+      const timeline = document.getElementById('timeline');
+      const empty = document.getElementById('empty');
+      const results = document.getElementById('results');
+      const buttons = [...document.querySelectorAll('[data-filter]')];
+      const state = { query: '', genre: '', isBanger: false, isToDownload: false, isMyIdea: false };
+      const genres = [...new Set(tracks.map(track => track.genre))].sort((a, b) => a.localeCompare(b));
+      const allGroups = groupTracks(tracks);
+      document.getElementById('total-tracks').textContent = tracks.length;
+      document.getElementById('total-blocks').textContent = allGroups.length;
+      document.getElementById('total-genres').textContent = genres.filter(genre => genre !== 'Unspecified').length;
+      document.getElementById('time-range').textContent = tracks.length ? `${tracks[0].time} → ${tracks[tracks.length - 1].time}` : 'No tracks';
+      for (const genre of genres) {
+        const option = element('option', '', genre);
+        option.value = genre;
+        genreSelect.append(option);
+      }
+      for (const button of buttons) {
+        button.querySelector('.counter').textContent = tracks.filter(track => track[button.dataset.filter]).length;
+      }
+
+      function render() {
+        const visible = filterTracks(tracks, state);
+        const groups = groupTracks(visible);
+        const fragment = document.createDocumentFragment();
+        for (const [index, group] of groups.entries()) {
+          const section = element('section', 'time-block');
+          const heading = element('h2', 'time-label', group.time);
+          heading.id = `time-${index}`;
+          heading.dir = 'ltr';
+          section.setAttribute('aria-labelledby', heading.id);
+          const body = element('div', 'block-body');
+          body.append(element('p', 'block-meta', `${group.tracks.length} ${group.tracks.length === 1 ? 'track' : 'tracks'}`));
+          const list = element('ol', 'tracks');
+          for (const track of group.tracks) list.append(renderTrack(track));
+          body.append(list);
+          section.append(heading, body);
+          fragment.append(section);
+        }
+        timeline.replaceChildren(fragment);
+        empty.hidden = visible.length > 0;
+        timeline.hidden = visible.length === 0;
+        const active = Boolean(state.query.trim() || state.genre || state.isBanger || state.isToDownload || state.isMyIdea);
+        results.textContent = `${visible.length} of ${tracks.length} tracks · ${groups.length} time blocks${active ? ' · Filters active' : ' · Full set'}`;
+        for (const button of buttons) button.setAttribute('aria-pressed', String(state[button.dataset.filter]));
+      }
+
+      function reset() {
+        Object.assign(state, { query: '', genre: '', isBanger: false, isToDownload: false, isMyIdea: false });
+        search.value = '';
+        genreSelect.value = '';
+        render();
+      }
+      search.addEventListener('input', () => { state.query = search.value; render(); });
+      genreSelect.addEventListener('change', () => { state.genre = genreSelect.value; render(); });
+      for (const button of buttons) button.addEventListener('click', () => {
+        const key = button.dataset.filter;
+        state[key] = !state[key];
+        render();
+      });
+      document.getElementById('reset').addEventListener('click', reset);
+      document.getElementById('empty-reset').addEventListener('click', () => { reset(); search.focus(); });
+      render();
+    }
+
+    const tracks = parseSet(RAW_DATA);
+    initialize(tracks);
+  </script>
+</body>
+</html>

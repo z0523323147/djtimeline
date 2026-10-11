@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!-- DJ Set Timeline v3.0 | Offline, dependency-free.
+Macro overview first; choose a genre section to inspect its tracks.
+Time/genre persist. Peak sections reset at genre changes. Only whole-line
+parentheses declare genres; embedded parentheses remain in track titles.
+12-hour rollover is interpreted sequentially (12:30 → 1:01 → 4:00).
+Internal genre changes lack timestamps: equal track spacing is used ONLY
+for diagram placement. Labels show the source time interval, never a false
+exact time. A change preceding a time marker inherits that following time.
+Track corrections are stored locally when browser storage is available.
+-->
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1019">
+<title>Party map · DJ timeline</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1019;--panel:#131c29;--raised:#1d2a3b;--line:#344257;--text:#f3f6fb;--muted:#b8c5d6;--cyan:#70ddd2;--hip:#ff8bbb;--fire:#ffd18c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;height:100dvh;overflow:hidden}button,input,select,textarea,a.action{font:inherit;color:inherit}button,select,summary{cursor:pointer}button,input,select,textarea,a.action{background:var(--panel);border:1px solid var(--line);border-radius:10px;min-height:46px;padding:10px 13px}button:hover,a.action:hover{background:var(--raised)}:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}button[aria-pressed=true]{background:var(--raised);border-color:var(--cyan)}button:disabled{opacity:.45;cursor:default}h1,h2,p{margin:0}h1{font-size:24px;letter-spacing:-.035em}h2{font-size:21px}.logo{color:var(--cyan)}header{height:84px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 24px;border-bottom:1px solid var(--line)}header p{font-size:13px;color:var(--muted);margin-top:3px}.header-actions{display:flex;gap:8px}.version{display:none}main{max-width:1500px;margin:auto;height:calc(100dvh - 84px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:18px;padding:18px 24px}.overview,.detail{background:var(--panel);border:1px solid var(--line);border-radius:16px;min-height:0}.overview{padding:20px;overflow:auto;scrollbar-color:var(--line) var(--panel)}.section-head{margin-bottom:14px}.hint{color:var(--muted);font-size:14px;margin-top:5px}.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-size:14px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.dot{width:12px;height:12px;border-radius:4px;background:var(--color)}.map-row{margin-bottom:8px}.row-caption{font-size:14px;font-weight:650;color:var(--muted);margin-bottom:2px;display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}.map-row svg{width:100%;height:76px;display:block;overflow:visible}.segment{cursor:pointer}.segment:hover rect,.segment:focus rect{stroke:white;stroke-width:2}.segment:focus{outline:none}.segment .hit-area{stroke:none!important}.tick{fill:var(--muted);font-size:14px}.map-label{fill:#071018;font-size:14px;font-weight:650;pointer-events:none}.note{font-size:14px;color:var(--muted);margin:8px 0 18px}.section-picker{padding-top:16px;border-top:1px solid var(--line)}label{display:block;color:var(--muted);font-size:14px;margin-bottom:7px}input,select,textarea{width:100%;min-width:0}.selected-card{margin-top:10px;border-inline-start:4px solid var(--cyan);padding:12px 14px;background:var(--raised);border-radius:6px}.selected-card strong{display:block;font-size:18px}.selected-card p{font-size:14px;color:var(--muted);margin-top:5px}.selected-card button{width:100%;margin-top:12px;background:#243d43;border-color:var(--cyan)}summary{font-size:15px;padding:13px 0;min-height:46px;color:var(--text)}details{border-top:1px solid var(--line);margin-top:14px}.switches{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:10px}.switch{text-align:start;font-size:14px;border-color:#ff8bbb60;min-height:64px}.switch .direction{display:block;color:var(--hip);font-weight:650}.switch .when{display:block;margin-top:3px}.time-jumps{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px}.time-jumps button{font-size:14px;min-width:65px}.workspace{min-height:0}.detail{height:100%;display:flex;flex-direction:column;overflow:hidden}.pane-head{padding:18px;border-bottom:1px solid var(--line);flex:none}.detail-heading{display:flex;justify-content:space-between;gap:10px;align-items:start}.detail-heading p{font-size:14px;color:var(--muted);margin-top:5px}.detail-nav{display:flex;gap:6px}.detail-nav button{min-width:46px;padding:8px}.filters{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:9px;margin-top:16px}.toggles{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.toggles button{font-size:14px;min-height:44px;padding:8px 12px}.track-list{list-style:none;padding:0 18px;margin:0;flex:1;min-height:0;overflow:auto;scrollbar-color:var(--line) var(--panel)}.track{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;padding:16px 0;border-bottom:1px solid var(--line)}.number{font-size:12px;color:var(--muted);padding-top:3px}.title{font-size:16px;font-weight:600;overflow-wrap:anywhere;unicode-bidi:plaintext;text-align:start}.tags{font-size:12px;display:flex;gap:10px;flex-wrap:wrap;margin-top:5px;color:var(--muted)}.peak{color:var(--fire)}.idea{color:#d7baff}.download{color:#c1e8a2}.actions{grid-column:2;display:flex;gap:8px;margin-top:5px}.actions button,a.action{font-size:14px;min-height:44px;padding:8px 13px}.actions a{color:var(--cyan);text-decoration:none;display:inline-flex;align-items:center;gap:6px}.edit-form{grid-column:2;display:flex;gap:8px;flex-wrap:wrap}.edit-form label{width:100%}.edit-form input{flex:1 1 180px}.result-bar{padding:10px 18px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);flex:none}.empty{padding:30px;color:var(--muted)}#notice{position:fixed;bottom:18px;right:18px;max-width:calc(100% - 36px);background:var(--raised);border:1px solid var(--cyan);padding:12px 18px;border-radius:10px;z-index:50}#notice:empty{display:none}[hidden]{display:none!important}.skip{position:absolute;top:-60px;padding:12px;background:var(--cyan);color:var(--bg);z-index:60}.skip:focus{top:0}.mobile-tabs{display:none}dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(620px,calc(100% - 24px));max-height:90dvh;overflow:auto}dialog::backdrop{background:#000a}dialog p{color:var(--muted);margin:10px 0 20px;font-size:14px}dialog textarea{height:220px;resize:vertical;margin-bottom:16px;direction:ltr}dialog .dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.import-error{color:#ffb7b7!important;min-height:20px}#import-use{background:#244345;border-color:var(--cyan)}
+@media(min-width:1150px){.track{grid-template-columns:24px minmax(0,1fr) auto}.actions{grid-column:auto;align-self:center;margin:0}.edit-form{grid-column:2/-1}}
+@media(max-width:850px){body{height:100dvh}header{height:76px;padding:10px 14px}h1{font-size:21px}header p{font-size:12px}.header-actions button{font-size:14px}.mobile-tabs{height:58px;display:flex;padding:6px 12px;gap:8px;border-bottom:1px solid var(--line)}.mobile-tabs button{flex:1;min-height:44px}.mobile-tabs button[aria-pressed=true]{color:var(--cyan)}main{height:calc(100dvh - 134px);display:block;padding:12px}.overview,.workspace{height:100%}body[data-view=party] .workspace{display:none}body[data-view=tracks] .overview{display:none}.overview{padding:16px}.pane-head{padding:14px}.filters{grid-template-columns:minmax(0,1fr) 130px;gap:8px}.toggles{gap:6px}.toggles button{font-size:13px;padding-inline:9px}.track-list{padding-inline:14px}.detail-heading h2{font-size:19px}.detail-heading p{font-size:13px}.switches{grid-template-columns:1fr}.legend{font-size:13px;gap:12px;margin-bottom:12px}.note{font-size:13px;margin-bottom:12px}.map-row svg{height:76px}.selected-card p{font-size:13px}.result-bar{font-size:12px}.actions button,a.action{padding-inline:12px}}
+@media(max-width:850px){.selected-card{display:none}}
+@media(prefers-reduced-motion:no-preference){button,a.action{transition:background .15s,border-color .15s}}
+
+</style>
+</head>
+<body data-view="party">
+<a class="skip" href="#detail">Skip to track details</a>
+<header><div><h1><span class="logo">◈</span> Party map</h1><p id="summary">Your whole night, then every track.</p></div><div class="header-actions"><button id="import-open">Import notes</button></div></header><div class="mobile-tabs" role="group" aria-label="Choose view"><button id="party-tab" aria-pressed="true">The party</button><button id="tracks-tab" aria-pressed="false">Tracks</button></div>
+<main>
+<section class="overview" aria-labelledby="overview-heading">
+<div class="section-head"><h2 id="overview-heading">The whole party</h2><p class="hint">Click or tap a timeline section to open its tracks.</p></div>
+<div id="legend" class="legend" aria-label="Genre colors"></div>
+<div id="map"></div>
+
+<p class="note">Some genre changes have no exact time in your notes. These show a time range.</p>
+<div class="section-picker"><label for="section-select">Choose a time &amp; genre section</label><select id="section-select"></select><div class="selected-card"><strong id="selected-genre"></strong><p id="selected-time"></p><button id="open-tracks">Open tracks</button></div></div>
+<details id="switch-panel"><summary>Hip-hop changes · view all</summary><div id="switches" class="switches"></div></details>
+<details><summary>All times from your notes</summary><div id="time-jumps" class="time-jumps" role="group" aria-label="Every exact time marker from the notes"></div></details>
+</section>
+<div class="workspace">
+
+<section id="detail" class="detail" aria-labelledby="detail-title" tabindex="-1">
+<div class="pane-head"><div class="detail-heading"><div><h2 id="detail-title" tabindex="-1">Select a section</h2><p id="detail-time"></p></div><div class="detail-nav"><button id="prev" aria-label="Previous section">←</button><button id="next" aria-label="Next section">→</button></div></div>
+<div class="filters"><input id="search" type="search" aria-label="Search all tracks" placeholder="Search all tracks…" dir="auto"><select id="genre" aria-label="Filter genre"><option value="">All genres</option></select></div>
+<div class="toggles"><button data-filter="isBanger" aria-pressed="false">🔥 Peaks</button><button data-filter="isToDownload" aria-pressed="false">💾 Downloads</button><button data-filter="isMyIdea" aria-pressed="false">💡 Ideas</button><button id="reset">Reset</button></div></div>
+<ol id="tracks" class="track-list"></ol><p id="results" class="result-bar" role="status" aria-live="polite"></p>
+</section>
+</div>
+</main>
+<dialog id="import-dialog" aria-labelledby="import-title"><h2 id="import-title">Import your set notes</h2><p>Paste your notes or choose a text file. Use times like 1:50 and genres like (Hip hop). Add --- for downloads, /// for ideas, and הפגזות for peaks.</p><label for="import-text">Set notes</label><textarea id="import-text" placeholder="12:30&#10;(Afro tech)&#10;Track name ---&#10;1:50&#10;(Hip hop)&#10;Another track" spellcheck="false"></textarea><label for="import-file">Or load a .txt file</label><input id="import-file" type="file" accept=".txt,text/plain"><p id="import-error" class="import-error" role="alert"></p><div class="dialog-actions"><button id="import-cancel">Cancel</button><button id="import-use">Use these notes</button></div></dialog>
+<div id="notice" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const RAW_DATA = `12:30
+Shakira beautiful life 116 bpm
+They not like us 116 bpm
+Tony dark eyes - no body
+Cat dealers - snoop
+dj joga - mi Chicko ---
+Nico de andrea - etnica x mi amore
+12:50
+(Melodic house afro tech)
+Асфальт
+Зима в сердце
+Moscow never sleep
+Грустный денс (afro rech)
+Dj dark - alabina ---
+Toko maya - la sonora
+Inache - andale agasi asparyan
+Freed from desire xtm remix
+1:01
+(Afro tech)
+Карабли ---
+Artic asti гармония x bam bam (לא בם בם של סולטו) ---
+Айдахар
+Салют вера 
+Justin beenr - beauty and a beat
+Eminem - without me remix
+Pitbul blanko remix
+Hot in here maximum risk
+Шелк
+1:16
+Xcho - темная ночь
+Hugel - stay sexy
+1:23
+(Edm)
+Omer adam
+Memories remix
+
+(Afro tech)
+Худи
+bad bunny - nevauol
+Экспонат (x hotell remix)
+1:30
+(House)
+Owek fargo он тебя целует
+Люся чеботина - по барабану ---
+Gaz x we found love
+
+(Edm)
+Spacho & lamur - make u x lior narkis shagaat ---
+Nosa nosa x yama
+dj lindao - Motel de motor
+1:40
+Zarica
+Снова я напиваюсь x argy siera
+Gimme gimme x он тебя целует
+Bmw שחורה tomer shteyman אתניקס
+One more time
+I adore you argy x mor avraami
+1:50
+(Hip hop)
+Te bote
+עומר אדם - ראיתי עולם
+Ido shoam - sha la la ---
+Тимоти - баклажан ---
+5sta familly - зачем
+Single ladies X shape of you
+That way - backstreet boys ---
+1:57
+(House)
+J bavlon - in da getto House remix
+Goldbaum - havhavhav
+
+(Tribal)
+Восточные сказки x majnuna hugel
+Сияй 
+
+(Edm)
+Monaco
+2:07
+Nicky minaj - starship toby nize
+אודיה 10 רמות מעליו
+Sandstorm zans remix
+(Hip hop) 
+Dansa kuduro
+2:15
+(Edm) הפגזות
+Камин remix ---
+solto - Bam bam
+volkoder - Unique moment
+carsen - crank that (solja boy supermen)
+2:24
+(Hip hop)
+שחר סאול דובשניה
+כך זה אופק אדנק x shake it to the max ---
+Yeah
+Macarena
+Malrboro
+2:30
+(House)
+5sta familly - я буду
+Artic asti - лампочки
+I got love
+(Dance) הפגזות
+Osher cohen - שונא את תל אביב x darco we we we
+Hugel movin to the sun
+2:40
+Франциский поцелуй ---
+Amanda
+Osher cohen - מנגן ושר
+Bittuev - Как быть ---
+Rhytm of the night remix
+Салют вера x adriatique racer ---
+Харизма גרסה edm 
+
+(Hip hop)
+
+גל מלכה - בא לה לרקוד ---
+2:50
+Gasolina
+Gyal you a party animal feat daddy yanki ---
+סטאטיק ובנאל רונדלים ---
+החוף של טרמפלטוני ---
+Husband x beyonse crazy in love ---
+Шаде
+3:00
+(Afro tech) 
+Асфальт
+הפגזות
+Baiana x Красиво afro tech ---
+Моргенштер - последняя любовь ---
+топит dj rem remix ---
+3:10
+רולקס וקסקט ---
+Kenobix - head voice
+(Tribal dance)
+Who let the dogs out
+(Hip hop)
+3:17
+Christina aguilera - Jinie in a botle 
+Kazka - plakala
+אדנק טן טן טן ---
+נתנאל דהן - מלכת הקרח --
+Slim shady
+Я ухожу красиво
+Ritmo 
+3:25
+Тимоти - в клубе ---
+Jony - kometa ---
+Fatman scoop - be haitfull x magenta riddm ---
+(Edm) הפגזות
+3:31
+Asher swisa mor avraaminim in
+Я танцую до утра x el sonida shorty ---
+Satisfaction
+כולם גנבים
+Beni al ---
+Si ai ///
+Винтаж - эва x hills ///
+3:40
+(House/ dance)
+По весне ---
+Добро - Юность x fire fire dance remix ---
+השם יתברך תמיד אוהב אותי ---
+Argy - anima x love tonight ---
+3:45
+Space motion - alarma 
+Jedry cohen - hayde ---
+3:49
+(Tribal house)
+Suavemente ---
+stephanie
+(Indie dance)
+morinio - eonovyal ---
+(Tech house)
+Ben adam patumba
+trfn- Milkshake ---
+Darco - baziman ---
+3:56
+Sweet dreams x all i need a love tonight ---
+Max steeler- love tonight ---
+Rasa - marimba ---
+4:00
+(Hip hop)
+Me pregunto`;
+
+function parseNotes(raw){
+ const tracks=[],blocks=[];let genre='Unspecified',peak=false,pendingGenre=false,block=null;
+ for(const original of raw.split(/\r?\n/)){
+  const line=original.trim();if(!line)continue;
+  if(/^(?:[01]?\d|2[0-3]):[0-5]\d$/.test(line)){
+   let [hour,minute]=line.split(':').map(Number);let start=hour*60+minute;
+   while(block&&start<block.start)start+=720;
+   block={id:blocks.length,time:line,start,tracks:[]};blocks.push(block);continue;
+  }
+  const g=line.match(/^\(([^()]+)\)\s*(הפגזות)?$/);
+  if(g){genre=g[1].trim();peak=!!g[2];pendingGenre=true;continue;}
+  if(line==='הפגזות'){peak=true;continue;}
+  const title=line.replace(/הפגזות/g,'').replace(/-{2,}/g,'').replace(/\/{3}/g,'').replace(/\s+/g,' ').trim();
+  if(!title)continue;
+  if(!block){block={id:0,time:'Unscheduled',start:0,tracks:[]};blocks.push(block);}
+  const track={id:tracks.length+1,blockId:block.id,time:block.time,genre,title,originalTitle:title,isBanger:peak||line.includes('הפגזות'),isToDownload:/-{2,}/.test(line),isMyIdea:line.includes('///'),genreDeclared:pendingGenre};
+  pendingGenre=false;tracks.push(track);block.tracks.push(track);
+ }
+ for(let i=0;i<blocks.length;i++){
+  const b=blocks[i];b.end=blocks[i+1]?.start??b.start;b.tracks.forEach((t,j)=>{t.start=b.start+(b.end-b.start)*j/b.tracks.length;t.end=b.start+(b.end-b.start)*(j+1)/b.tracks.length;t.exact=j===0;t.boundStart=b.start;t.boundEnd=b.end;});
+ }
+ const sections=[];
+ for(const t of tracks){let s=sections.at(-1);if(!s||s.genre!==t.genre){s={id:sections.length,genre:t.genre,start:t.start,end:t.end,exact:t.exact,boundStart:t.boundStart,boundEnd:t.boundEnd,tracks:[]};sections.push(s);}s.tracks.push(t);s.end=t.end;t.sectionId=s.id;}
+ return {tracks,blocks,sections};
+}
+let currentRaw=RAW_DATA;
+try{const imported=localStorage.getItem('party-map-imported-notes');if(imported&&parseNotes(imported).tracks.length)currentRaw=imported;}catch{}
+let model=parseNotes(currentRaw);
+const normalize=s=>s.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().trim();
+const isHip=genre=>normalize(genre)==='hip hop';
+function clock(minutes){let h=Math.floor(minutes/60)%12;return `${h||12}:${String(Math.floor(minutes%60)).padStart(2,'0')}`;}
+function boundary(s){return s.exact?clock(s.start):`${clock(s.boundStart)}–${clock(s.boundEnd)} · exact time not noted`;}
+function sectionRange(s){const next=model.sections[s.id+1];return next ? `From ${boundary(s)} · until ${boundary(next)}` : `From ${boundary(s)} · end time unspecified`;}
+function matches(track,state){return (!state.query||normalize(track.title).includes(normalize(state.query)))&&(!state.genre||track.genre===state.genre)&&['isBanger','isToDownload','isMyIdea'].every(k=>!state[k]||track[k]);}
+const colors={'Unspecified':'#a8b8cb','Melodic house afro tech':'#8fc3ff','Afro tech':'#64dad1','Edm':'#b7a1ff','House':'#96baff','Hip hop':'#ff80b8','Tribal':'#e6bc7f','Dance':'#a2e499','Tribal dance':'#d4bd80','House/ dance':'#9dbef7','Tribal house':'#e6bd89','Indie dance':'#d8a8ee','Tech house':'#a2cba6'};
+const color=g=>isHip(g)?'#ff8bbb':'#70ddd2';
+const $=id=>document.getElementById(id);
+function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
+function svgEl(tag,attrs){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);return n;}
+let storageKey='';let storageAvailable=true;
+function loadCorrections(){storageAvailable=true;
+try{let hash=2166136261;for(const char of currentRaw)hash=Math.imul(hash^char.charCodeAt(0),16777619);storageKey=`party-map-v2-${hash>>>0}`;const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');for(const t of model.tracks)if(typeof saved[t.id]==='string'&&saved[t.id].trim())t.title=saved[t.id].trim();}catch{storageAvailable=false;}
+}
+loadCorrections();
+function persist(){try{const edits={};for(const t of model.tracks)if(t.title!==t.originalTitle)edits[t.id]=t.title;localStorage.setItem(storageKey,JSON.stringify(edits));storageAvailable=true;return true;}catch{storageAvailable=false;return false;}}
+let noticeTimer;
+function notify(text){clearTimeout(noticeTimer);$('notice').textContent=text;noticeTimer=setTimeout(()=>{$('notice').textContent='';},4000);}
+const state={selected:0,query:'',genre:'',isBanger:false,isToDownload:false,isMyIdea:false};
+const filterActive=()=>Boolean(state.query.trim()||state.genre||state.isBanger||state.isToDownload||state.isMyIdea);
+function setView(view){document.body.dataset.view=view;$('party-tab').setAttribute('aria-pressed',String(view==='party'));$('tracks-tab').setAttribute('aria-pressed',String(view==='tracks'));if(view==='party')renderMap();}
+function selectSection(id){state.selected=id;state.query='';state.genre='';state.isBanger=false;state.isToDownload=false;state.isMyIdea=false;$('search').value='';$('genre').value='';render();}
+
+function renderMap(){
+ const start=model.blocks[0]?.start??0,end=model.blocks.at(-1)?.start??start;
+ const fragment=document.createDocumentFragment();
+ if(end<=start){fragment.append(el('p','note','Add more time markers to see the party flow. You can still browse every track below.'));$('map').replaceChildren(fragment);return;}
+ for(let row=0;row<3;row++){
+  const a=start+(end-start)*row/3,b=start+(end-start)*(row+1)/3,width=Math.max(220,$('map').clientWidth-16),x=t=>(t-a)/(b-a)*width;
+  const wrap=el('div','map-row'),caption=el('div','row-caption');caption.append(el('span','',clock(a)),el('span','',clock(b)));
+  const svg=svgEl('svg',{viewBox:`-8 0 ${width+16} 76`,preserveAspectRatio:'none',role:'group','aria-label':`Party flow from ${clock(a)} to ${clock(b)}. Pink indicates hip-hop; teal indicates other genres. Activate a genre section to open its tracks.`});
+  svg.append(svgEl('rect',{x:0,y:10,width,height:32,rx:6,fill:'#253247'}));
+  for(const s of model.sections){if(s.end<=a||s.start>=b)continue;const left=Math.max(a,s.start),right=Math.min(b,s.end),w=Math.max(2,x(right)-x(left));const group=svgEl('g',{class:'segment',role:'button',tabindex:0,'aria-label':`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`,'aria-pressed':String(!filterActive()&&state.selected===s.id)});const title=svgEl('title',{});title.textContent=`${s.genre} · ${boundary(s)} · Open tracks`;group.append(title);group.append(svgEl('rect',{x:x(left),y:10,width:w,height:32,fill:color(s.genre),stroke:!filterActive()&&state.selected===s.id?'#ffffff':'#131c29','stroke-width':!filterActive()&&state.selected===s.id?2:1}));group.append(svgEl('rect',{x:x(left),y:4,width:w,height:44,fill:'transparent','pointer-events':'all',class:'hit-area'}));const open=()=>{selectSection(s.id);setView('tracks');$('tracks').scrollTop=0;$('detail-title').focus({preventScroll:true});};group.addEventListener('click',open);group.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});svg.append(group);const name=isHip(s.genre)?"Hip-hop":s.genre;if(w>name.length*8+14){const text=svgEl("text",{x:x(left)+7,y:31,class:"map-label"});text.textContent=name;svg.append(text);}}
+  for(const t of model.tracks){if(t.isBanger&&t.end>a&&t.start<b)svg.append(svgEl('rect',{x:x(Math.max(a,t.start)),y:46,width:Math.max(2,x(Math.min(b,t.end))-x(Math.max(a,t.start))),height:5,rx:1,fill:'#ffd18c'}));}
+  const step=width<380?20:15;
+  for(let tick=a+step;tick<b-3;tick+=step){const tx=x(tick);svg.append(svgEl('line',{x1:tx,x2:tx,y1:55,y2:59,stroke:'#7187a0'}));const label=svgEl('text',{x:tx,y:73,class:'tick','text-anchor':'middle'});label.textContent=clock(tick);svg.append(label);}
+  wrap.append(caption,svg);fragment.append(wrap);
+ }
+ $('map').replaceChildren(fragment);
+}
+function renderSections(){
+ $('section-select').value=String(state.selected);const selected=model.sections[state.selected];$('selected-genre').textContent=selected.genre;$('selected-time').textContent=sectionRange(selected);$('selected-genre').parentElement.style.borderInlineStartColor=color(selected.genre);$('open-tracks').textContent=`Open ${selected.tracks.length} tracks →`;
+}
+async function copyTrack(track,button){
+ try{if(navigator.clipboard?.writeText){try{await navigator.clipboard.writeText(track.title);}catch{fallbackCopy(track.title);}}else fallbackCopy(track.title);button.textContent='Copied ✓';setTimeout(()=>{if(button.isConnected)button.textContent='Copy';},1600);notify('Track name copied.');}
+ catch{notify('Copy unavailable. Select the track name and copy it manually.');}
+}
+function fallbackCopy(text){const active=document.activeElement,n=el('textarea');n.value=text;n.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.append(n);n.select();let copied=false;try{copied=document.execCommand('copy');}finally{n.remove();active?.focus();}if(!copied)throw new Error('Clipboard unavailable');}
+function editTrack(track,row){if(row.querySelector('form'))return;const form=el('form','edit-form'),label=el('label','', 'Correct track name'),input=el('input');input.id=`edit-${track.id}`;label.htmlFor=input.id;input.value=track.title;input.dir='auto';input.required=true;input.maxLength=500;const save=el('button','','Save'),cancel=el('button','','Cancel');save.type='submit';cancel.type='button';form.append(label,input,save,cancel);row.append(form);input.focus();input.select();const close=()=>{form.remove();row.querySelector('.edit-button')?.focus();};cancel.addEventListener('click',close);input.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();}});form.addEventListener('submit',e=>{e.preventDefault();const title=input.value.trim();if(!title){input.setCustomValidity('Enter a track name.');input.reportValidity();return;}track.title=title;const saved=persist();render();notify(saved?'Correction saved on this browser.':'Correction kept for this session. Browser storage is unavailable.');$('tracks').querySelector(`[data-track="${track.id}"] .edit-button`)?.focus();});input.addEventListener('input',()=>input.setCustomValidity(''));}
+function render(){
+ const selected=model.sections[state.selected],active=filterActive();const visible=active?model.tracks.filter(t=>matches(t,state)):selected.tracks;
+ $('detail-title').textContent=active?'Matching tracks':selected.genre;$('detail-time').textContent=active?'Results across the entire party':`${sectionRange(selected)} · ${selected.tracks.length} tracks`;
+ $('prev').disabled=active||state.selected===0;$('next').disabled=active||state.selected===model.sections.length-1;
+ for(const b of document.querySelectorAll('[data-filter]'))b.setAttribute('aria-pressed',String(state[b.dataset.filter]));
+ const frag=document.createDocumentFragment();for(const t of visible){const row=el('li','track');row.dataset.track=t.id;const content=el('div'),title=el('p','title',t.title);title.dir='auto';const tags=el('div','tags');if(active)tags.append(el('span','',`${t.time} · ${t.genre}`));if(t.isBanger)tags.append(el('span','peak','🔥 Peak'));if(t.isToDownload)tags.append(el('span','download','💾 Download'));if(t.isMyIdea)tags.append(el('span','idea','💡 Idea'));if(t.title!==t.originalTitle)tags.append(el('span','','Edited'));content.append(title,tags);const actions=el('div','actions'),copy=el('button','','Copy'),edit=el('button','edit-button','Edit');copy.setAttribute('aria-label',`Copy ${t.title}`);edit.setAttribute('aria-label',`Edit ${t.title}`);copy.addEventListener('click',()=>copyTrack(t,copy));edit.addEventListener('click',()=>editTrack(t,row));const download=el('a','action','Download ↗');download.href='https://www.google.com/search?q='+encodeURIComponent(t.title+' download');download.target='_blank';download.rel='noopener noreferrer';download.setAttribute('aria-label',`Search Google for ${t.title} download`);actions.append(copy,edit,download);row.append(el('span','number',String(t.id).padStart(2,'0')),content,actions);frag.append(row);}
+ if(!visible.length)frag.append(el('li','empty','No tracks match. Reset filters to return to your selected section.'));
+ $('tracks').replaceChildren(frag);$('results').textContent=`${visible.length} tracks shown${active?' · Filters combine together':' · Select another section in the overview'}${storageAvailable?'':' · Edits are session-only'}`;renderSections();renderMap();
+}
+function populate(){
+ $('summary').textContent=`${model.blocks[0]?.time??'No time'} → ${model.blocks.at(-1)?.time??'No time'} · ${model.tracks.length} tracks`;
+ $('legend').replaceChildren();for(const [name,c]of [['Other genres',color('House')],['Hip-hop',color('Hip hop')],['Peak sections','#ffd18c']]){const item=el('span'),dot=el('i','dot');dot.style.setProperty('--color',c);item.append(dot,document.createTextNode(name));$('legend').append(item);}
+ $('genre').replaceChildren(el('option','','All genres'));$('genre').firstElementChild.value='';
+ for(const genre of new Set(model.tracks.map(t=>t.genre))){const option=el('option','',genre);option.value=genre;$('genre').append(option);}
+ $('section-select').replaceChildren();for(const s of model.sections){const option=el('option','',`${s.exact?clock(s.start):clock(s.boundStart)+'–'+clock(s.boundEnd)} · ${s.genre}`);option.value=String(s.id);$('section-select').append(option);}
+ $('time-jumps').replaceChildren();for(const block of model.blocks){if(!block.tracks.length)continue;const button=el('button','',block.time);button.addEventListener('click',()=>{selectSection(block.tracks[0].sectionId);setView('tracks');const row=$('tracks').querySelector(`[data-track="${block.tracks[0].id}"]`);if(row)$('tracks').scrollTop=row.offsetTop-$('tracks').offsetTop;});$('time-jumps').append(button);}
+ $('switches').replaceChildren();for(let i=1;i<model.sections.length;i++){const previous=model.sections[i-1],s=model.sections[i];if(isHip(previous.genre)===isHip(s.genre))continue;const button=el('button','switch');button.append(el('span','direction',isHip(s.genre)?'Into hip-hop':'Back to '+s.genre),el('span','when',boundary(s)));button.addEventListener('click',()=>{selectSection(s.id);setView('tracks');});$('switches').append(button);}
+ if(!$('switches').children.length)$('switches').append(el('p','note','No hip-hop changes in these notes.'));
+}
+function initialize(){
+ populate();
+ $('section-select').addEventListener('change',()=>{selectSection(Number($('section-select').value));if(matchMedia('(max-width:850px)').matches)setView('tracks');});
+ $('party-tab').addEventListener('click',()=>setView('party'));$('tracks-tab').addEventListener('click',()=>setView('tracks'));$('open-tracks').addEventListener('click',()=>{setView('tracks');$('detail-title').scrollIntoView({block:'nearest'});});
+ $('search').addEventListener('input',()=>{state.query=$('search').value;render();});$('genre').addEventListener('change',()=>{state.genre=$('genre').value;render();});for(const b of document.querySelectorAll('[data-filter]'))b.addEventListener('click',()=>{state[b.dataset.filter]=!state[b.dataset.filter];render();});$('reset').addEventListener('click',()=>selectSection(state.selected));$('prev').addEventListener('click',()=>{if(state.selected>0)selectSection(state.selected-1);});$('next').addEventListener('click',()=>{if(state.selected<model.sections.length-1)selectSection(state.selected+1);});
+ $('import-open').addEventListener('click',()=>{$('import-error').textContent='';$('import-dialog').showModal();});$('import-cancel').addEventListener('click',()=>$('import-dialog').close());
+ $('import-file').addEventListener('change',async()=>{const file=$('import-file').files[0];if(!file)return;if(file.size>500000){$('import-error').textContent='Choose a text file smaller than 500 KB.';return;}try{$('import-text').value=await file.text();$('import-error').textContent='';}catch{$('import-error').textContent='Could not read the file. Try pasting the notes.';}});
+ $('import-use').addEventListener('click',()=>{const raw=$('import-text').value.trim();if(raw.length>500000){$('import-error').textContent='Keep your notes under 500,000 characters.';return;}const imported=parseNotes(raw);if(!imported.tracks.length){$('import-error').textContent='Add at least one track name to your notes.';return;}currentRaw=raw;model=imported;loadCorrections();let stored=true;try{localStorage.setItem('party-map-imported-notes',raw);}catch{stored=false;}state.selected=0;populate();selectSection(0);setView('party');$('switch-panel').open=false;$('import-dialog').close();notify(`Imported ${model.tracks.length} tracks.${stored?' Saved on this browser.':' Available for this session.'}`);});
+ let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(renderMap,100);});render();
+}
+initialize();
+</script>
+</body>
+</html>

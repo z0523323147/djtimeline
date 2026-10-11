@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DJ Set Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09060f;--panel:#140f1f;--panel2:#1b1530;--line:#2a2340;--txt:#ece9f5;--mut:#8d87a6;--pink:#ff2bd6;--amber:#ffb020;--cyan:#25e3ff;--lime:#aef23e;--red:#ff4f63}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(900px 500px at 8% -12%,#2a0f46 0,transparent 60%),radial-gradient(820px 480px at 102% -4%,#032736 0,transparent 55%),var(--bg);background-attachment:fixed;color:var(--txt);font:15px/1.45 Inter,system-ui,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+header{max-width:920px;margin:auto;padding:28px 16px 10px}
+h1{font:800 clamp(24px,5.5vw,38px)/1.05 Unbounded,sans-serif;letter-spacing:-.03em;background:linear-gradient(90deg,var(--pink),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);margin-top:6px;font-size:13px}
+
+/* ---------- skyline (macro) ---------- */
+.sky-wrap{max-width:920px;margin:14px auto 0;padding:0 16px}
+.sky{display:flex;align-items:flex-end;gap:3px;height:120px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 8px 0;overflow-x:auto}
+.col{display:flex;flex-direction:column-reverse;flex:1 1 0;min-width:7px;height:100%;border-radius:3px 3px 0 0;overflow:hidden;cursor:pointer;background:transparent;border:0;padding:0;position:relative}
+.col:hover,.col:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
+.col.dim{opacity:.22}
+.seg{width:100%;background:hsl(var(--h) 72% 54%)}
+.flare{position:absolute;inset:0;box-shadow:inset 0 0 0 2px var(--amber),0 0 10px rgba(255,176,32,.7);border-radius:3px 3px 0 0;pointer-events:none}
+.sky-axis{display:flex;justify-content:space-between;color:var(--mut);font-size:11px;margin-top:6px;padding:0 2px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:10px 2px 0;font-size:12px;color:var(--mut)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:9px;height:9px;border-radius:50%;background:hsl(var(--h) 72% 54%);display:inline-block}
+
+/* ---------- controls ---------- */
+.bar{position:sticky;top:0;z-index:10;background:rgba(9,6,15,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 16px;margin-top:16px}
+.bar>div{max-width:920px;margin:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input,select,button{font:inherit;color:var(--txt);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
+input{flex:1 1 200px}
+select{flex:1 1 140px;max-width:220px}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button{cursor:pointer}
+.f{--c:var(--cyan);display:inline-flex;gap:6px;align-items:center;white-space:nowrap}
+.f small{color:var(--mut);font-size:12px}
+.f[aria-pressed=true]{border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--panel));box-shadow:0 0 14px color-mix(in srgb,var(--c) 40%,transparent)}
+.f[aria-pressed=true] small{color:var(--txt)}
+#reset,#toggleAll{background:none;border-color:transparent;color:var(--mut)}
+#reset:hover,#toggleAll:hover{color:var(--txt)}
+#count{width:100%;font-size:12px;color:var(--mut)}
+
+/* ---------- accordion (micro) ---------- */
+main{max-width:920px;margin:auto;padding:16px 16px 90px}
+.block{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-bottom:8px;overflow:hidden;scroll-margin-top:72px}
+.bhead{width:100%;display:flex;align-items:center;gap:12px;padding:13px 14px;background:none;border:0;border-radius:0;color:var(--txt);text-align:left;cursor:pointer}
+.bhead .time{font:800 17px Unbounded,sans-serif;letter-spacing:-.02em;color:var(--pink);min-width:62px}
+.bhead .binfo{color:var(--mut);font-size:12.5px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bhead .binfo b{color:var(--txt);font-weight:600}
+.chev{color:var(--mut);transition:transform .2s;flex:none}
+.block.open .chev{transform:rotate(90deg);color:var(--cyan)}
+.bodywrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .22s ease}
+.block.open .bodywrap{grid-template-rows:1fr}
+.bodyin{overflow:hidden}
+.bodyin>div{padding:0 14px 14px}
+.gh{display:flex;align-items:center;gap:8px;margin:12px 0 6px;font-weight:600;font-size:12.5px;color:hsl(var(--h) 100% 74%)}
+.gh:first-child{margin-top:4px}
+.gh::before{content:"";width:7px;height:7px;border-radius:50%;background:hsl(var(--h) 72% 58%);box-shadow:0 0 8px hsl(var(--h) 72% 58%)}
+.trk{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;background:var(--panel2);border:1px solid var(--line);border-left:3px solid hsl(var(--h) 72% 54%);border-radius:8px;padding:8px 8px 8px 11px;margin-top:5px}
+.trk.peak{border-color:rgba(255,176,32,.45);border-left-color:var(--amber);box-shadow:0 0 16px rgba(255,176,32,.14)}
+.trk.bad .name{opacity:.5}
+.row{display:flex;align-items:center;gap:8px;flex:1 1 220px;min-width:0}
+.name{flex:1;min-width:0;overflow-wrap:anywhere;unicode-bidi:plaintext;text-align:start;border-radius:5px;padding:2px 5px;outline-offset:1px}
+.name:hover{background:rgba(255,255,255,.04)}
+.name:focus{outline:2px solid var(--cyan);background:rgba(255,255,255,.04)}
+.edited::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--cyan);display:inline-block;margin-inline-start:6px;vertical-align:middle}
+.copy{flex:none;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;background:transparent;border:1px solid var(--line);color:var(--mut)}
+.copy:hover{color:var(--txt);border-color:var(--cyan)}
+.copy.ok{color:var(--lime);border-color:var(--lime)}
+.copy svg{width:14px;height:14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.b{display:inline-flex;gap:5px;align-items:center;border:1px solid;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.b.peak{color:var(--amber);border-color:rgba(255,176,32,.5);background:rgba(255,176,32,.1)}
+.b.lib{color:var(--lime);border-color:rgba(174,242,62,.45);background:rgba(174,242,62,.08)}
+.b.bad{color:var(--red);border-color:rgba(255,79,99,.5);background:rgba(255,79,99,.1)}
+.empty{text-align:center;color:var(--mut);padding:50px 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){.bar{padding:8px 12px}.f{flex:1 1 auto;justify-content:center}select{max-width:none}.sky{height:92px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>DJ set timeline</h1>
+  <p class="sub" id="meta"></p>
+</header>
+
+<div class="sky-wrap">
+  <div class="sky" id="sky" role="group" aria-label="Set overview, click a column to jump to that time"></div>
+  <div class="sky-axis" id="skyAxis"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="bar"><div>
+  <input id="q" type="search" placeholder="Search tracks" aria-label="Search tracks">
+  <select id="g" aria-label="Filter by genre"></select>
+  <button class="f" id="fLib" data-k="lib" style="--c:var(--lime)" aria-pressed="false">💾 Library <small></small></button>
+  <button class="f" id="fPeak" data-k="peak" style="--c:var(--amber)" aria-pressed="false">🔥 Peak <small></small></button>
+  <button class="f" id="fBad" data-k="bad" style="--c:var(--red)" aria-pressed="false">👎 Bad <small></small></button>
+  <button id="toggleAll" type="button">Expand all</button>
+  <button id="reset" type="button">Clear</button>
+  <div id="count" aria-live="polite"></div>
+</div></div>
+
+<main id="out"></main>
+
+<script type="text/plain" id="raw">
+12:30
+Shakira beautiful life 116 bpm
+They not like us 116 bpm
+Tony dark eyes - no body
+Cat dealers - snoop
+dj joga - mi Chicko ---
+Nico de andrea - etnica x mi amore
+12:50
+(Melodic house afro tech)
+Асфальт
+Зима в сердце
+Moscow never sleep
+Грустный денс (afro rech)
+Dj dark - alabina ---
+Toko maya - la sonora
+Inache - andale agasi asparyan
+Freed from desire xtm remix
+1:01
+(Afro tech)
+Карабли ---
+Artic asti гармония x bam bam (לא בם בם של סולטו) ---
+Айдахар
+Салют вера 
+Justin beenr - beauty and a beat
+Eminem - without me remix
+Pitbul blanko remix
+Hot in here maximum risk
+Шелк
+1:16
+Xcho - темная ночь
+Hugel - stay sexy
+1:23
+(Edm)
+Omer adam
+Memories remix
+
+(Afro tech)
+Худи
+bad bunny - nevauol
+Экспонат (x hotell remix)
+1:30
+(House)
+Owek fargo он тебя целует
+Люся чеботина - по барабану ---
+Gaz x we found love
+
+(Edm)
+Spacho & lamur - make u x lior narkis shagaat ---
+Nosa nosa x yama
+dj lindao - Motel de motor
+1:40
+Zarica
+Снова я напиваюсь x argy siera
+Gimme gimme x он тебя целует
+Bmw שחורה tomer shteyman אתניקס
+One more time
+I adore you argy x mor avraami
+1:50
+(Hip hop)
+Te bote
+עומר אדם - ראיתי עולם
+Ido shoam - sha la la ---
+Тимоти - баклажан ---
+5sta familly - зачем
+Single ladies X shape of you
+That way - backstreet boys ---
+1:57
+(House)
+J bavlon - in da getto House remix
+Goldbaum - havhavhav
+
+(Tribal)
+Восточные сказки x majnuna hugel
+Сияй 
+
+(Edm)
+Monaco
+2:07
+Nicky minaj - starship toby nize
+אודיה 10 רמות מעליו
+Sandstorm zans remix
+(Hip hop) 
+Dansa kuduro
+2:15
+(Edm) הפגזות
+Камин remix ---
+solto - Bam bam
+volkoder - Unique moment
+carsen - crank that (solja boy supermen)
+2:24
+(Hip hop)
+שחר סאול דובשניה
+כך זה אופק אדנק x shake it to the max ---
+Yeah
+Macarena
+Malrboro
+2:30
+(House)
+5sta familly - я буду
+Artic asti - лампочки
+I got love
+(Dance) הפגזות
+Osher cohen - שונא את תל אביב x darco we we we
+Hugel movin to the sun
+2:40
+Франциский поцелуй ---
+Amanda
+Osher cohen - מנגן ושר
+Bittuev - Как быть ---
+Rhytm of the night remix
+Салют вера x adriatique racer ---
+Харизма גרסה edm 
+
+(Hip hop)
+
+גל מלכה - בא לה לרקוד ---
+2:50
+Gasolina
+Gyal you a party animal feat daddy yanki ---
+סטאטיק ובנאל רונדלים ---
+החוף של טרמפלטוני ---
+Husband x beyonse crazy in love ---
+Шаде
+3:00
+(Afro tech) 
+Асфальт
+הפגזות
+Baiana x Красиво afro tech ---
+Моргенштер - последняя любовь ---
+топит dj rem remix ---
+3:10
+רולקס וקסקט ---
+Kenobix - head voice
+(Tribal dance)
+Who let the dogs out
+(Hip hop)
+3:17
+Christina aguilera - Jinie in a botle 
+Kazka - plakala
+אדנק טן טן טן ---
+נתנאל דהן - מלכת הקרח --
+Slim shady
+Я ухожу красиво
+Ritmo 
+3:25
+Тимоти - в клубе ---
+Jony - kometa ---
+Fatman scoop - be haitfull x magenta riddm ---
+(Edm) הפגזות
+3:31
+Asher swisa mor avraaminim in
+Я танцую до утра x el sonida shorty ---
+Satisfaction
+כולם גנבים
+Beni al ---
+Si ai ///
+Винтаж - эва x hills ///
+3:40
+(House/ dance)
+По весне ---
+Добро - Юность x fire fire dance remix ---
+השם יתברך תמיד אוהב אותי ---
+Argy - anima x love tonight ---
+3:45
+Space motion - alarma 
+Jedry cohen - hayde ---
+3:49
+(Tribal house)
+Suavemente ---
+stephanie
+(Indie dance)
+morinio - eonovyal ---
+(Tech house)
+Ben adam patumba
+trfn- Milkshake ---
+Darco - baziman ---
+3:56
+Sweet dreams x all i need a love tonight ---
+Max steeler- love tonight ---
+Rasa - marimba ---
+4:00
+(Hip hop)
+Me pregunto
+</script>
+
+<script>
+const PEAK = 'הפגזות';
+const LIB_RE = () => /(^|\s)-{2,}(?=\s|$)/g;
+const BAD_RE = () => /\/{3,}/g;
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const COPY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function normGenre(g) {
+  g = g.trim().replace(/\s*\/\s*/g, '/').replace(/\s+/g, ' ').toLowerCase();
+  return g === 'edm' ? 'EDM' : g.charAt(0).toUpperCase() + g.slice(1);
+}
+
+/* raw text -> flat track list, tagged with a stable id for persistence */
+function parse(raw) {
+  const tracks = [];
+  let time = '', genre = 'No genre noted', peakRun = false, blockIdx = -1, lastTime = null;
+  for (let line of raw.split(/\r?\n/)) {
+    line = line.trim();
+    if (!line) continue;
+    if (/^\d{1,2}:\d{2}$/.test(line)) { time = line; if (time !== lastTime) { blockIdx++; lastTime = time; } continue; }
+    const gm = line.match(/^\(([^)]+)\)\s*(.*)$/);
+    if (gm) { genre = normGenre(gm[1]); peakRun = gm[2].includes(PEAK); continue; }
+    if (line === PEAK) { peakRun = true; continue; }
+    let peak = peakRun;
+    if (line.includes(PEAK)) { peak = true; line = line.replace(PEAK, ' '); }
+    const lib = LIB_RE().test(line);
+    const bad = BAD_RE().test(line);
+    const name = line.replace(LIB_RE(), ' ').replace(BAD_RE(), ' ').replace(/\s+/g, ' ').trim();
+    if (!name) continue;
+    const id = 't' + blockIdx + '_' + tracks.filter(t => t.time === time).length;
+    tracks.push({ id, time, genre, name, orig: name, peak, lib, bad });
+  }
+  return tracks;
+}
+
+const tracks = parse($('raw').textContent);
+const times = [...new Set(tracks.map(t => t.time))];
+const genres = [...new Set(tracks.map(t => t.genre))];
+const HUES = [320, 190, 95, 40, 265, 5, 160, 215, 345, 70];
+const hue = g => HUES[genres.indexOf(g) % HUES.length];
+const active = { lib: false, peak: false, bad: false };
+const openTimes = new Set();
+
+/* restore saved edits */
+let edits = {};
+try { edits = JSON.parse(localStorage.getItem('dj-timeline-edits') || '{}'); } catch (e) { edits = {}; }
+tracks.forEach(t => { if (edits[t.id] !== undefined) t.name = edits[t.id]; });
+function saveEdit(id, name) {
+  edits[id] = name;
+  try { localStorage.setItem('dj-timeline-edits', JSON.stringify(edits)); } catch (e) {}
+}
+
+/* blocks: tracks grouped by time, each with its genre sub-groups */
+const blocks = times.map(time => {
+  const bt = tracks.filter(t => t.time === time);
+  const groups = [];
+  for (const t of bt) {
+    const last = groups[groups.length - 1];
+    if (last && last.genre === t.genre) last.count++; else groups.push({ genre: t.genre, count: 1 });
+  }
+  return { time, tracks: bt, groups, peak: bt.some(t => t.peak) };
+});
+const maxCount = Math.max(...blocks.map(b => b.tracks.length));
+
+/* ---------- static chrome ---------- */
+$('meta').textContent = `${tracks.length} tracks · ${times[0]}–${times[times.length - 1]} · ${genres.length} genres`;
+$('g').innerHTML = '<option value="">All genres</option>' + genres.map(gg =>
+  `<option value="${esc(gg)}">${esc(gg)} (${tracks.filter(t => t.genre === gg).length})</option>`).join('');
+document.querySelectorAll('.f').forEach(b => {
+  b.querySelector('small').textContent = tracks.filter(t => t[b.dataset.k]).length;
+  b.onclick = () => { active[b.dataset.k] = !active[b.dataset.k]; b.setAttribute('aria-pressed', active[b.dataset.k]); render(); };
+});
+$('legend').innerHTML = genres.map(gg => `<span style="--h:${hue(gg)}"><i></i>${esc(gg)}</span>`).join('');
+$('q').oninput = $('g').onchange = render;
+$('reset').onclick = () => {
+  $('q').value = ''; $('g').value = '';
+  document.querySelectorAll('.f').forEach(b => { active[b.dataset.k] = false; b.setAttribute('aria-pressed', false); });
+  render();
+};
+$('toggleAll').onclick = () => {
+  if (openTimes.size === times.length) openTimes.clear(); else times.forEach(t => openTimes.add(t));
+  render();
+};
+
+/* skyline: one column per block, stacked by genre group, flame glow if peak present */
+$('sky').innerHTML = blocks.map((b) => {
+  const h = Math.max(10, (b.tracks.length / maxCount) * 100);
+  const segs = b.groups.map(gr => `<span class="seg" style="--h:${hue(gr.genre)};flex:${gr.count} 0 0" title="${esc(gr.genre)} · ${gr.count}"></span>`).join('');
+  return `<button type="button" class="col" data-time="${esc(b.time)}" style="height:${h}%" title="${esc(b.time)} · ${b.tracks.length} tracks">${segs}${b.peak ? '<span class="flare"></span>' : ''}</button>`;
+}).join('');
+$('skyAxis').innerHTML = `<span>${esc(times[0])}</span><span>${esc(times[times.length - 1])}</span>`;
+document.querySelectorAll('.col').forEach(c => c.onclick = () => {
+  const t = c.dataset.time;
+  openTimes.add(t);
+  render();
+  document.querySelector(`.block[data-time="${CSS.escape(t)}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+/* ---------- copy ---------- */
+function copyText(text, btn) {
+  const done = () => { btn.classList.add('ok'); btn.innerHTML = CHECK_SVG; setTimeout(() => { btn.classList.remove('ok'); btn.innerHTML = COPY_SVG; }, 1100); };
+  if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done)); }
+  else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function badges(t) {
+  return (t.peak ? '<span class="b peak">🔥 Peak</span>' : '') +
+         (t.lib ? '<span class="b lib">💾 Library</span>' : '') +
+         (t.bad ? '<span class="b bad">👎 Bad</span>' : '');
+}
+
+/* ---------- render accordion ---------- */
+function render() {
+  const q = $('q').value.trim().toLowerCase(), g = $('g').value;
+  const on = Object.keys(active).filter(k => active[k]);
+  const filtering = !!(q || g || on.length);
+  const matches = t => (!g || t.genre === g) && (!q || t.name.toLowerCase().includes(q)) && (!on.length || on.some(k => t[k]));
+
+  let html = '';
+  for (const b of blocks) {
+    const matched = b.tracks.filter(matches);
+    const isOpen = filtering ? matched.length > 0 : openTimes.has(b.time);
+    const shownTracks = filtering ? matched : b.tracks;
+    const genreList = [...new Set(b.groups.map(x => x.genre))].join(', ');
+    html += `<section class="block${isOpen ? ' open' : ''}" data-time="${esc(b.time)}">
+      <button class="bhead" aria-expanded="${isOpen}" data-h="${esc(b.time)}">
+        <span class="time">${esc(b.time)}</span>
+        <span class="binfo"><b>${b.tracks.length} track${b.tracks.length > 1 ? 's' : ''}</b> · ${esc(genreList)}</span>
+        <span class="chev">▸</span>
+      </button>
+      <div class="bodywrap"><div class="bodyin"><div>`;
+    let last = null;
+    for (const t of shownTracks) {
+      if (t.genre !== last) { html += `<div class="gh" style="--h:${hue(t.genre)}">${esc(t.genre)}</div>`; last = t.genre; }
+      html += `<article class="trk${t.peak ? ' peak' : ''}${t.bad ? ' bad' : ''}" style="--h:${hue(t.genre)}" data-id="${t.id}">
+        <span class="row">
+          <span class="name${t.name !== t.orig ? ' edited' : ''}" dir="auto" contenteditable="true" spellcheck="false" data-id="${t.id}">${esc(t.name)}</span>
+          <button class="copy" type="button" title="Copy track name" aria-label="Copy track name">${COPY_SVG}</button>
+        </span>
+        <span class="tags">${badges(t)}</span>
+      </article>`;
+    }
+    html += (shownTracks.length ? '' : '<p class="empty" style="padding:14px 0">No tracks match.</p>') + `</div></div></div></section>`;
+  }
+  $('out').innerHTML = html;
+
+  document.querySelectorAll('.bhead').forEach(h => h.onclick = () => {
+    const t = h.dataset.h;
+    openTimes.has(t) ? openTimes.delete(t) : openTimes.add(t);
+    render();
+  });
+  document.querySelectorAll('.col').forEach(c => c.classList.toggle('dim', filtering && !blocks.find(b => b.time === c.dataset.time).tracks.some(matches)));
+  document.querySelectorAll('.copy').forEach(btn => btn.onclick = () => {
+    const nameEl = btn.previousElementSibling;
+    copyText(nameEl.textContent.trim(), btn);
+  });
+  document.querySelectorAll('.name[contenteditable]').forEach(el => {
+    el.addEventListener('input', () => {
+      const t = tracks.find(x => x.id === el.dataset.id);
+      t.name = el.textContent.trim();
+      el.classList.toggle('edited', t.name !== t.orig);
+      saveEdit(t.id, t.name);
+    });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+  });
+  const totalShown = filtering ? blocks.reduce((n, b) => n + b.tracks.filter(matches).length, 0) : tracks.length;
+  $('count').textContent = filtering ? `Showing ${totalShown} of ${tracks.length} tracks` : `${tracks.length} tracks · click a time to open it, or click a skyline bar`;
+  $('toggleAll').textContent = openTimes.size === times.length ? 'Collapse all' : 'Expand all';
+}
+render();
+</script>
+</body>
+</html>
