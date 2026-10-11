@@ -10,7 +10,7 @@ Show the whole party first, then let the DJ inspect a genre section. Keep hip-ho
 
 E7-S1–S4, E1-S1–S2, and E5-S1 are implemented and locally verified. The application source is now `src/`; the old standalone HTML files are preserved baselines. Both outputs use the same Svelte root, parser, data, styles, state, and browser adapters.
 
-Validation: 15 Node tests, 42 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
+Validation: 16 Node tests, 48 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
 
 ## Architecture — Astro routes, Svelte views
 
@@ -55,12 +55,12 @@ Adapt Linear's aligned panels, quiet surfaces, clear hierarchy, and restrained c
 - Define spacing, type, radii, surface, accent, and focus tokens consistently.
 - Align pane headers, filters, and track actions; keep track names at least 16px and controls at least 44px tall.
 - Keep pink hip-hop and amber peaks meaningful, with text/accessibility labels alongside color.
-- Keep a full-width timeline above a generous track list; use horizontal panning on narrow screens.
+- Keep a full-width timeline above a generous track list; wrap genre buttons on narrow screens.
 - Keep row actions directly accessible on touch devices, with predictable keyboard focus.
 - Use plain copy for uncertain times, local saving, and import replacement.
 - Honor reduced motion and validate enlarged text and short viewports.
 
-The foundation preserves the accepted palette/layout and extracts color tokens. E8-S1 remains Todo because the full visual token/refinement and enlarged-text review are not yet complete.
+The foundation and E9 preserve the accepted palette/layout and use shared color tokens. E8-S1 remains Todo because the full visual token/refinement and enlarged-text review are not yet complete.
 
 ## Data decisions
 
@@ -68,9 +68,9 @@ Time and genre persist until replaced. Only a whole-line genre declaration chang
 
 No chart estimate becomes an exact source timestamp. Final sections use an explicit end marker without invented duration; untimed and repeated markers remain browsable. Every brief section also has a full-size button alternative without overlapping chart targets or stretching durations.
 
-The clickable timeline is the main navigation. A compact whole-party strip stays above the labeled bars. One collapsed section/time jump list provides larger alternatives. Selection brightens the bar with a luminous outline; the previous black underline is removed.
+The clickable timeline is the main navigation. A compact whole-party strip stays above the labeled bars. Every section is a large button; one collapsed recorded-time list provides exact-source jumps. Selection brightens the bar with a luminous outline; the previous black underline is removed.
 
-The timeline has one presentation: no Genre details mode or Party/Tracks tabs. Time scopes adapt to fit names and change times inside every bar. Each row includes an estimated ruler with regular five- or ten-minute marks and both endpoints. A bounded scroll region keeps the track area nearby. Phones pan the timeline horizontally rather than shrinking the labels. Diagram placement stays approximate; uncertain changes retain the source range. The 4:00 Hip hop cap has no invented ending time.
+The timeline has one presentation: no Genre details mode or Party/Tracks tabs. One proportional overview owns the time ruler and all hip-hop switch labels. A chronological genre sequence wraps full-name buttons beneath it. The timeline has no internal scrolling; larger sets extend normal page flow. Genre button widths express label space, while the selected interval remains proportional in the overview. The 4:00 Hip hop marker has no invented ending time.
 
 Imports and corrections are untrusted text. Keep copy and Google search tied to the current title. Storage is scoped to the browser/origin, with session-only feedback when unavailable; legacy data remains compatible on the same origin.
 
@@ -82,13 +82,13 @@ Imports and corrections are untrusted text. Keep copy and Google search tied to 
 - M3: Corrected-note export, import preview, restore example, and expanded persistence coverage — remaining.
 - M4: Multiple named sets — optional, validate demand before implementation.
 
-Next execution order: E9-S1 → E9-S2 → E9-S3 → E9-S4 → E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1. Finish and verify each story's acceptance criteria before marking it Done.
+Completed next UI iteration: E9-S1–S4. Remaining execution order: E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1. Finish and verify each story's acceptance criteria before marking it Done.
 
 Design review: Linear’s homepage and product examples (https://linear.app/) informed the neutral dark surfaces, restrained borders, clear hierarchy, quiet row actions, and selected-state emphasis. This is a local adaptation for DJ preparation.
 
 ## Next UI strategy — compact complete party timeline
 
-Status: researched proposal, 2026-10-11. This section supersedes the bounded scrolling/panning layout above for the next iteration. No new UI implementation or dependency installation is included in this planning change. Execution is tracked in E9 in backlog.md.
+Status: implemented and locally verified, 2026-10-11. E9-S1–S4 are Done. Three desktop genre rows and seven phone rows preserve all 26 sections; every hip-hop change is visible. No dependency was added. See docs/verification.md and docs/timeline-layout-metrics.json for prototype measurements and limits.
 
 ### Outcome
 
@@ -158,4 +158,4 @@ Place switch labels in compact lanes above/below the overview. Measure rendered 
 
 **E9-S3:** Add the proportional overview ruler, all eleven hip-hop boundary annotations, uncertainty intervals, terminal marker, and shared selection highlighting.
 
-**E9-S4:** Validate both builds and the no-scroll/complete-label constraints, update screenshots/docs, and push the finished implementation. No dependency is adopted without the recorded spike result. Keep statuses Todo until the implementation and acceptance checks pass.
+**E9-S4:** Validate both builds and the no-scroll/complete-label constraints, update screenshots/docs, and push the finished implementation. No dependency is adopted without the recorded spike result. Completed: the implementation and acceptance checks pass; statuses and evidence are updated.

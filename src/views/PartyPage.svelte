@@ -1,82 +1,79 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { Model } from '../lib/parser';
-  import { boundary, changeTime, clock, color, genreBands, isHip, overviewRuns, peakRuns } from '../lib/timeline';
+  import { annotationLanes, boundary, clock, color, hipChanges, isHip, overviewRuns, peakRuns, position } from '../lib/timeline';
   export let model: Model;
   export let selected: number;
   export let active: boolean;
   export let select: (id: number, trackId?: number) => void;
-  let mapWidth = 1100;
-  $: diagramWidth = Math.max(1000, mapWidth - 16);
-  $: terminal = model.sections.filter(s => s.start === s.end);
-  $: rows = genreBands(model, diagramWidth - 140);
-  $: chartRows = rows.length ? rows : terminal.length ? [{ start: terminal[0].start, end: terminal[0].start }] : [];
-  $: flow = overviewRuns(model);
-  $: peaks = peakRuns(model);
+  let mapWidth = 1000;
+  let measure: ((text: string) => number) | undefined;
+  onMount(() => {
+    const context = document.createElement('canvas').getContext('2d');
+    if (context) {
+      context.font = '12px system-ui, sans-serif';
+      measure = text => context.measureText(text).width + 4;
+    }
+  });
+  $: width = Math.max(100, mapWidth - 12);
   $: start = model.blocks[0]?.start ?? 0;
   $: end = model.blocks.at(-1)?.start ?? start;
-  const x = (time: number, from: number, to: number, width: number) => to > from ? (time - from) / (to - from) * width : 0;
-  function ruler(from: number, to: number, width: number) {
-    if (to <= from) return [from];
-    const step = (to - from) / width * 72 <= 5 ? 5 : 10;
-    const interior = Array.from({ length: Math.max(0, Math.ceil(to / step) - Math.floor(from / step) - 1) }, (_, i) => (Math.floor(from / step) + i + 1) * step).filter(t => t > from && t < to && x(t, from, to, width) > 48 && width - x(t, from, to, width) > 48);
-    return [from, ...interior, to];
-  }
+  $: flow = overviewRuns(model);
+  $: peaks = peakRuns(model);
+  $: changes = hipChanges(model);
+  $: annotations = annotationLanes(changes.map(c => ({ anchor: position(c.section.start, start, end, width), width: measure ? measure(c.label) : c.label.length * 8 })), width);
+  $: lanes = Math.max(0, ...annotations.map(a => a.lane + 1));
+  $: chartHeight = 54 + lanes * 24;
+  $: step = width < 600 ? 60 : 30;
+  $: ticks = [start, ...Array.from({ length: Math.max(0, Math.ceil(end / 10) - Math.floor(start / 10) - 1) }, (_, i) => (Math.floor(start / 10) + i + 1) * 10).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
+  $: current = !active ? model.sections.find(s => s.id === selected) : undefined;
 </script>
 <section class="overview" aria-labelledby="overview-heading">
   <div class="timeline-head">
-    <div><h2 id="overview-heading">Party timeline</h2><p class="hint">Choose a genre section to see its tracks below.</p></div>
+    <h2 id="overview-heading">Party timeline</h2>
     <div class="legend" aria-label="Genre colors"><span><i class="dot" style="--color:var(--cyan)"></i>Other genres</span><span><i class="dot" style="--color:var(--hip)"></i>Hip-hop</span><span><i class="dot" style="--color:var(--fire)"></i>Peak</span></div>
   </div>
-  <div class="party-summary" aria-label="Whole-party overview">
-    <span>{clock(start)}</span><div class="summary-flow">
-      {#each flow as run}<span style={`flex:${run.end-run.start};background:${color(run.genre)}`}></span>{/each}
-      {#each terminal as s}<span class="summary-end" style={`background:${color(s.genre)}`} title={`${s.genre} · ${boundary(s)} · ending not noted`}></span>{/each}
-    </div><span>{clock(end)} →</span>
-  </div>
-  <!-- svelte-ignore a11y_no_noninteractive_tabindex (Keyboard users need to focus the scroll region to pan the timeline.) -->
-  <div class="timeline-scroll" role="region" tabindex="0" aria-label="Genre timeline. Scroll horizontally on smaller screens.">
-    <div id="map" bind:clientWidth={mapWidth}>
-      {#each chartRows as band, rowIndex}
-        {@const endings = rowIndex === chartRows.length - 1 ? terminal : []}
-        {@const capWidth = endings.length ? Math.min(140, diagramWidth / endings.length) : 0}
-        {@const flowWidth = band.end > band.start ? diagramWidth - endings.length * capWidth : 0}
-        <div class="map-row">
-          <svg viewBox={`-8 0 ${diagramWidth + 16} 78`} preserveAspectRatio="none" role="group" aria-label={`Estimated party flow from ${clock(band.start)} to ${clock(band.end)}`}>
-            {#each ruler(band.start, band.end, flowWidth) as time}
-              {@const pos = x(time, band.start, band.end, flowWidth)}
-              <line class="ruler-line" x1={pos} x2={pos} y1="23" y2="72" />
-              <text class="tick" x={pos} y="15" text-anchor={time === band.start ? 'start' : time === band.end ? 'end' : 'middle'}>{clock(time)}</text>
-            {/each}
-            {#each model.sections.filter(s => s.end > band.start && s.start < band.end) as s}
-              {@const left = x(s.start, band.start, band.end, flowWidth)}
-              {@const width = Math.max(2, x(s.end, band.start, band.end, flowWidth) - left)}
-              <g class="segment" class:lit={!active && selected === s.id} role="button" tabindex="0" aria-label={`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`} aria-pressed={!active && selected === s.id} onclick={() => select(s.id)} onkeydown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(s.id); } }}>
-                <title>{s.genre} · {boundary(s)} · Open tracks</title>
-                <rect class="genre-fill" x={left + 2} y="27" width={Math.max(0,width-4)} height="44" rx="5" fill={color(s.genre)} />
-                <text class="map-label" x={left+10} y="45">{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>
-                <text class="map-label change-time" x={left+10} y="62">{changeTime(s)}</text>
-              </g>
-            {/each}
-            {#each peaks.filter(p => p.end > band.start && p.start < band.end) as p}
-              <rect x={x(Math.max(p.start,band.start),band.start,band.end,flowWidth)} y="74" width={Math.max(2,x(Math.min(p.end,band.end),band.start,band.end,flowWidth)-x(Math.max(p.start,band.start),band.start,band.end,flowWidth))} height="3" rx="1" fill="var(--fire)" />
-            {/each}
-            {#each endings as s, index}
-              {@const left = flowWidth + index * capWidth}
-              <g class="segment terminal-section" class:lit={!active && selected === s.id} role="button" tabindex="0" aria-label={`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`} aria-pressed={!active && selected === s.id} onclick={() => select(s.id)} onkeydown={e => { if(e.key === 'Enter' || e.key === ' ') {e.preventDefault();select(s.id);} }}>
-                <title>{s.genre} · {boundary(s)} · End time not noted</title>
-                <rect class="genre-fill" x={left+2} y="27" width={capWidth-4} height="44" rx="5" fill={color(s.genre)} />
-                <text class="map-label" x={left+10} y="45">{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>
-                <text class="map-label change-time" x={left+10} y="62">{changeTime(s)} →</text>
-              </g>
-            {/each}
-          </svg>
-        </div>
+  <div class="party-summary" bind:clientWidth={mapWidth}>
+    <svg viewBox={`-6 0 ${width + 12} ${chartHeight}`} style={`height:${chartHeight}px`} role="img" aria-label={`Estimated whole-party time scale, ${model.blocks[0]?.time ?? 'Time not noted'} to ${model.blocks.at(-1)?.time ?? 'Time not noted'}. ${changes.map(c => `${c.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(c.section)}`).join('; ')}. Ending not recorded.`}>
+      {#each ticks as time}
+        {@const x = position(time, start, end, width)}
+        {@const labeled = time === start || time === end || time % step === 0 && x > 55 && width - x > 55 && !changes.some(c => c.section.exact && c.section.start === time)}
+        <line class="ruler-line" x1={x} x2={x} y1="21" y2={labeled ? 28 : 25} />
+        {#if labeled}<text class="tick" x={x} y="13" text-anchor={time === start ? 'start' : time === end ? 'end' : 'middle'}>{time === start && model.blocks[0]?.time === 'Unscheduled' ? 'Time not noted' : clock(time)}</text>{/if}
       {/each}
-    </div>
+      {#each flow as run}
+        <rect x={position(run.start,start,end,width)} y="29" width={position(run.end,start,end,width)-position(run.start,start,end,width)} height="12" fill={color(run.genre)} opacity=".65" />
+      {/each}
+      {#each peaks as peak}
+        <rect x={position(peak.start,start,end,width)} y="43" width={Math.max(2,position(peak.end,start,end,width)-position(peak.start,start,end,width))} height="3" fill="var(--fire)" />
+      {/each}
+      {#if current}
+        <rect class="overview-selection" data-selected={current.id} x={Math.max(0,position(current.start,start,end,width)-1)} y="28" width={Math.max(2,position(current.end,start,end,width)-position(current.start,start,end,width))} height="14" rx="2" fill={color(current.genre)} />
+      {/if}
+      {#each changes as change, i}
+        {@const a = annotations[i]}
+        {@const anchor = position(change.section.start,start,end,width)}
+        <g class="hip-change" data-entering={change.entering} aria-label={`${change.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(change.section)}`}>
+          <title>{change.entering ? 'Into' : 'Out of'} hip-hop · {boundary(change.section)}{change.section.start === change.section.end ? ' · ending not noted' : ''}</title>
+          {#if !change.section.exact}
+            <rect class="uncertain-range" x={position(change.section.boundStart,start,end,width)} y="27" width={Math.max(2,position(change.section.boundEnd,start,end,width)-position(change.section.boundStart,start,end,width))} height="16" />
+          {:else}<line class="switch-marker" x1={anchor} x2={anchor} y1="27" y2="46" />{/if}
+          <path class="switch-guide" d={`M${anchor},47 V${52+a.lane*24} L${a.left+a.width/2},${52+a.lane*24}`} />
+          <text class="switch-label" x={a.left} y={68+a.lane*24}>{change.label}</text>
+        </g>
+      {/each}
+      {#if model.sections.some(s => s.end === s.start)}<text class="open-end" x={width} y="39" text-anchor="end"><title>Ending not recorded</title>→</text>{/if}
+    </svg>
   </div>
-  <p class="timeline-note">Estimated time scale · ~ marks a change within a known range · → ending not noted<span class="pan-hint"> · Swipe sideways to explore</span></p>
+  <h3 class="sequence-heading">Genre sequence</h3>
+  <div class="section-buttons" role="group" aria-label="Genre sequence">
+    {#each model.sections as s, index}
+      <button data-section={s.id} class:wide={s.genre.length > 15 || s.genre === 'Unspecified'} class:terminal-section={s.start === s.end} class:lit={!active && selected === s.id} style={`--genre:${color(s.genre)}`} aria-label={`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`} aria-pressed={!active && selected === s.id} title={`${boundary(s)}${s.start === s.end ? ' · ending not noted' : ''}`} onclick={() => select(s.id)}>
+        <span class="ordinal" aria-hidden="true">{index + 1}</span><span class="genre-name" dir="auto">{isHip(s.genre) ? 'Hip-hop' : s.genre}</span>
+      </button>
+    {/each}
+  </div>
   <details><summary>Jump to a section or recorded time</summary>
-    <div class="section-buttons">{#each model.sections as s}<button data-section={s.id} aria-pressed={!active && selected === s.id} onclick={() => select(s.id)}><span>{s.genre}</span><span>{boundary(s)}</span></button>{/each}</div>
     <div class="time-jumps" role="group" aria-label="Every exact time marker from the notes">{#each model.blocks.filter(b => b.tracks.length) as b}<button onclick={() => select(b.tracks[0].sectionId,b.tracks[0].id)}>{b.time}</button>{/each}</div>
   </details>
 </section>

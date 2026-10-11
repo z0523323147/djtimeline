@@ -71,3 +71,20 @@ test('corrections preserve legacy keys and reject malformed stored shapes', () =
   values.set(correctionsKey(raw), 'null');
   assert.throws(() => loadCorrections(storage, raw, m), /Invalid corrections/);
 });
+
+// Protect source evidence separately from approximate diagram placement.
+test('hip-hop changes retain all recorded pairs and uncertain entries', async () => {
+  const { hipChanges, position, annotationLanes } = await import('../src/lib/timeline.ts');
+  const m = parseNotes(readFileSync('src/data/example-notes.txt', 'utf8'));
+  const changes = hipChanges(m);
+  assert.deepEqual(changes.map(c => c.label), ['In 1:50','Out 1:57','In ~2:07–2:15','Out 2:15','In 2:24','Out 2:30','In ~2:40–2:50','Out 3:00','In 3:17','Out 3:31','In 4:00']);
+  assert.equal(changes.filter(c => c.entering).length, 6);
+  assert.equal(changes.at(-1)!.section.start, changes.at(-1)!.section.end);
+  assert.equal(position(855, 750, 960, 1000), 500);
+  assert.equal(position(960, 750, 960, 1000), 1000);
+  const packed = annotationLanes([{anchor:0,width:80},{anchor:20,width:90},{anchor:160,width:50},{anchor:195,width:70}],200);
+  for (const a of packed) {
+    assert.ok(a.left >= 0 && a.left + a.width <= 200);
+    for (const b of packed.filter(b => b !== a && b.lane === a.lane)) assert.ok(a.left + a.width <= b.left || b.left + b.width <= a.left);
+  }
+});

@@ -1,6 +1,6 @@
 # Product backlog
 
-Updated: 2026-10-11. Eight stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, and E8-S3. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-11. Twelve stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S4. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
@@ -364,20 +364,20 @@ AC:
 
 Evidence: docs/verification.md. Wider import-preview, shortcuts, and enlarged-text work remain under the existing Todo stories.
 
-## E9 — Complete compact timeline without internal scrolling · P1 · Todo
+## E9 — Complete compact timeline without internal scrolling · P1 · Done
 
-The 2026-10-11 research strategy in plan.md supersedes E8-S3's bounded-scroll layout. That story remains Done as a historical implemented iteration. These four new stories describe the next iteration; no acceptance criterion is yet claimed as implemented.
+The 2026-10-11 research strategy in plan.md supersedes E8-S3's bounded-scroll layout. That story remains Done as a historical implemented iteration. E9-S1–S4 are implemented and verified. Evidence, measured layout tradeoffs, and library decision are recorded in docs/verification.md.
 
-### E9-S1 — Prove the compact representation and library choice · P1 · Todo
+### E9-S1 — Prove the compact representation and library choice · P1 · Done
 
 As a DJ, I want to see the whole party and every genre without a crowded chart or hidden sections.
 
 Subtasks:
 
-- [ ] E9-S1-T1 · P1: Prototype proportional bars, staggered-label bars, and the recommended proportional overview plus chronological genre sequence with the actual 26 sections.
-- [ ] E9-S1-T2 · P1: Measure full-name fit, row counts, annotation collisions, and 44px hit areas at desktop, phone, and short viewport sizes.
-- [ ] E9-S1-T3 · P1: Compare existing numeric mapping with d3-scale; assess LayerCake, vis-timeline, and ECharts against the documented scope before adding dependencies.
-- [ ] E9-S1-T4 · P1: Record chosen representation, rendered evidence, offline HTML byte count, and the reason for any dependency in docs/verification.md.
+- [x] E9-S1-T1 · P1: Prototype proportional bars, staggered-label bars, and the recommended proportional overview plus chronological genre sequence with the actual 26 sections.
+- [x] E9-S1-T2 · P1: Measure full-name fit, row counts, annotation collisions, and 44px hit areas at desktop, phone, and short viewport sizes.
+- [x] E9-S1-T3 · P1: Compare existing numeric mapping with d3-scale; assess LayerCake, vis-timeline, and ECharts against the documented scope before adding dependencies.
+- [x] E9-S1-T4 · P1: Record chosen representation, rendered evidence, offline HTML byte count, and the reason for any dependency in docs/verification.md.
 
 AC:
 
@@ -386,7 +386,7 @@ AC:
 - The overview stays proportional to elapsed minutes. Genre sequence widths are text-sized and have no attached duration ruler.
 - No performance or bundle-size advantage is claimed without measured evidence. No candidate is adopted solely because it can draw a timeline.
 
-### E9-S2 — Remove chrome and render every genre without scrolling · P1 · Todo
+### E9-S2 — Remove chrome and render every genre without scrolling · P1 · Done
 
 As a DJ, I want the useful timeline content to take the space currently occupied by instructions, repeated rulers, and scrolling controls.
 
@@ -394,10 +394,10 @@ Dependencies: E9-S1.
 
 Subtasks:
 
-- [ ] E9-S2-T1 · P1: Remove the instruction sentence and estimated-scale/swipe footer; align title and legend in one compact normal-size header row.
-- [ ] E9-S2-T2 · P1: Build source-ordered genre buttons with full in-bar names, small ordinals, intrinsic wrapping, and shared selection IDs.
-- [ ] E9-S2-T3 · P1: Remove the 1016px chart minimum, 240px viewport limit, internal overflow, repeated detailed rulers, and obsolete styles.
-- [ ] E9-S2-T4 · P1: Preserve bright selection, keyboard focus, mixed-language labels, track layout, and direct actions.
+- [x] E9-S2-T1 · P1: Remove the instruction sentence and estimated-scale/swipe footer; align title and legend in one compact normal-size header row.
+- [x] E9-S2-T2 · P1: Build source-ordered genre buttons with full in-bar names, small ordinals, intrinsic wrapping, and shared selection IDs.
+- [x] E9-S2-T3 · P1: Remove the 1016px chart minimum, 240px viewport limit, internal overflow, repeated detailed rulers, and obsolete styles.
+- [x] E9-S2-T4 · P1: Preserve bright selection, keyboard focus, mixed-language labels, track layout, and direct actions.
 
 AC:
 
@@ -409,7 +409,7 @@ AC:
 - The timeline does not obscure track names/actions or stretch durations under a time ruler.
 - Long imported genre names wrap; larger imports can extend normal page flow.
 
-### E9-S3 — Show every hip-hop entry/exit time in the overview · P0 · Todo
+### E9-S3 — Show every hip-hop entry/exit time in the overview · P0 · Done
 
 As a DJ, I want to recognize immediately when hip-hop starts and finishes while viewing the complete party.
 
@@ -417,10 +417,10 @@ Dependencies: E9-S1; integrate selection with E9-S2. Coordinates and labels must
 
 Subtasks:
 
-- [ ] E9-S3-T1 · P0: Derive six hip-hop windows and all eleven boundary changes from source sections, preserving final unknown end.
-- [ ] E9-S3-T2 · P0: Add a complete overview ruler with responsive major/minor ticks and both endpoints.
-- [ ] E9-S3-T3 · P0: Pack visible entry/exit labels into the minimum non-overlapping annotation lanes using measured widths.
-- [ ] E9-S3-T4 · P0: Render exact markers, uncertain interval markers, shared selection highlighting, and the open-ended 4:00 cap.
+- [x] E9-S3-T1 · P0: Derive six hip-hop windows and all eleven boundary changes from source sections, preserving final unknown end.
+- [x] E9-S3-T2 · P0: Add a complete overview ruler with responsive major/minor ticks and both endpoints.
+- [x] E9-S3-T3 · P0: Pack visible entry/exit labels into the minimum non-overlapping annotation lanes using measured widths.
+- [x] E9-S3-T4 · P0: Render exact markers, uncertain interval markers, shared selection highlighting, and the open-ended 4:00 cap.
 
 AC:
 
@@ -432,7 +432,7 @@ AC:
 - Entry/exit direction has accessible textual meaning alongside color/glyphs.
 - Labels do not overlap one another or the endpoint labels. Selecting a genre highlights its corresponding overview interval and opens the right tracks.
 
-### E9-S4 — Verify the complete no-scroll layout in both builds · P0 · Todo
+### E9-S4 — Verify the complete no-scroll layout in both builds · P0 · Done
 
 As a DJ, I want the cleaner site and offline file to preserve every preparation workflow.
 
@@ -440,10 +440,10 @@ Dependencies: E9-S2 and E9-S3.
 
 Subtasks:
 
-- [ ] E9-S4-T1 · P0: Add row/label completeness, ordering, overflow, annotation collision, and shared-selection regression checks.
-- [ ] E9-S4-T2 · P0: Run hosted/offline desktop, phone, and short-viewport workflows; verify text enlargement and keyboard access.
-- [ ] E9-S4-T3 · P0: Run parser/packaging tests, both builds, checks, direct-file request audit, and reproducibility.
-- [ ] E9-S4-T4 · P1: Refresh screenshots, README, plan status, and verification evidence; push the completed source.
+- [x] E9-S4-T1 · P0: Add row/label completeness, ordering, overflow, annotation collision, and shared-selection regression checks.
+- [x] E9-S4-T2 · P0: Run hosted/offline desktop, phone, and short-viewport workflows; verify text enlargement and keyboard access.
+- [x] E9-S4-T3 · P0: Run parser/packaging tests, both builds, checks, direct-file request audit, and reproducibility.
+- [x] E9-S4-T4 · P1: Refresh screenshots, README, plan status, and verification evidence; push the completed source.
 
 AC:
 

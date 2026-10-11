@@ -1,0 +1,65 @@
+[
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "availableWidth": 1190,
+    "sectionCount": 26,
+    "proportionalFullLabelsRows": 8,
+    "proportionalSectionCount": 26,
+    "staggeredLabelLanes": 5,
+    "wrappedGenreRows": 3,
+    "wrapAreaLowerBoundRows": 3,
+    "overviewHeight": 436.484375,
+    "annotationLanes": 3,
+    "minimumTarget": {
+      "width": 64,
+      "height": 44
+    },
+    "timelineOverflow": false,
+    "firstTrackVisible": true
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "availableWidth": 332,
+    "sectionCount": 26,
+    "proportionalFullLabelsRows": 15,
+    "proportionalSectionCount": 26,
+    "staggeredLabelLanes": 9,
+    "wrappedGenreRows": 7,
+    "wrapAreaLowerBoundRows": 7,
+    "overviewHeight": 703.578125,
+    "annotationLanes": 5,
+    "minimumTarget": {
+      "width": 79.25,
+      "height": 48
+    },
+    "timelineOverflow": false,
+    "firstTrackVisible": false
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 600
+    },
+    "availableWidth": 1190,
+    "sectionCount": 26,
+    "proportionalFullLabelsRows": 8,
+    "proportionalSectionCount": 26,
+    "staggeredLabelLanes": 5,
+    "wrappedGenreRows": 3,
+    "wrapAreaLowerBoundRows": 3,
+    "overviewHeight": 436.484375,
+    "annotationLanes": 3,
+    "minimumTarget": {
+      "width": 64,
+      "height": 44
+    },
+    "timelineOverflow": false,
+    "firstTrackVisible": false
+  }
+]

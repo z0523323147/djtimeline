@@ -3,6 +3,37 @@ export const normalize = (text: string) => text.normalize('NFD').replace(/\p{M}/
 export const isHip = (genre: string) => normalize(genre) === 'hip hop';
 export const color = (genre: string) => isHip(genre) ? 'var(--hip)' : 'var(--cyan)';
 
+/** Source boundaries, never estimated track positions, supply switch wording. */
+export function hipChanges(model: Model) {
+  return model.sections.flatMap((section, index) => {
+    const before = index > 0 && isHip(model.sections[index - 1].genre);
+    const after = isHip(section.genre);
+    if (before === after) return [];
+    return [{ section, entering: after, label: `${after ? 'In' : 'Out'} ${changeTime(section)}` }];
+  });
+}
+
+export function position(time: number, start: number, end: number, width: number) {
+  return end > start ? Math.max(0, Math.min(width, (time - start) / (end - start) * width)) : 0;
+}
+
+/** Interval partitioning uses the fewest lanes and returns labels in source order. */
+export function annotationLanes(items: { anchor: number; width: number }[], width: number) {
+  const ends: number[] = [];
+  const labels = items.map((item, index) => {
+    const size = Math.min(item.width, width);
+    const left = Math.max(0, Math.min(width - size, item.anchor - size / 2));
+    return { index, left, width: size, lane: 0 };
+  });
+  for (const label of [...labels].sort((a, b) => a.left - b.left)) {
+    let lane = ends.findIndex(end => end + 8 <= label.left);
+    if (lane < 0) lane = ends.length;
+    ends[lane] = label.left + label.width;
+    label.lane = lane;
+  }
+  return labels;
+}
+
 /** Continuous overview colors; detailed genre sections keep their own hit targets. */
 export function overviewRuns(model: Model) {
   const runs: { start: number; end: number; genre: string }[] = [];

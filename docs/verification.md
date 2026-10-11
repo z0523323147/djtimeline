@@ -1,25 +1,45 @@
 # Verification — 2026-10-11
 
-The shared Astro/Svelte app renders a full-width timeline above tracks on desktop and mobile. Party/Tracks tabs, Genre details mode, and the black selection underline are removed. Linear’s homepage/product examples informed the neutral surfaces, clear hierarchy, restrained borders, and quiet row actions.
+E9-S1–S4 are implemented in the shared Astro/Svelte app. One proportional time overview sits above a chronological genre sequence and the track workspace. Both outputs use the same components and styles.
 
-## Local evidence
+## Local checks
 
-- Windows, Node 24.14.1, pnpm 12.11.2, pinned dependencies and lockfile.
-- Astro and Svelte checks: zero errors and warnings; three informational clipboard deprecation hints.
-- Both website and self-contained offline builds succeed.
-- 15 Node tests pass; bundled data remains 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, and 2 ideas.
-- 42 Chromium workflow checks pass across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. After the final viewport/selection adjustment, the six layout/navigation checks pass again.
-- Tests verify timeline above tracks, absence of tabs/detail toggle/underline, both labels in every genre bar, estimated ruler endpoints from 12:30 to 4:00, and illuminated terminal selection.
-- Import/cancel, title correction/reload, combined filters, encoded Google search, clipboard fallback/failure, storage denial, hostile imported text, repeated markers, and exact-source track navigation are covered.
-- Offline contexts disable networking and observe requests: no required network or sibling assets, and no app page errors.
-- The 4:00 Hip hop section opens Me pregunto inside the final bar, with no inferred finish time. Large section/time jump buttons remain available.
-- Hebrew-leading titles retain automatic RTL direction and align with English titles.
-- Two offline builds produce identical 79,724-byte files. SHA-256: 8ac9dee3fef461eef3232651ec5dbdd813ea187e32f8b3d6c03a6a049e45c32a.
+- Windows, Node 24.14.1, pinned dependencies and lockfile. No new dependency.
+- Astro and Svelte: zero errors/warnings; three informational clipboard deprecation hints.
+- Website build and self-contained offline build pass.
+- 16 Node model/packaging tests pass. The example retains 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, and 2 ideas.
+- 48 Chromium workflow tests pass: hosted and direct-file outputs at 1280×900, 390×844, and 1280×600.
+- Checks cover all 26 ordered genre controls, full label fit, all 11 hip-hop changes, both ruler endpoints, non-overlapping annotations, header alignment, no timeline overflow, keyboard selection, and coordinated overview highlighting.
+- Import/cancel, corrections/reload, encoded Google search, combined filters, corrected copy, clipboard fallback/failure, storage denial, hostile text, repeated markers, and exact-source jumps remain covered. The desktop source-time jump regression was fixed by revealing the track workspace for explicit track jumps.
+- Enlarged-layout checks use half-width/half-height CSS viewports, equivalent to the reflow space at 200% browser zoom. They check full labels, page overflow, keyboard navigation, and long imported genres. This is a reflow simulation, not a native browser-zoom or screen-reader audit.
+- Offline contexts disable networking and audit requests across all workflows. No network/sibling assets or page errors were observed. Google links are checked without navigating away.
+- Repeated offline builds produce identical 77,244-byte files. SHA-256: fd02cdde015c1db600a4f241540b6dddcfe32d2b20fc35fc0a7c4d8f46b43393.
 
-## UX and limits
+## Representation spike and measurements
 
-A whole-party color strip provides macro context. Detailed bars occupy a bounded scroll region so tracks remain nearby. Rows use their own estimated time ranges, with five- or ten-minute ruler marks and endpoints. All names and changes remain inside the bars. Mobile uses horizontal panning and readable text rather than shrinking the desktop chart. Each row can have a different scale; source intervals remain authoritative. Track spacing supplies diagram estimates, never new source timestamps.
+Run `node --experimental-strip-types scripts/measure-timeline.mjs` with the built website served on port 4180. It measures actual system-font widths, renders disposable alternatives, removes them, and records the production geometry in [timeline-layout-metrics.json](timeline-layout-metrics.json). These prototypes are a bounded layout comparison, not three maintained applications.
 
-Desktop, phone, and selected-bar screenshots were visually reviewed. Other browsers may restrict file-origin storage/clipboard differently; the app reports session-only edits or copy failure. Quota-specific testing, enlarged-text accessibility, import preview/restore, and portable export remain in the backlog.
+- At 1280×900 and 1280×600: the proportional full-name/time prototype requires seven duration rows plus an open-ended final cap row. Staggered genre labels require five lanes. The selected wrapping sequence uses three rows, matching the area lower bound calculated from its rendered control widths. All 26 controls remain present.
+- At 390×844: proportional labels require fourteen duration rows plus the final cap row; staggered genre labels require nine lanes. Wrapping uses seven rows, matching the measured control-area lower bound. The older nine-row phone chart used an artificial 1016px width; this comparison uses the available 332px and needs no panning.
+- Minimum controls: desktop 64×44px; phone 79.25×48px. Label width comes from text space, not elapsed duration. Small mobile ordinals sit in button corners so they do not force Hip-hop onto another line.
+- Hip-hop annotations use three desktop lanes and five phone lanes, packed with actual 12px system-font measurements. No label overlap was detected in the browser checks.
+- Timeline overflow: none in either axis at all three normal-size viewports. Title and legend share a row at desktop and 390px. The first track and its actions are visible initially at 1280×900. Phone/short users reach tracks through normal page scrolling; selecting a section brings the workspace into view.
+- The original 240–300px desktop panel-height goal was not achieved: the complete region measures approximately 436px on desktop and 704px on phones. Keeping all labels, switch times, and large controls takes precedence over a fixed panel height. The initial genre-row goals were achieved. Larger imported sets extend normal page flow.
 
-GitHub Actions is configured; remote results are not inferred from local checks. No hosting deployment is configured. Google query encoding is tested without navigating to Google or downloading audio.
+## Library decision
+
+The bounded API comparison used the requirements and primary documentation linked in plan.md. D3's `scaleLinear().domain([start,end]).range([0,width]).clamp(true)` supplies the same two-endpoint numeric mapping as the small `position` helper. The model test verifies midpoint and endpoint proportionality through the 12-hour rollover. D3 tick generation would still need the app's source-aware tick suppression, explicit endpoints, and 30/60-minute labels. It would not remove measured annotation packing or native button layout. Retain the existing helper; no D3 package was installed or benchmarked.
+
+LayerCake's composition, vis-timeline's scheduler/panning, and ECharts' custom series do not eliminate the custom labels, focus, source uncertainty, or control wrapping required here. Their documented capabilities remain candidates for future scheduling/analytics features. No runtime or package-size comparison against those libraries is claimed.
+
+The final offline file is 2,480 bytes smaller than the previous 79,724-byte build under the same packaging settings. This is a measured whole-app difference after markup/CSS changes, not an attributed library performance advantage.
+
+## Timing and visual evidence
+
+The overview retains proportional diagram positions; source evidence supplies the switch text. Six hip-hop entries and five exits are visible. Entries inside 2:07–2:15 and 2:40–2:50 retain those ranges and dashed interval markers. Exact changes use crisp markers. The final entry is 4:00, with an arrow and no inferred exit or duration. Both screen-reader description and button names expose timing and direction.
+
+Selecting a genre illuminates its button and its estimated overview interval, then focuses the correct track heading. Full source time/range remains in the track heading and each button's accessible name/title. English, Hebrew, and Russian track titles retain natural direction with a shared left alignment.
+
+Refreshed and visually reviewed: party-map-preview.png, party-map-mobile.png, party-map-genre-details.png, and party-map-language-alignment.png. The latter shows the selected hip-hop tracks in the complete page.
+
+Other browsers may restrict file-origin storage/clipboard differently; the app reports session-only saves or copy failure. Native screen-reader review, quota-specific testing, import preview/restore, portable export, and shortcuts remain in the backlog. GitHub Actions is configured; local results do not imply remote CI passed. No hosting deployment is configured.

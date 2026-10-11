@@ -37,7 +37,7 @@
     const row = trackId ? list?.querySelector<HTMLElement>(`[data-track="${trackId}"]`) : null;
     const top = list && row ? row.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop : 0;
     list?.scrollTo({ top });
-    if (window.innerWidth < 850 || window.innerHeight < 700) document.getElementById('detail')?.scrollIntoView({ block: 'start' });
+    if (trackId || window.innerWidth < 850 || window.innerHeight < 700) document.getElementById('detail')?.scrollIntoView({ block: 'start' });
     else heading?.scrollIntoView({ block: 'nearest' });
   }
   function save(id: number, title: string) {
