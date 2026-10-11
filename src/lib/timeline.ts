@@ -35,6 +35,13 @@ export function boundary(section: Section) {
   if (section.boundStart === section.boundEnd) return `After ${clock(section.boundStart)} · exact time not noted`;
   return `${clock(section.boundStart)}–${clock(section.boundEnd)} · exact time not noted`;
 }
+/** Short in-bar time label; ranges retain uncertainty rather than inventing minutes. */
+export function changeTime(section: Section) {
+  if (section.tracks[0]?.time === 'Unscheduled') return 'Time not noted';
+  if (section.exact) return clock(section.start);
+  if (section.boundStart === section.boundEnd) return `After ${clock(section.boundStart)}`;
+  return `~${clock(section.boundStart)}–${clock(section.boundEnd)}`;
+}
 export function sectionRange(section: Section, model: Model) {
   const next = model.sections[section.id + 1];
   return next ? `From ${boundary(section)} · until ${boundary(next)}` : `From ${boundary(section)} · end time unspecified`;
@@ -54,7 +61,7 @@ export function genreBands(model: Model, width: number) {
   let group: Section[] = [];
   const fits = (sections: Section[]) => {
     const start = sections[0].start, end = sections.at(-1)!.end;
-    return sections.every(s => (s.end - s.start) / (end - start) * width >= s.genre.length * 8 + 18);
+    return sections.every(s => (s.end - s.start) / (end - start) * width >= Math.max(s.genre.length, changeTime(s).length) * 8 + 18);
   };
   const flush = () => {
     if (group.length) bands.push({ start: group[0].start, end: group.at(-1)!.end, first: group[0], last: group.at(-1)! });

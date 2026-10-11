@@ -295,7 +295,7 @@ AC:
 
 Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Browse all sections** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
 
-Additional correction: **Genre details** uses tighter time scopes to put full names inside the bars, including House/EDM in the 1:30 block. Inter-row genre notes are removed. The final 4:00 Hip hop track is selectable inside the last bar with an open-ended arrow. The compact overview remains the default; both modes are verified in hosted/offline phone, desktop, and short-height tests.
+Additional correction: **Genre details** uses tighter time scopes to put full names inside the bars, including House/EDM in the 1:30 block. Inter-row genre notes are removed. The final 4:00 Hip hop track is selectable inside the last bar with an open-ended arrow. Genre details is shown by default with a compact macro overview above it; both modes are verified in hosted/offline phone, desktop, and short-height tests.
 
 ### E8-S1 — Introduce coherent tokens and calm layout hierarchy · P1 · Todo
 
@@ -339,3 +339,5 @@ AC:
 E7-S1 → E7-S2 with E5-S1 → E7-S3 → E1-S1 → E1-S2 → E7-S4 → E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1.
 
 A story is Done only after its AC pass and the relevant validation evidence is recorded. Priority belongs to the work, not to the order in which its section appears here.
+
+UX follow-up completed: default genre/time labels in every detailed bar, compact whole-party preview, and consistent Hebrew/English track alignment. Existing regression workflows verify labels and RTL alignment in both builds at all three viewport sizes.

@@ -70,7 +70,7 @@ No chart estimate becomes an exact source timestamp. Final sections use an expli
 
 The clickable timeline is the main navigation. The redundant time/genre dropdown and selected-section card are removed; **Browse all sections** is a collapsed fallback for short sections. Continuous teal/pink overview runs and amber peak runs render without internal divider seams. Detailed genres retain their individual click/keyboard targets and labels; selected sections use an underline, with an outline on hover/focus.
 
-The compact overview is the default. **Genre details** uses tighter time scopes so full genre names fit inside the bars. Source times or known ranges label each row boundary; genre notes between rows are removed. The final 4:00 Hip hop section is an integrated cap on the last bar, with an arrow indicating an unrecorded ending. Its cap width is a navigation affordance, not an inferred duration.
+Genre details is shown by default, with a small whole-party overview above it. **Genre details** uses tighter time scopes so full genre names fit inside the bars. Source times or known ranges label each row boundary; genre notes between rows are removed. The final 4:00 Hip hop section is an integrated cap on the last bar, with an arrow indicating an unrecorded ending. Its cap width is a navigation affordance, not an inferred duration.
 
 Imports and corrections are untrusted text. Keep copy and Google search tied to the current title. Storage is scoped to the browser/origin, with session-only feedback when unavailable; legacy data remains compatible on the same origin.
 

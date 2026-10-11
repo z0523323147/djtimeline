@@ -11,12 +11,18 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   await expect(page.getByText('126 tracks', { exact: false }).first()).toBeVisible();
   await expect(page.getByLabel('Choose a time & genre section')).toHaveCount(0);
   await expect(page.locator('.selected-card')).toHaveCount(0);
-  await expect(page.locator('.map-row').first().locator('.flow-band')).toHaveCount(1);
-  await page.getByRole('button', { name: 'Genre details +', exact: true }).click();
+  await expect(page.locator('.macro-map')).toBeVisible();
   await expect(page.locator('.genre-captions')).toHaveCount(0);
   await expect(page.locator('svg .segment .map-label').filter({ hasText: /^House$/ }).first()).toBeVisible();
   await expect(page.locator('svg .segment .map-label').filter({ hasText: /^Edm$/ }).first()).toBeVisible();
+  for (const change of await page.locator('#map .segment:not(.terminal-section)').all()) {
+    await expect(change.locator('.map-label')).toHaveCount(2);
+    await expect(change.locator('.change-time')).not.toBeEmpty();
+  }
+  await expect(page.locator('.change-time').filter({ hasText: '~1:23–1:30' })).toHaveCount(1);
+  await expect(page.locator('.change-time').filter({ hasText: '~1:30–1:40' })).toHaveCount(1);
   await page.getByRole('button', { name: 'Genre details −', exact: true }).click();
+  await expect(page.locator('.map-row').first().locator('.flow-band')).toHaveCount(1);
   const final = page.getByRole('button', { name: 'Hip hop, 4:00, open 1 tracks', exact: true });
   await expect(page.locator('svg .terminal-section')).toHaveCount(1);
   await expect(page.locator('button.terminal-section')).toHaveCount(0);
@@ -46,6 +52,7 @@ test('import, cancel, correction, encoded search, combined filters and reload', 
   await page.getByLabel('Correct track name').fill('מתוק & Вечер (mix)');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.locator('#tracks .title')).toHaveText('מתוק & Вечер (mix)');
+  expect(await page.locator('#tracks .title').evaluate(el => ({ align: getComputedStyle(el).textAlign, dir: getComputedStyle(el).direction }))).toEqual({ align: 'left', dir: 'rtl' });
   const search = page.getByRole('link', { name: 'Search Google for מתוק & Вечер (mix) download', exact: true });
   expect(new URL((await search.getAttribute('href'))!).searchParams.get('q')).toBe('מתוק & Вечер (mix) download');
   await page.getByRole('button', { name: 'Copy מתוק & Вечер (mix)', exact: true }).click();

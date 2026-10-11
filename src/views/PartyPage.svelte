@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { Model } from '../lib/parser';
-  import { boundary, clock, color, genreBands, isHip, overviewRuns, peakRuns, timeBands } from '../lib/timeline';
+  import { boundary, changeTime, clock, color, genreBands, isHip, overviewRuns, peakRuns, timeBands } from '../lib/timeline';
   export let model: Model;
   export let selected: number;
   export let active: boolean;
   export let select: (id: number, trackId?: number) => void;
   let mapWidth = 600;
-  let showGenres = false;
+  let showGenres = true;
   $: diagramWidth = Math.max(220, mapWidth - 16);
   $: bands = timeBands(model);
   $: zoomBands = genreBands(model, Math.max(160, diagramWidth - 116));
@@ -30,6 +30,18 @@
     <span><i class="dot" style="--color:var(--fire)"></i>Peak sections</span>
     <span>→ End not noted</span>
   </div>
+  {#if showGenres}
+    <div class="macro-map" aria-label="Whole-party overview">
+      {#each bands as band}
+        <div class="macro-caption"><span>{clock(band.start)}</span><span>{clock(band.end)}</span></div>
+        <svg viewBox={`0 0 ${diagramWidth} 16`} preserveAspectRatio="none" aria-label={`Overview ${clock(band.start)} to ${clock(band.end)}`}>
+          {#each flow.filter(run => run.end > band.start && run.start < band.end) as run}
+            <rect x={x(Math.max(run.start, band.start), band.start, band.end)} y="0" width={x(Math.min(run.end, band.end), band.start, band.end) - x(Math.max(run.start, band.start), band.start, band.end)} height="16" fill={color(run.genre)} />
+          {/each}
+        </svg>
+      {/each}
+    </div>
+  {/if}
   <button class="genre-detail-toggle" aria-pressed={showGenres} onclick={() => showGenres = !showGenres}>Genre details {showGenres ? '−' : '+'}</button>
   <div id="map" bind:clientWidth={mapWidth}>
     {#each chartRows as band, rowIndex}
@@ -54,7 +66,8 @@
               <rect class="genre-fill" x={left} y="10" {width} height="44" fill="transparent" />
               {#if !active && selected === s.id}<rect class="selection-mark" x={left} y="50" {width} height="4" fill="var(--bg)" />{/if}
               <rect class="hit-area" x={left} y="10" {width} height="44" fill="transparent" />
-              {#if showGenres || width > s.genre.length * 8 + 14}<text class="map-label" x={left + 7} y="36">{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>{/if}
+              {#if showGenres || width > s.genre.length * 8 + 14}<text class="map-label" x={left + 7} y={showGenres ? 28 : 36}>{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>{/if}
+              {#if showGenres}<text class="map-label change-time" x={left + 7} y="46">{changeTime(s)}</text>{/if}
             </g>
           {/each}
           {#each peaks.filter(t => t.end > band.start && t.start < band.end) as t}
@@ -81,7 +94,7 @@
       <p class="note">No timed flow yet. Open a section below to browse your tracks.</p>
     {/each}
   </div>
-  <p class="note">Some genre changes have no exact time in your notes. These show a time range.</p>
+  <p class="note">~ means the change happened within this time range; your notes do not give an exact minute.</p>
   <details><summary>Browse all sections</summary><div class="section-buttons">
     {#each model.sections as s}<button data-section={s.id} aria-pressed={!active && selected === s.id} onclick={() => select(s.id)}><span>{s.genre}</span><span>{boundary(s)}</span></button>{/each}
   </div></details>
