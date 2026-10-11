@@ -295,6 +295,8 @@ AC:
 
 Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Browse all sections** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
 
+Additional correction: **Genre details** exposes all genre names and recorded times/ranges at readable size, including House/EDM in the 1:30 block. The compact overview remains the default; the expanded labels are verified in hosted/offline phone, desktop, and short-height tests.
+
 ### E8-S1 — Introduce coherent tokens and calm layout hierarchy · P1 · Todo
 
 As a DJ, I want a polished, aligned interface that stays readable and makes the music flow easy to scan.

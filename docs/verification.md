@@ -14,7 +14,7 @@ Completed stories: E7-S1–S4, E1-S1–S2, E5-S1. The migrated source preserves 
 - Browser coverage includes import/cancel/invalid input, `.txt` files, edit/save/reload, multilingual names, combined filters, corrected Google links, final-section Enter/Space activation, rapid-switch button alternatives, hostile text rendering, corrupt imported data, storage denial, clipboard fallback success, and clipboard failure feedback.
 - Offline contexts disable networking. Request observation across every workflow reports no network or sibling assets; only the HTML document itself is requested. No app page errors were observed.
 - The 4:00 Hip hop end marker opens `Me pregunto` without inventing an ending time. Every section has a separate full-size button in **Browse all sections**; rapid switches at 2:07–2:15 and 3:49–3:56 are covered without stretching the diagram.
-- Two unchanged offline builds produce identical 73,904-byte files. SHA-256: `3dc967359a443a24a310e90d1d9018ca29853fff52eae78eed3c7b67fd40f9a8`.
+- Two unchanged offline builds produce identical 75,119-byte files. SHA-256: `c0a3f9c507928955b619afc617b6abf6373ea3dfd445ffe3d44c5c337efcfa46`.
 
 Bundled model: 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, 2 ideas. Existing imported-note and correction keys are preserved; scoped title corrections reload correctly.
 
@@ -27,3 +27,5 @@ Local Chromium tests establish behavior for this browser/runtime, not universal 
 GitHub Actions repeats installation, checks, builds, tests, and reproducibility and uploads the offline file. Its remote result is not inferred from local tests. No hosting deployment is configured.
 
 The structural validator is a packaging guard, not a general HTML security auditor; runtime request checks and untrusted-text browser tests complement it. Google link parameters are tested without performing a real audio download or navigating to Google.
+
+Genre detail mode is verified in all six browser projects: House at 1:30 and the subsequent EDM boundary in the 1:30–1:40 interval are rendered at readable size. The compact overview remains the default; the Genre details toggle reveals all section names and source boundaries. Updated screenshots were captured at settled phone/desktop viewports.

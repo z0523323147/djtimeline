@@ -30,6 +30,7 @@ pnpm preview
 ## Features
 
 - Three-band party overview with clickable genre sections, pink hip-hop, and amber peaks.
+- **Genre details** reveals every section name and its recorded time or known range, including sections too narrow for a chart label.
 - Explicit final-section controls when an ending time is missing.
 - Clickable timeline navigation and a collapsed Browse all sections list with full-size buttons for brief switches.
 - Desktop overview beside a generous track pane; dedicated Party/Tracks views on phones.

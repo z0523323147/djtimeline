@@ -6,6 +6,7 @@
   export let active: boolean;
   export let select: (id: number, trackId?: number) => void;
   let mapWidth = 600;
+  let showGenres = false;
   $: diagramWidth = Math.max(220, mapWidth - 16);
   $: bands = timeBands(model);
   $: flow = overviewRuns(model);
@@ -24,6 +25,7 @@
     <span><i class="dot" style="--color:var(--hip)"></i>Hip-hop</span>
     <span><i class="dot" style="--color:var(--fire)"></i>Peak sections</span>
   </div>
+  <button class="genre-detail-toggle" aria-pressed={showGenres} onclick={() => showGenres = !showGenres}>Genre details {showGenres ? '−' : '+'}</button>
   <div id="map" bind:clientWidth={mapWidth}>
     {#each bands as band}
       <div class="map-row">
@@ -44,7 +46,7 @@
               <rect class="genre-fill" x={left} y="10" {width} height="32" fill="transparent" />
               {#if !active && selected === s.id}<rect class="selection-mark" x={left} y="38" {width} height="4" fill="var(--bg)" />{/if}
               <rect class="hit-area" x={left} y="4" {width} height="44" fill="transparent" />
-              {#if width > s.genre.length * 8 + 14}<text class="map-label" x={left + 7} y="31">{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>{/if}
+              {#if !showGenres && width > s.genre.length * 8 + 14}<text class="map-label" x={left + 7} y="31">{isHip(s.genre) ? 'Hip-hop' : s.genre}</text>{/if}
             </g>
           {/each}
           {#each peaks.filter(t => t.end > band.start && t.start < band.end) as t}
@@ -54,6 +56,11 @@
             <text class="tick" x={x(time, band.start, band.end)} y="73" text-anchor="middle">{clock(time)}</text>
           {/each}
         </svg>
+        {#if showGenres}<div class="genre-captions" aria-label={`Genre details from ${clock(band.start)} to ${clock(band.end)}`}>
+          {#each model.sections.filter(s => s.end > band.start && s.start < band.end) as s}
+            <span><strong>{isHip(s.genre) ? 'Hip-hop' : s.genre}</strong><span dir="ltr">{boundary(s).replace(' · exact time not noted', '')}{s.exact ? '' : ' · time range'}</span></span>
+          {/each}
+        </div>{/if}
       </div>
     {:else}
       <p class="note">No timed flow yet. Open a section below to browse your tracks.</p>

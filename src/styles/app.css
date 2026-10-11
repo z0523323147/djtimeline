@@ -160,6 +160,20 @@ main{
   font-weight:650;
   pointer-events:none
 }
+.genre-captions{
+  display:flex;
+  flex-wrap:wrap;
+  column-gap:16px;
+  row-gap:6px;
+  margin-block:4px 12px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.5;
+}
+.genre-detail-toggle{margin-block-end:12px;font-size:14px;min-height:44px}
+.genre-captions:empty{display:none}
+.genre-captions>span{display:inline-flex;flex-wrap:wrap;gap:6px}
+.genre-captions strong{font-weight:600;color:var(--text)}
 .note{
   font-size:14px;
   color:var(--muted);

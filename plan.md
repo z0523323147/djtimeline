@@ -70,6 +70,8 @@ No chart estimate becomes an exact source timestamp. Final sections use an expli
 
 The clickable timeline is the main navigation. The redundant time/genre dropdown and selected-section card are removed; **Browse all sections** is a collapsed fallback for short sections. Continuous teal/pink overview runs and amber peak runs render without internal divider seams. Detailed genres retain their individual click/keyboard targets and labels; selected sections use an underline, with an outline on hover/focus.
 
+The compact overview is the default. **Genre details** reveals every genre name and source time/range below each band, so narrow chart sections do not lose their names. This mode adds detail when requested instead of shrinking labels or expanding the default overview.
+
 Imports and corrections are untrusted text. Keep copy and Google search tied to the current title. Storage is scoped to the browser/origin, with session-only feedback when unavailable; legacy data remains compatible on the same origin.
 
 ## Milestones
