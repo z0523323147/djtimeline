@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseNotes } from '../src/lib/parser.ts';
-import { boundary, overviewRuns, peakRuns, timeBands } from '../src/lib/timeline.ts';
+import { boundary, genreBands, overviewRuns, peakRuns, timeBands } from '../src/lib/timeline.ts';
 import { emptyFilters, googleSearch, matches } from '../src/lib/search.ts';
 import { correctionsKey, loadCorrections, saveCorrections } from '../src/lib/storage.ts';
 
@@ -20,6 +20,19 @@ test('overview colors and peaks stay continuous while detailed genres remain sel
   assert.deepEqual(overviewRuns(m).map(r => [r.start, r.end]), [[60, 80], [80, 90], [90, 100]]);
   assert.deepEqual(peakRuns(m), [{ start: 60, end: 80 }]);
   assert.deepEqual(m.sections[1].tracks.map(t => t.title), ['B']);
+});
+
+test('genre zoom keeps true coordinates and makes room for labels', () => {
+  const m = parseNotes(readFileSync('src/data/example-notes.txt', 'utf8'));
+  const rows = genreBands(m, 194);
+  const sections = m.sections.filter(s => s.end > s.start);
+  assert.equal(rows[0].start, sections[0].start);
+  assert.equal(rows.at(-1)!.end, sections.at(-1)!.end);
+  for (const row of rows) {
+    const visible = sections.filter(s => s.start >= row.start && s.end <= row.end);
+    for (const s of visible) assert.ok((s.end - s.start) / (row.end - row.start) * 194 >= Math.min(194, s.genre.length * 8 + 18));
+  }
+  assert.equal(m.sections.at(-1)!.end, m.sections.at(-1)!.start);
 });
 test('inheritance, embedded parentheses, markers and peak reset', () => {
   const m = parseNotes('12:30\n(House)\nA (remix) --\nהפגזות\nB ///\n1:01\nC\n(Hip hop)\nD הפגזות\nE\n---\n///');

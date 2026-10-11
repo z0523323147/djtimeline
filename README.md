@@ -30,8 +30,8 @@ pnpm preview
 ## Features
 
 - Three-band party overview with clickable genre sections, pink hip-hop, and amber peaks.
-- **Genre details** reveals every section name and its recorded time or known range, including sections too narrow for a chart label.
-- Explicit final-section controls when an ending time is missing.
+- **Genre details** zooms into tighter time ranges, with genre names inside the bars and recorded boundaries above them.
+- The final section stays inside the last timeline bar; an arrow indicates its ending time is missing.
 - Clickable timeline navigation and a collapsed Browse all sections list with full-size buttons for brief switches.
 - Desktop overview beside a generous track pane; dedicated Party/Tracks views on phones.
 - Recorded time navigation and a hip-hop entry/exit list, with honest labels for uncertain changes.
@@ -77,7 +77,7 @@ pnpm test:e2e
 node scripts/check-reproducible.mjs
 ```
 
-The current suite contains 14 Node tests and 42 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
+The current suite contains 15 Node tests and 42 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
 
 Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
 

@@ -47,3 +47,22 @@ export function timeBands(model: Model) {
     end: Math.round(start + (end - start) * (i + 1) / 3),
   })).filter(b => b.end > b.start);
 }
+
+/** Zoomed rows use true diagram positions while reserving room for full labels. */
+export function genreBands(model: Model, width: number) {
+  const bands: { start: number; end: number; first: Section; last: Section }[] = [];
+  let group: Section[] = [];
+  const fits = (sections: Section[]) => {
+    const start = sections[0].start, end = sections.at(-1)!.end;
+    return sections.every(s => (s.end - s.start) / (end - start) * width >= s.genre.length * 8 + 18);
+  };
+  const flush = () => {
+    if (group.length) bands.push({ start: group[0].start, end: group.at(-1)!.end, first: group[0], last: group.at(-1)! });
+  };
+  for (const section of model.sections.filter(s => s.end > s.start)) {
+    if (group.length && !fits([...group, section])) { flush(); group = []; }
+    group.push(section);
+  }
+  flush();
+  return bands;
+}

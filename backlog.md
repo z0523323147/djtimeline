@@ -4,7 +4,7 @@ Updated: 2026-10-11. Seven stories are **Done**: E7-S1–S4, E1-S1–S2, and E5-
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
-Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 14 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
+Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 15 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
 ## E1 — Complete, usable party navigation · P0
 
@@ -295,7 +295,7 @@ AC:
 
 Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Browse all sections** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
 
-Additional correction: **Genre details** exposes all genre names and recorded times/ranges at readable size, including House/EDM in the 1:30 block. The compact overview remains the default; the expanded labels are verified in hosted/offline phone, desktop, and short-height tests.
+Additional correction: **Genre details** uses tighter time scopes to put full names inside the bars, including House/EDM in the 1:30 block. Inter-row genre notes are removed. The final 4:00 Hip hop track is selectable inside the last bar with an open-ended arrow. The compact overview remains the default; both modes are verified in hosted/offline phone, desktop, and short-height tests.
 
 ### E8-S1 — Introduce coherent tokens and calm layout hierarchy · P1 · Todo
 

@@ -133,7 +133,7 @@ main{
 }
 .map-row svg{
   width:100%;
-  height:76px;
+  height:88px;
   display:block;
   overflow:visible
 }
@@ -160,20 +160,7 @@ main{
   font-weight:650;
   pointer-events:none
 }
-.genre-captions{
-  display:flex;
-  flex-wrap:wrap;
-  column-gap:16px;
-  row-gap:6px;
-  margin-block:4px 12px;
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.5;
-}
 .genre-detail-toggle{margin-block-end:12px;font-size:14px;min-height:44px}
-.genre-captions:empty{display:none}
-.genre-captions>span{display:inline-flex;flex-wrap:wrap;gap:6px}
-.genre-captions strong{font-weight:600;color:var(--text)}
 .note{
   font-size:14px;
   color:var(--muted);
@@ -453,7 +440,7 @@ dialog .dialog-actions{
     height:100dvh
   }
   header{
-    height:76px;
+    height:88px;
     padding:10px 14px
   }
   h1{
@@ -532,7 +519,7 @@ dialog .dialog-actions{
     margin-bottom:12px
   }
   .map-row svg{
-    height:76px
+    height:88px
   }
   .result-bar{
     font-size:12px
@@ -549,19 +536,6 @@ dialog .dialog-actions{
 }
 .app{
   height:100dvh
-}
-.terminal-section{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  width:100%;
-  text-align:start;
-  margin-block:10px;
-  font-size:14px;
-  min-height:48px
-}
-.terminal-section span:last-child{
-  color:var(--cyan)
 }
 .section-buttons{
   display:grid;

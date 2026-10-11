@@ -13,13 +13,13 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   await expect(page.locator('.selected-card')).toHaveCount(0);
   await expect(page.locator('.map-row').first().locator('.flow-band')).toHaveCount(1);
   await page.getByRole('button', { name: 'Genre details +', exact: true }).click();
-  const captions = page.locator('.map-row').first().locator('.genre-captions');
-  await expect(captions).toContainText('House');
-  await expect(captions).toContainText('1:30');
-  await expect(captions).toContainText('Edm');
-  await expect(captions).toContainText('1:30–1:40 · time range');
+  await expect(page.locator('.genre-captions')).toHaveCount(0);
+  await expect(page.locator('svg .segment .map-label').filter({ hasText: /^House$/ }).first()).toBeVisible();
+  await expect(page.locator('svg .segment .map-label').filter({ hasText: /^Edm$/ }).first()).toBeVisible();
   await page.getByRole('button', { name: 'Genre details −', exact: true }).click();
   const final = page.getByRole('button', { name: 'Hip hop, 4:00, open 1 tracks', exact: true });
+  await expect(page.locator('svg .terminal-section')).toHaveCount(1);
+  await expect(page.locator('button.terminal-section')).toHaveCount(0);
   await final.scrollIntoViewIfNeeded(); await final.focus(); await final.press('Enter');
   await expect(page.locator('#detail-title')).toHaveText('Hip hop');
   await expect(page.locator('#detail-title')).toBeFocused();
