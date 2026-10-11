@@ -5,6 +5,8 @@
   import { filterActive, googleSearch, matches, type Filters } from '../lib/search';
   export let model: Model;
   export let selected: number;
+  export let allTracks: boolean;
+  export let showAll: () => void;
   export let filters: Filters;
   export let storageAvailable: boolean;
   export let select: (id: number) => void;
@@ -16,8 +18,9 @@
   let editor: HTMLInputElement;
   let list: HTMLOListElement;
   $: active = filterActive(filters);
+  $: browsing = allTracks || active;
   $: section = model.sections[selected];
-  $: visible = active ? model.tracks.filter(t => matches(t, filters)) : section?.tracks ?? [];
+  $: visible = browsing ? model.tracks.filter(t => matches(t, filters)) : section?.tracks ?? [];
   async function edit(track: Track) {
     editing = track.id; draft = track.title;
     await tick(); editor.focus(); editor.select();
@@ -30,11 +33,11 @@
 <div class="workspace"><section id="detail" class="detail" aria-labelledby="detail-title" tabindex="-1">
   <div class="pane-head">
     <div class="detail-heading"><div>
-      <h2 id="detail-title" bind:this={heading} tabindex="-1">{active ? 'Matching tracks' : section?.genre ?? 'Tracks'}</h2>
-      <p>{active ? 'Results across the entire party' : section ? sectionRange(section, model) : 'Import notes to begin'}</p>
+      <h2 id="detail-title" bind:this={heading} tabindex="-1">{active ? 'Matching tracks' : allTracks ? 'All tracks' : section?.genre ?? 'Tracks'}</h2>
+      <p>{browsing ? 'Entire party · source order' : section ? sectionRange(section, model) : 'Import notes to begin'}</p>
     </div><div class="detail-nav">
-      <button aria-label="Previous section" disabled={active || selected === 0} onclick={() => select(selected - 1)}>←</button>
-      <button aria-label="Next section" disabled={active || selected >= model.sections.length - 1} onclick={() => select(selected + 1)}>→</button>
+      <button aria-label="Previous section" disabled={browsing || selected === 0} onclick={() => select(selected - 1)}>←</button>
+      <button aria-label="Next section" disabled={browsing || selected >= model.sections.length - 1} onclick={() => select(selected + 1)}>→</button>
     </div></div>
     <div class="filters">
       <input id="search" type="search" aria-label="Search all tracks" placeholder="Search all tracks…" dir="auto" bind:value={filters.query} />
@@ -43,10 +46,11 @@
       </select>
     </div>
     <div class="toggles">
+      <button aria-pressed={allTracks} onclick={showAll}>All tracks</button>
       <button aria-pressed={filters.isBanger} onclick={() => filters.isBanger = !filters.isBanger}>🔥 Peaks</button>
       <button aria-pressed={filters.isToDownload} onclick={() => filters.isToDownload = !filters.isToDownload}>💾 Downloads</button>
       <button aria-pressed={filters.isMyIdea} onclick={() => filters.isMyIdea = !filters.isMyIdea}>💡 Ideas</button>
-      <button onclick={() => select(selected)}>Reset</button>
+      <button onclick={() => allTracks ? showAll() : select(selected)}>Reset</button>
     </div>
   </div>
   <ol id="tracks" class="track-list" bind:this={list}>
@@ -54,7 +58,7 @@
       <li class="track" data-track={t.id}>
         <span class="number">{String(t.id).padStart(2, '0')}</span>
         <div><p class="title" dir="auto">{t.title}</p><div class="tags">
-          {#if active}<span>{t.time} · {t.genre}</span>{/if}
+          {#if browsing}<span>{t.time} · {t.genre}</span>{/if}
           {#if t.isBanger}<span class="peak">🔥 Peak</span>{/if}
           {#if t.isToDownload}<span class="download">💾 Download</span>{/if}
           {#if t.isMyIdea}<span class="idea">💡 Idea</span>{/if}
@@ -73,7 +77,7 @@
           </form>
         {/if}
       </li>
-    {:else}<li class="empty">No tracks match. Reset filters to return to your selected section.</li>{/each}
+    {:else}<li class="empty">No tracks match. Reset filters to {allTracks ? 'see all tracks' : 'return to your selected section'}.</li>{/each}
   </ol>
-  <p class="result-bar" role="status">{visible.length} tracks shown · {active ? 'Filters combine together' : 'Select another section in the overview'}{storageAvailable ? '' : ' · Edits are session-only'}</p>
+  <p class="result-bar" role="status">{visible.length} tracks shown · {active ? 'Filters combine together' : allTracks ? 'Entire party' : 'Select another section in the overview'}{storageAvailable ? '' : ' · Edits are session-only'}</p>
 </section></div>

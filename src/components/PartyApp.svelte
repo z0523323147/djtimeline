@@ -12,6 +12,7 @@
   let raw = example;
   let model = parseNotes(raw);
   let selected = 0, filters = emptyFilters();
+  let allTracks = false;
   let notice = '', storageAvailable = true;
   let heading: HTMLHeadingElement | undefined;
   let dialog: HTMLDialogElement;
@@ -31,7 +32,7 @@
   }
   async function select(id: number, trackId?: number) {
     if (!model.sections[id]) return;
-    selected = id; filters = emptyFilters();
+    selected = id; allTracks = false; filters = emptyFilters();
     await tick(); heading?.focus({ preventScroll: true });
     const list = document.getElementById('tracks');
     const row = trackId ? list?.querySelector<HTMLElement>(`[data-track="${trackId}"]`) : null;
@@ -39,6 +40,13 @@
     list?.scrollTo({ top });
     if (trackId || window.innerWidth < 850 || window.innerHeight < 700) document.getElementById('detail')?.scrollIntoView({ block: 'start' });
     else heading?.scrollIntoView({ block: 'nearest' });
+  }
+  async function showAll() {
+    allTracks = true; filters = emptyFilters();
+    await tick();
+    heading?.focus({ preventScroll: true });
+    document.getElementById('tracks')?.scrollTo({ top: 0 });
+    document.getElementById('detail')?.scrollIntoView({ block: 'start' });
   }
   function save(id: number, title: string) {
     model.tracks.find(t => t.id === id)!.title = title;
@@ -63,7 +71,7 @@
     if (next.length > 500000) { importError = 'Keep your notes under 500,000 characters.'; return; }
     const parsed = parseNotes(next);
     if (!parsed.tracks.length) { importError = 'Add at least one track name to your notes.'; return; }
-    raw = next; model = parsed; selected = 0; filters = emptyFilters();
+    raw = next; model = parsed; selected = 0; allTracks = false; filters = emptyFilters();
     storageAvailable = true;
     try { loadCorrections(localStorage, raw, model); } catch { storageAvailable = false; }
     try { localStorage.setItem(importedKey, raw); } catch { storageAvailable = false; }
@@ -77,8 +85,8 @@
     <div class="header-actions"><button onclick={() => { importError = ''; dialog.showModal(); }}>Import notes</button></div>
   </header>
   <main>
-    <PartyPage {model} {selected} active={filterActive(filters)} {select} />
-    <TracksPage {model} {selected} bind:filters {storageAvailable} {select} {save} {copy} bind:heading />
+    <PartyPage {model} {selected} active={allTracks || filterActive(filters)} {select} />
+    <TracksPage {model} {selected} {allTracks} {showAll} bind:filters {storageAvailable} {select} {save} {copy} bind:heading />
   </main>
   <dialog bind:this={dialog} aria-labelledby="import-title">
     <h2 id="import-title">Import your set notes</h2>

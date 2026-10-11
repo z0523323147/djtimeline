@@ -74,6 +74,7 @@
     {/each}
   </div>
   <details><summary>Jump to a section or recorded time</summary>
+    <p class="timing-key">Dotted outline: hip-hop changes somewhere within that time range. The notes do not give an exact minute.</p>
     <div class="time-jumps" role="group" aria-label="Every exact time marker from the notes">{#each model.blocks.filter(b => b.tracks.length) as b}<button onclick={() => select(b.tracks[0].sectionId,b.tracks[0].id)}>{b.time}</button>{/each}</div>
   </details>
 </section>

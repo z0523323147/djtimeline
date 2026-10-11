@@ -44,6 +44,7 @@ label{display:block;color:var(--muted);font-size:14px;margin-bottom:7px}
 input,select,textarea{width:100%;min-width:0}
 summary{font-size:13px;padding:10px 0;min-height:44px;color:var(--muted)}
 details{border-top:1px solid var(--line);margin-top:12px}
+.timing-key{font-size:13px;color:var(--muted);margin-bottom:12px}
 .time-jumps{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px;direction:ltr}
 .time-jumps button{font-size:14px;min-width:65px}
 .workspace{min-width:0}

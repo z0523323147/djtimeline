@@ -36,6 +36,7 @@ pnpm preview
 - Selecting a genre brightens its button and highlights its estimated interval in the overview.
 - The final 4:00 hip-hop section opens its track without an invented ending time.
 - A collapsed recorded-time list jumps directly to the first track at that source marker.
+- **All tracks** shows the entire set in source order, with time/genre labels; selecting a timeline section returns to its tracks.
 - Search with combined genre, peak, download, and idea filters.
 - Copy a track, edit its name, and search Google using its corrected title.
 - Import pasted notes or a `.txt` file. Names support Hebrew, Russian, and English.
@@ -78,7 +79,7 @@ pnpm test:e2e
 node scripts/check-reproducible.mjs
 ```
 
-The current suite contains 16 Node tests and 48 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
+The current suite contains 16 Node tests and 54 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
 
 Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
 

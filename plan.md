@@ -10,7 +10,7 @@ Show the whole party first, then let the DJ inspect a genre section. Keep hip-ho
 
 E7-S1–S4, E1-S1–S2, and E5-S1 are implemented and locally verified. The application source is now `src/`; the old standalone HTML files are preserved baselines. Both outputs use the same Svelte root, parser, data, styles, state, and browser adapters.
 
-Validation: 16 Node tests, 48 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
+Validation: 16 Node tests, 54 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
 
 ## Architecture — Astro routes, Svelte views
 
@@ -88,7 +88,7 @@ Design review: Linear’s homepage and product examples (https://linear.app/) in
 
 ## Next UI strategy — compact complete party timeline
 
-Status: implemented and locally verified, 2026-10-11. E9-S1–S4 are Done. Three desktop genre rows and seven phone rows preserve all 26 sections; every hip-hop change is visible. No dependency was added. See docs/verification.md and docs/timeline-layout-metrics.json for prototype measurements and limits.
+Status: implemented and locally verified, 2026-10-11. E9-S1–S5 are Done. All tracks browsing preserves filters and track actions. Three desktop genre rows and seven phone rows preserve all 26 sections; every hip-hop change is visible. No dependency was added. See docs/verification.md and docs/timeline-layout-metrics.json for prototype measurements and limits.
 
 ### Outcome
 

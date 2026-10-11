@@ -134,3 +134,36 @@ test('enlarged text and long imported genres preserve full controls', async ({ p
   await expect(page.locator('.genre-name').first()).toHaveText(long);
   expect(await page.locator('.section-buttons').evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBeTruthy();
 });
+
+test('all tracks keeps source order, filters, corrections and section return', async ({ page }, info) => {
+  await page.goto(url(info.project.name));
+  await page.getByRole('button', { name: 'All tracks', exact: true }).click();
+  await expect(page.locator('#detail-title')).toHaveText('All tracks');
+  await expect(page.locator('#tracks .track')).toHaveCount(126);
+  await expect(page.locator('#tracks .title').first()).toHaveText('Shakira beautiful life 116 bpm');
+  await expect(page.locator('#tracks .title').last()).toHaveText('Me pregunto');
+  await expect(page.locator('.overview-selection, .section-buttons .lit')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Next section', exact: true })).toBeDisabled();
+  await page.getByRole('searchbox').fill('Me pregunto');
+  await expect(page.locator('#tracks .track')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Edit Me pregunto', exact: true }).click();
+  await page.getByLabel('Correct track name').fill('Me pregunto corrected');
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.getByRole('link', { name: 'Search Google for Me pregunto corrected download', exact: true })).toHaveAttribute('href', /Me%20pregunto%20corrected/);
+  await page.getByRole('button', { name: 'Copy Me pregunto corrected', exact: true }).click();
+  await expect(page.locator('#notice')).toContainText(/copied|Copy unavailable/);
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(page.locator('#detail-title')).toHaveText('All tracks');
+  await expect(page.locator('#tracks .track')).toHaveCount(126);
+  await page.getByRole('button', { name: 'Hip hop, 4:00, open 1 tracks', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'All tracks', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#tracks .title')).toHaveText('Me pregunto corrected');
+  await page.getByText('Jump to a section or recorded time', { exact: true }).click();
+  await expect(page.locator('.timing-key')).toContainText('The notes do not give an exact minute.');
+  await page.getByRole('button', { name: 'All tracks', exact: true }).click();
+  await page.getByRole('button', { name: 'Import notes', exact: true }).click();
+  await page.getByLabel('Set notes', { exact: true }).fill('1:00\n(House)\nA\n1:30\n(Hip hop)\nB');
+  await page.getByRole('button', { name: 'Use these notes', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'All tracks', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#tracks .track')).toHaveCount(1);
+});

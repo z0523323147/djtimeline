@@ -1,6 +1,6 @@
 # Verification — 2026-10-11
 
-E9-S1–S4 are implemented in the shared Astro/Svelte app. One proportional time overview sits above a chronological genre sequence and the track workspace. Both outputs use the same components and styles.
+E9-S1–S5 are implemented in the shared Astro/Svelte app. One proportional time overview sits above a chronological genre sequence and the track workspace. Both outputs use the same components and styles.
 
 ## Local checks
 
@@ -8,12 +8,12 @@ E9-S1–S4 are implemented in the shared Astro/Svelte app. One proportional time
 - Astro and Svelte: zero errors/warnings; three informational clipboard deprecation hints.
 - Website build and self-contained offline build pass.
 - 16 Node model/packaging tests pass. The example retains 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, and 2 ideas.
-- 48 Chromium workflow tests pass: hosted and direct-file outputs at 1280×900, 390×844, and 1280×600.
+- 54 Chromium workflow tests pass: hosted and direct-file outputs at 1280×900, 390×844, and 1280×600.
 - Checks cover all 26 ordered genre controls, full label fit, all 11 hip-hop changes, both ruler endpoints, non-overlapping annotations, header alignment, no timeline overflow, keyboard selection, and coordinated overview highlighting.
 - Import/cancel, corrections/reload, encoded Google search, combined filters, corrected copy, clipboard fallback/failure, storage denial, hostile text, repeated markers, and exact-source jumps remain covered. The desktop source-time jump regression was fixed by revealing the track workspace for explicit track jumps.
 - Enlarged-layout checks use half-width/half-height CSS viewports, equivalent to the reflow space at 200% browser zoom. They check full labels, page overflow, keyboard navigation, and long imported genres. This is a reflow simulation, not a native browser-zoom or screen-reader audit.
 - Offline contexts disable networking and audit requests across all workflows. No network/sibling assets or page errors were observed. Google links are checked without navigating away.
-- Repeated offline builds produce identical 77,244-byte files. SHA-256: fd02cdde015c1db600a4f241540b6dddcfe32d2b20fc35fc0a7c4d8f46b43393.
+- Repeated offline builds produce identical 78,028-byte files. SHA-256: ca360b912ba113b4bb3b8cdd75b50d644c7879c187f2bdce9dddb76225eb24cc.
 
 ## Representation spike and measurements
 
@@ -32,7 +32,7 @@ The bounded API comparison used the requirements and primary documentation linke
 
 LayerCake's composition, vis-timeline's scheduler/panning, and ECharts' custom series do not eliminate the custom labels, focus, source uncertainty, or control wrapping required here. Their documented capabilities remain candidates for future scheduling/analytics features. No runtime or package-size comparison against those libraries is claimed.
 
-The final offline file is 2,480 bytes smaller than the previous 79,724-byte build under the same packaging settings. This is a measured whole-app difference after markup/CSS changes, not an attributed library performance advantage.
+The final offline file is 1,696 bytes smaller than the previous 79,724-byte build under the same packaging settings. This is a measured whole-app difference after markup/CSS changes, not an attributed library performance advantage.
 
 ## Timing and visual evidence
 
@@ -43,3 +43,5 @@ Selecting a genre illuminates its button and its estimated overview interval, th
 Refreshed and visually reviewed: party-map-preview.png, party-map-mobile.png, party-map-genre-details.png, and party-map-language-alignment.png. The latter shows the selected hip-hop tracks in the complete page.
 
 Other browsers may restrict file-origin storage/clipboard differently; the app reports session-only saves or copy failure. Native screen-reader review, quota-specific testing, import preview/restore, portable export, and shortcuts remain in the backlog. GitHub Actions is configured; local results do not imply remote CI passed. No hosting deployment is configured.
+
+All tracks follow-up: six additional workflow checks verify 126 tracks in source order, time/genre tags, filters and Reset preserving all-track scope, corrected copy/search, return to a selected section, and import resetting the scope. A plain dotted-outline explanation appears only when the existing timing area is expanded. Desktop proof: party-map-all-tracks.png.

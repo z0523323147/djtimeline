@@ -1,6 +1,6 @@
 # Product backlog
 
-Updated: 2026-10-11. Twelve stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S4. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-11. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
@@ -453,3 +453,13 @@ AC:
 - Existing import/cancel, edit/save/reload, corrected copy/search, combined filters, Hebrew alignment, storage/clipboard failure, hostile text, and final-track navigation remain working.
 - The offline edition requests no network or sibling assets and remains one HTML file; repeated builds are identical.
 - Record achieved desktop/mobile row counts and first-track visibility instead of declaring success from code inspection alone.
+
+### E9-S5 — Browse all tracks and explain uncertain switches · P1 · Done
+
+- [x] Add All tracks alongside track filters, preserving original order and time/genre context.
+- [x] Preserve filtering, Reset, copy/edit/search, section return, and import behavior in both builds.
+- [x] Explain dotted uncertainty markers in the existing expandable timing area.
+
+AC: All tracks reveals the full active set; the example contains 126 tracks. Filtering and Reset retain all-track scope. Clicking a timeline section restores its tracks and selection. Import starts with its first section. No selected interval is implied while browsing all tracks. Uncertain changes remain source ranges.
+
+Evidence: 54 browser workflow checks, 16 model/packaging tests, both builds, reproducibility, and docs/verification.md.
