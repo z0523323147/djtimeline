@@ -4,7 +4,7 @@ Updated: 2026-10-11. Seven stories are **Done**: E7-S1–S4, E1-S1–S2, and E5-
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
-Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 13 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
+Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 14 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
 ## E1 — Complete, usable party navigation · P0
 
@@ -35,14 +35,14 @@ Historical evidence (fixed through full-size button alternatives): baseline hit 
 Subtasks:
 
 - [x] E1-S2-T1 · P1: Choose a non-overlapping selection approach for adjacent short sections.
-- [x] E1-S2-T2 · P1: Preserve true diagram proportions and the section picker alternative.
+- [x] E1-S2-T2 · P1: Preserve true diagram proportions and the expandable section-list alternative.
 - [x] E1-S2-T3 · P1: Test rapid switches at 2:07–2:15 and 3:49–3:56 on a phone.
 
 AC:
 
 - Every short section has a clearly discoverable primary or adjacent control at least 44×44px.
 - Hit areas cannot silently route a tap to a neighboring genre.
-- Keyboard selection and the section picker remain usable.
+- Keyboard selection and the expandable section list remain usable.
 - The diagram does not stretch durations merely to make buttons larger.
 
 ## E2 — Timing users can trust · P1
@@ -292,6 +292,8 @@ AC:
 - CI runs declared checks; validation is not reported as complete based only on six structural tests.
 
 ## E8 — Linear-inspired DJ interface · P1
+
+Completed UX correction (2026-10-11): removed the redundant time/genre selector and selected-section card, kept a collapsed **Browse all sections** fallback, and rendered continuous overview/peak bands without internal dividers. Detailed genre selection and hip-hop boundaries remain intact. E8 stories below still track the broader refinement work.
 
 ### E8-S1 — Introduce coherent tokens and calm layout hierarchy · P1 · Todo
 

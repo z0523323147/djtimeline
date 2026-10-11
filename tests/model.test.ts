@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parseNotes } from '../src/lib/parser.ts';
-import { boundary, timeBands } from '../src/lib/timeline.ts';
+import { boundary, overviewRuns, peakRuns, timeBands } from '../src/lib/timeline.ts';
 import { emptyFilters, googleSearch, matches } from '../src/lib/search.ts';
 import { correctionsKey, loadCorrections, saveCorrections } from '../src/lib/storage.ts';
 
@@ -12,6 +12,14 @@ test('bundled set retains the accepted baseline', () => {
   assert.deepEqual(['isToDownload', 'isBanger', 'isMyIdea'].map(key => m.tracks.filter(t => t[key as keyof typeof t]).length), [42, 25, 2]);
   assert.equal(m.sections.at(-1)?.tracks[0].title, 'Me pregunto');
   assert.equal(boundary(m.sections.at(-1)!), '4:00');
+});
+
+test('overview colors and peaks stay continuous while detailed genres remain selectable', () => {
+  const m = parseNotes('1:00\n(House) הפגזות\nA\n1:10\n(Edm) הפגזות\nB\n1:20\n(Hip hop)\nC\n1:30\n(House)\nD\n1:40\nEnd');
+  assert.equal(m.sections.length, 4);
+  assert.deepEqual(overviewRuns(m).map(r => [r.start, r.end]), [[60, 80], [80, 90], [90, 100]]);
+  assert.deepEqual(peakRuns(m), [{ start: 60, end: 80 }]);
+  assert.deepEqual(m.sections[1].tracks.map(t => t.title), ['B']);
 });
 test('inheritance, embedded parentheses, markers and peak reset', () => {
   const m = parseNotes('12:30\n(House)\nA (remix) --\nהפגזות\nB ///\n1:01\nC\n(Hip hop)\nD הפגזות\nE\n---\n///');

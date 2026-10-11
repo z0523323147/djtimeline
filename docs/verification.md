@@ -9,16 +9,18 @@ Completed stories: E7-S1–S4, E1-S1–S2, E5-S1. The migrated source preserves 
 - Astro development server starts, `/` builds as a static route, and browser APIs are confined to mounted interaction code.
 - `pnpm check`: Astro and Svelte report zero errors and zero warnings. TypeScript emits informational deprecation hints for the intentionally retained clipboard fallback.
 - `pnpm build`: produces `dist/site/index.html` plus its assets and `dist/party-map.html`. Independent builds preserve the other output.
-- 13 Node tests pass: parser baseline/grammar, rollover, sparse/repeated markers, uncertainty, filters, encoded links, storage identity/validation, and offline packaging including closing-tag payloads.
+- 14 Node tests pass: parser baseline/grammar, rollover, sparse/repeated markers, uncertainty, filters, encoded links, storage identity/validation, and offline packaging including closing-tag payloads.
 - 42 Chromium browser tests pass across hosted and direct `file://` builds at 1280×900, 390×844, and 1280×600.
 - Browser coverage includes import/cancel/invalid input, `.txt` files, edit/save/reload, multilingual names, combined filters, corrected Google links, final-section Enter/Space activation, rapid-switch button alternatives, hostile text rendering, corrupt imported data, storage denial, clipboard fallback success, and clipboard failure feedback.
 - Offline contexts disable networking. Request observation across every workflow reports no network or sibling assets; only the HTML document itself is requested. No app page errors were observed.
-- The 4:00 Hip hop end marker opens `Me pregunto` without inventing an ending time. Every section has a separate full-size button in **All sections · easy selection**; rapid switches at 2:07–2:15 and 3:49–3:56 are covered without stretching the diagram.
-- Two unchanged offline builds produce identical 75,757-byte files. SHA-256: `e9d45f92d53f35b41cb630635698f8d954a66ee9f5d70a175467b0ada717de77`.
+- The 4:00 Hip hop end marker opens `Me pregunto` without inventing an ending time. Every section has a separate full-size button in **Browse all sections**; rapid switches at 2:07–2:15 and 3:49–3:56 are covered without stretching the diagram.
+- Two unchanged offline builds produce identical 73,904-byte files. SHA-256: `3dc967359a443a24a310e90d1d9018ca29853fff52eae78eed3c7b67fd40f9a8`.
 
 Bundled model: 126 tracks, 25 blocks, 26 sections, 42 downloads, 25 peaks, 2 ideas. Existing imported-note and correction keys are preserved; scoped title corrections reload correctly.
 
 ## Limits and next work
+
+UX correction: verified removal of the duplicate section dropdown/card and continuous first-band rendering. Existing phone/desktop/short-height tests now select through the timeline, tabs, or full-size section-list buttons. A model check proves overview/peak grouping preserves detailed genre sections. Both outputs and the refreshed screenshots reflect this change.
 
 Local Chromium tests establish behavior for this browser/runtime, not universal file-origin storage or clipboard guarantees. Other browsers may restrict these APIs differently; the app reports session-only changes and copy failure. Storage-full/quota-specific coverage, enlarged-text accessibility checks, import preview/restore, portable export, and the complete Linear visual refinement remain in the backlog.
 

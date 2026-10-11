@@ -140,7 +140,7 @@ main{
 .segment{
   cursor:pointer
 }
-.segment:hover rect,.segment:focus rect{
+.segment:hover .genre-fill,.segment:focus .genre-fill{
   stroke:white;
   stroke-width:2
 }
@@ -165,10 +165,6 @@ main{
   color:var(--muted);
   margin:8px 0 18px
 }
-.section-picker{
-  padding-top:16px;
-  border-top:1px solid var(--line)
-}
 label{
   display:block;
   color:var(--muted);
@@ -178,28 +174,6 @@ label{
 input,select,textarea{
   width:100%;
   min-width:0
-}
-.selected-card{
-  margin-top:10px;
-  border-inline-start:4px solid var(--cyan);
-  padding:12px 14px;
-  background:var(--raised);
-  border-radius:6px
-}
-.selected-card strong{
-  display:block;
-  font-size:18px
-}
-.selected-card p{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:5px
-}
-.selected-card button{
-  width:100%;
-  margin-top:12px;
-  background:#243d43;
-  border-color:var(--cyan)
 }
 summary{
   font-size:15px;
@@ -546,9 +520,6 @@ dialog .dialog-actions{
   .map-row svg{
     height:76px
   }
-  .selected-card p{
-    font-size:13px
-  }
   .result-bar{
     font-size:12px
   }
@@ -556,11 +527,7 @@ dialog .dialog-actions{
     padding-inline:12px
   }
 }
-@media(max-width:850px){
-  .selected-card{
-    display:none
-  }
-}
+
 @media(prefers-reduced-motion:no-preference){
   button,a.action{
     transition:background .15s,border-color .15s

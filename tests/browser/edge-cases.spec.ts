@@ -5,7 +5,7 @@ const url = (name: string) => name.startsWith('offline') ? pathToFileURL(resolve
 test('small-section alternatives select rapid switches without overlapping', async ({ page, context }, info) => {
   if (info.project.name.startsWith('offline')) await context.setOffline(true);
   await page.goto(url(info.project.name));
-  await page.getByText('All sections · easy selection', { exact: true }).click();
+  await page.getByText('Browse all sections', { exact: true }).click();
   const buttons = page.locator('.section-buttons button');
   await expect(buttons).toHaveCount(26);
   for (const id of [11, 12, 22, 23, 24]) {
@@ -15,7 +15,7 @@ test('small-section alternatives select rapid switches without overlapping', asy
     const box = await button.boundingBox();
     expect(box!.height).toBeGreaterThanOrEqual(44); expect(box!.width).toBeGreaterThanOrEqual(44);
     await button.click();
-    expect(await page.locator('#section-select').inputValue()).toBe(String(id));
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('#detail-title')).toBeFocused();
   }
 });
@@ -27,7 +27,7 @@ test('text-file import renders hostile text safely and handles repeated markers'
   await page.getByLabel('Or load a .txt file').setInputFiles({ name: 'set.txt', mimeType: 'text/plain', buffer: Buffer.from(`4:00\n(House)\n${title}\n4:00\n(Hip hop)\nВечер`) });
   await expect(page.getByLabel('Set notes', { exact: true })).toHaveValue(new RegExp('Вечер'));
   await page.getByRole('button', { name: 'Use these notes', exact: true }).click();
-  await page.locator('#section-select').selectOption('0');
+  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await expect(page.locator('#tracks .title')).toHaveText(title);
   await expect(page.locator('#tracks img')).toHaveCount(0);
   if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'The party', exact: true }).click();

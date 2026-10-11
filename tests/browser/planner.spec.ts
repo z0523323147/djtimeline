@@ -9,6 +9,9 @@ test('map, final section, keyboard selection and large controls', async ({ page 
   page.on('request', r => requests.push(r.url()));
   await page.goto(url(info.project.name));
   await expect(page.getByText('126 tracks', { exact: false }).first()).toBeVisible();
+  await expect(page.getByLabel('Choose a time & genre section')).toHaveCount(0);
+  await expect(page.locator('.selected-card')).toHaveCount(0);
+  await expect(page.locator('.map-row').first().locator('.flow-band')).toHaveCount(1);
   const final = page.getByRole('button', { name: 'Hip hop, 4:00, open 1 tracks', exact: true });
   await final.scrollIntoViewIfNeeded(); await final.focus(); await final.press('Enter');
   await expect(page.locator('#detail-title')).toHaveText('Hip hop');
@@ -31,7 +34,7 @@ test('import, cancel, correction, encoded search, combined filters and reload', 
   await page.getByRole('button', { name: 'Import notes', exact: true }).click();
   await page.getByRole('button', { name: 'Use these notes', exact: true }).click();
   await expect(page.locator('header')).toContainText('3 tracks');
-  await page.locator('#section-select').selectOption('0');
+  if (info.project.name.includes('phone')) await page.getByRole('button', { name: 'Tracks', exact: true }).click();
   await page.getByRole('button', { name: 'Edit שלום & Café', exact: true }).click();
   await page.getByLabel('Correct track name').fill('מתוק & Вечер (mix)');
   await page.getByRole('button', { name: 'Save', exact: true }).click();

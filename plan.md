@@ -10,7 +10,7 @@ Show the whole party first, then let the DJ inspect a genre section. Keep hip-ho
 
 E7-S1–S4, E1-S1–S2, and E5-S1 are implemented and locally verified. The application source is now `src/`; the old standalone HTML files are preserved baselines. Both outputs use the same Svelte root, parser, data, styles, state, and browser adapters.
 
-Validation: 13 Node tests, 42 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
+Validation: 14 Node tests, 42 Chromium workflow tests, Astro/Svelte checks, both builds, direct-file operation with networking disabled, and identical bytes from two offline builds. See [docs/verification.md](docs/verification.md). GitHub Actions is configured; local passing checks do not imply remote CI has already run.
 
 ## Architecture — Astro routes, Svelte views
 
@@ -67,6 +67,8 @@ The foundation preserves the accepted palette/layout and extracts color tokens. 
 Time and genre persist until replaced. Only a whole-line genre declaration changes genre; embedded parentheses stay in names. Standalone peak state persists until the next genre, while inline peak markers tag one track. Download/idea markers are stripped from displayed names. Sequential rollover does not assign AM/PM.
 
 No chart estimate becomes an exact source timestamp. Final sections use an explicit end marker without invented duration; untimed and repeated markers remain browsable. Every brief section also has a full-size button alternative without overlapping chart targets or stretching durations.
+
+The clickable timeline is the main navigation. The redundant time/genre dropdown and selected-section card are removed; **Browse all sections** is a collapsed fallback for short sections. Continuous teal/pink overview runs and amber peak runs render without internal divider seams. Detailed genres retain their individual click/keyboard targets and labels; selected sections use an underline, with an outline on hover/focus.
 
 Imports and corrections are untrusted text. Keep copy and Google search tied to the current title. Storage is scoped to the browser/origin, with session-only feedback when unavailable; legacy data remains compatible on the same origin.
 
