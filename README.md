@@ -116,6 +116,12 @@ The bundled set remains **126 tracks, 25 blocks, 26 sections, 42 download choice
 - [AGENTS.md](AGENTS.md), [plan.md](plan.md), [backlog.md](backlog.md) — instructions, architecture, and prioritized work.
 - [SKILLS.md](SKILLS.md), [SUBAGENTS.md](SUBAGENTS.md) — recommended workflows/roles, not installed runtime configuration.
 
+## Next iteration — track-first plans
+
+The requested next version starts with an empty workspace and convenient private-plan switching. Users add tracks with a default current start time, manual genre suggestions and optional end time; contiguous genre sections and real gaps are derived automatically. A compact Add track dialog, automatic acknowledged saves, offline cache/reconnect, five-minute ruler/grid, light/dark/system themes and portable own-account backup are planned, not implemented. See [requirements](docs/track-first-requirements.md), the active sequence in [plan.md](plan.md) and E16–E21 in [backlog.md](backlog.md).
+
+The user clarified that the default 126-track notes are not already a database plan. Import preparation is local; a new private plan must be created through authenticated Supabase and read back before claiming completion.
+
 ## Remaining work
 
 Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Email-code UI, private account navigation and a metadata SQL migration are implemented/prepared. Real email delivery, applied database privacy, cloud song documents, structured editing and live synchronization remain pending. See [plan.md](plan.md), [backlog.md](backlog.md), and [Supabase connection checklist](docs/supabase-connection.md). The existing offline HTML remains network-free; the proposed connected single HTML needs internet for cloud features.

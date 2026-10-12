@@ -1,0 +1,1421 @@
+{
+  "name": "Imported party — 12:30–4:00",
+  "document": {
+    "version": 1,
+    "events": [
+      {
+        "kind": "time",
+        "value": "12:30",
+        "uid": "a6b558af-ec06-4ef7-a79c-d685f62f88a9"
+      },
+      {
+        "kind": "song",
+        "title": "Shakira beautiful life 116 bpm",
+        "originalTitle": "Shakira beautiful life 116 bpm",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "1cf2b2ca-9022-4bb6-b7f3-9569491efac3"
+      },
+      {
+        "kind": "song",
+        "title": "They not like us 116 bpm",
+        "originalTitle": "They not like us 116 bpm",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "6de52032-3bd5-42c6-a91d-125fbc6fc361"
+      },
+      {
+        "kind": "song",
+        "title": "Tony dark eyes - no body",
+        "originalTitle": "Tony dark eyes - no body",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "1151ac50-efae-4091-96be-7a0cdf9cec32"
+      },
+      {
+        "kind": "song",
+        "title": "Cat dealers - snoop",
+        "originalTitle": "Cat dealers - snoop",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "178d7a8d-7072-4270-b377-1586f45e6089"
+      },
+      {
+        "kind": "song",
+        "title": "dj joga - mi Chicko",
+        "originalTitle": "dj joga - mi Chicko",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "09dc9e2c-752d-4127-80f7-e11363c1c6bc"
+      },
+      {
+        "kind": "song",
+        "title": "Nico de andrea - etnica x mi amore",
+        "originalTitle": "Nico de andrea - etnica x mi amore",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "0d56d6cb-eb09-4e55-8e98-66f43ce3e439"
+      },
+      {
+        "kind": "time",
+        "value": "12:50",
+        "uid": "0a27b6e3-ee44-4f9d-8ff7-8a31b1b661bb"
+      },
+      {
+        "kind": "genre",
+        "value": "Melodic house afro tech",
+        "peak": false,
+        "uid": "d19b8483-1356-440e-a894-fa62efd826be"
+      },
+      {
+        "kind": "song",
+        "title": "Асфальт",
+        "originalTitle": "Асфальт",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "132c51c9-f078-4d6c-8ef6-da7c4d3ae4a9"
+      },
+      {
+        "kind": "song",
+        "title": "Зима в сердце",
+        "originalTitle": "Зима в сердце",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "8e023eb7-41be-48c1-8b45-1cde1a1cd456"
+      },
+      {
+        "kind": "song",
+        "title": "Moscow never sleep",
+        "originalTitle": "Moscow never sleep",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c69f9001-84c2-42fe-befb-f05643f167cf"
+      },
+      {
+        "kind": "song",
+        "title": "Грустный денс (afro rech)",
+        "originalTitle": "Грустный денс (afro rech)",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "adbf8c22-ea4b-45c9-aa42-841a612350db"
+      },
+      {
+        "kind": "song",
+        "title": "Dj dark - alabina",
+        "originalTitle": "Dj dark - alabina",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "2f3575c4-7c76-44b3-9433-ddebaf369ecc"
+      },
+      {
+        "kind": "song",
+        "title": "Toko maya - la sonora",
+        "originalTitle": "Toko maya - la sonora",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "26ca8174-b594-43da-a45b-3301c3b06b52"
+      },
+      {
+        "kind": "song",
+        "title": "Inache - andale agasi asparyan",
+        "originalTitle": "Inache - andale agasi asparyan",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "32b1db81-8c64-4c45-8707-4f0358870f65"
+      },
+      {
+        "kind": "song",
+        "title": "Freed from desire xtm remix",
+        "originalTitle": "Freed from desire xtm remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "86da747f-6f9c-4d38-bbb1-6e60daab7de9"
+      },
+      {
+        "kind": "time",
+        "value": "1:01",
+        "uid": "18a8f8bf-dad4-4f9a-af78-1ed9b1a9af94"
+      },
+      {
+        "kind": "genre",
+        "value": "Afro tech",
+        "peak": false,
+        "uid": "736cdc65-1ade-4afc-9578-9170758efba3"
+      },
+      {
+        "kind": "song",
+        "title": "Карабли",
+        "originalTitle": "Карабли",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "e1363e43-08b2-48f5-b993-bd5429067fe6"
+      },
+      {
+        "kind": "song",
+        "title": "Artic asti гармония x bam bam (לא בם בם של סולטו)",
+        "originalTitle": "Artic asti гармония x bam bam (לא בם בם של סולטו)",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "aee167bc-870d-4517-b10c-c13e83106e5f"
+      },
+      {
+        "kind": "song",
+        "title": "Айдахар",
+        "originalTitle": "Айдахар",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "24daf10a-d854-4ba6-bb10-95c05803e88b"
+      },
+      {
+        "kind": "song",
+        "title": "Салют вера",
+        "originalTitle": "Салют вера",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "b4fa3cfb-b093-4091-b954-330a3d6cdc62"
+      },
+      {
+        "kind": "song",
+        "title": "Justin beenr - beauty and a beat",
+        "originalTitle": "Justin beenr - beauty and a beat",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "877bef02-5e96-4245-bd65-808bcdeec69e"
+      },
+      {
+        "kind": "song",
+        "title": "Eminem - without me remix",
+        "originalTitle": "Eminem - without me remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "fe8fa624-4cd8-4571-a5a6-05412649bce5"
+      },
+      {
+        "kind": "song",
+        "title": "Pitbul blanko remix",
+        "originalTitle": "Pitbul blanko remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "0cbf9645-8c99-4b2a-9590-9838fea6215b"
+      },
+      {
+        "kind": "song",
+        "title": "Hot in here maximum risk",
+        "originalTitle": "Hot in here maximum risk",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "9a9cddc9-4135-42bf-b43b-92b7bf146b61"
+      },
+      {
+        "kind": "song",
+        "title": "Шелк",
+        "originalTitle": "Шелк",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "b2ea7f4b-936e-4ef8-b00b-51abf047b151"
+      },
+      {
+        "kind": "time",
+        "value": "1:16",
+        "uid": "e46718cb-c4fe-4cee-883d-aedeed603def"
+      },
+      {
+        "kind": "song",
+        "title": "Xcho - темная ночь",
+        "originalTitle": "Xcho - темная ночь",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "30a47806-371c-4b8c-9628-5ce436409a4d"
+      },
+      {
+        "kind": "song",
+        "title": "Hugel - stay sexy",
+        "originalTitle": "Hugel - stay sexy",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c1a311de-c968-43db-88da-af4c80255730"
+      },
+      {
+        "kind": "time",
+        "value": "1:23",
+        "uid": "c9af479e-6b67-4701-877c-8063d3f80ec6"
+      },
+      {
+        "kind": "genre",
+        "value": "Edm",
+        "peak": false,
+        "uid": "3aa4df37-3530-44fb-973b-8114769762ad"
+      },
+      {
+        "kind": "song",
+        "title": "Omer adam",
+        "originalTitle": "Omer adam",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "9ec60970-1681-4f6d-8dd9-9ac6bec4e289"
+      },
+      {
+        "kind": "song",
+        "title": "Memories remix",
+        "originalTitle": "Memories remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "bf3ae097-2c8c-40b5-b400-8ccd8f42b1eb"
+      },
+      {
+        "kind": "genre",
+        "value": "Afro tech",
+        "peak": false,
+        "uid": "d82763d3-3009-46b3-a34f-6db255648cc7"
+      },
+      {
+        "kind": "song",
+        "title": "Худи",
+        "originalTitle": "Худи",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "ee949caf-7bca-4a55-aaba-09320c2c8c53"
+      },
+      {
+        "kind": "song",
+        "title": "bad bunny - nevauol",
+        "originalTitle": "bad bunny - nevauol",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "a6103ee0-54b6-4df6-9b21-64c1667fd7b7"
+      },
+      {
+        "kind": "song",
+        "title": "Экспонат (x hotell remix)",
+        "originalTitle": "Экспонат (x hotell remix)",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "7d2b5a5d-f9c9-4e6f-8676-e8df43510bd8"
+      },
+      {
+        "kind": "time",
+        "value": "1:30",
+        "uid": "cb045ba8-96d8-4959-b6dc-6cd05340d7ff"
+      },
+      {
+        "kind": "genre",
+        "value": "House",
+        "peak": false,
+        "uid": "b24207b8-a3a1-4347-9896-f442220501c8"
+      },
+      {
+        "kind": "song",
+        "title": "Owek fargo он тебя целует",
+        "originalTitle": "Owek fargo он тебя целует",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "d6535af4-0556-4dd1-bf71-36dfeebe8737"
+      },
+      {
+        "kind": "song",
+        "title": "Люся чеботина - по барабану",
+        "originalTitle": "Люся чеботина - по барабану",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "e61737f3-8c55-4fb3-a4da-9858da73365a"
+      },
+      {
+        "kind": "song",
+        "title": "Gaz x we found love",
+        "originalTitle": "Gaz x we found love",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "ba757d27-02d0-4e11-8b38-101842be0ced"
+      },
+      {
+        "kind": "genre",
+        "value": "Edm",
+        "peak": false,
+        "uid": "deb39e89-736e-42cf-a42c-915c8966045d"
+      },
+      {
+        "kind": "song",
+        "title": "Spacho & lamur - make u x lior narkis shagaat",
+        "originalTitle": "Spacho & lamur - make u x lior narkis shagaat",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "8aa9dd27-feb6-4a08-a957-04223973146d"
+      },
+      {
+        "kind": "song",
+        "title": "Nosa nosa x yama",
+        "originalTitle": "Nosa nosa x yama",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "64f7f4d1-9f0a-494a-8f00-b6c8a5755c53"
+      },
+      {
+        "kind": "song",
+        "title": "dj lindao - Motel de motor",
+        "originalTitle": "dj lindao - Motel de motor",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "a68873d6-d9c2-4ff0-afe6-6f9529cf2b48"
+      },
+      {
+        "kind": "time",
+        "value": "1:40",
+        "uid": "2e48df64-c00b-49a3-b09c-993c064a2e36"
+      },
+      {
+        "kind": "song",
+        "title": "Zarica",
+        "originalTitle": "Zarica",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "6fd632ad-5d9b-4f0c-9310-18f03e4ffad7"
+      },
+      {
+        "kind": "song",
+        "title": "Снова я напиваюсь x argy siera",
+        "originalTitle": "Снова я напиваюсь x argy siera",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "cb19cbe9-b783-439d-ac30-15f7caddf4d1"
+      },
+      {
+        "kind": "song",
+        "title": "Gimme gimme x он тебя целует",
+        "originalTitle": "Gimme gimme x он тебя целует",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "82275ac1-ba2a-4b1c-bbfc-7c24787d1bca"
+      },
+      {
+        "kind": "song",
+        "title": "Bmw שחורה tomer shteyman אתניקס",
+        "originalTitle": "Bmw שחורה tomer shteyman אתניקס",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "36740401-26c2-4366-a691-a210ea20ce65"
+      },
+      {
+        "kind": "song",
+        "title": "One more time",
+        "originalTitle": "One more time",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "dabf3040-678c-4402-afb7-ff41ccb1c000"
+      },
+      {
+        "kind": "song",
+        "title": "I adore you argy x mor avraami",
+        "originalTitle": "I adore you argy x mor avraami",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "fdbd6ca5-ba0a-42dd-9c47-b4310bc9df9e"
+      },
+      {
+        "kind": "time",
+        "value": "1:50",
+        "uid": "75855ff8-811d-4d96-982a-1731a10e2edf"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "ded397f8-2b88-432b-b2bd-3d0341df3ef7"
+      },
+      {
+        "kind": "song",
+        "title": "Te bote",
+        "originalTitle": "Te bote",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "38eb9f6c-4435-4da6-b6fa-9f91a9513f59"
+      },
+      {
+        "kind": "song",
+        "title": "עומר אדם - ראיתי עולם",
+        "originalTitle": "עומר אדם - ראיתי עולם",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "8bec10cb-bc9a-4b4d-ab39-1062e7e52844"
+      },
+      {
+        "kind": "song",
+        "title": "Ido shoam - sha la la",
+        "originalTitle": "Ido shoam - sha la la",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "058ee04b-1f8f-4741-9f28-6ee1fefd77e2"
+      },
+      {
+        "kind": "song",
+        "title": "Тимоти - баклажан",
+        "originalTitle": "Тимоти - баклажан",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "b7aaaaf8-5b42-4cfc-b179-b8e86f0bc986"
+      },
+      {
+        "kind": "song",
+        "title": "5sta familly - зачем",
+        "originalTitle": "5sta familly - зачем",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "317f453c-d72a-4501-b7e8-4b94120f6d29"
+      },
+      {
+        "kind": "song",
+        "title": "Single ladies X shape of you",
+        "originalTitle": "Single ladies X shape of you",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c88b9483-bf9a-477d-8706-6b3df5cc122e"
+      },
+      {
+        "kind": "song",
+        "title": "That way - backstreet boys",
+        "originalTitle": "That way - backstreet boys",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "135e1992-7b5a-4510-9e3d-0156bdb6f3d2"
+      },
+      {
+        "kind": "time",
+        "value": "1:57",
+        "uid": "1bd47a0b-dfa0-4995-84ce-113aa10006a5"
+      },
+      {
+        "kind": "genre",
+        "value": "House",
+        "peak": false,
+        "uid": "73676856-339f-4643-99d6-c56f9d055431"
+      },
+      {
+        "kind": "song",
+        "title": "J bavlon - in da getto House remix",
+        "originalTitle": "J bavlon - in da getto House remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "0376a227-18b6-49bc-828c-a28922b5a9f7"
+      },
+      {
+        "kind": "song",
+        "title": "Goldbaum - havhavhav",
+        "originalTitle": "Goldbaum - havhavhav",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "7bf91480-c2d5-4fc4-9aae-f14c2bbe5701"
+      },
+      {
+        "kind": "genre",
+        "value": "Tribal",
+        "peak": false,
+        "uid": "ae2a0e3b-4753-466c-8cee-66d1f837ab23"
+      },
+      {
+        "kind": "song",
+        "title": "Восточные сказки x majnuna hugel",
+        "originalTitle": "Восточные сказки x majnuna hugel",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "3c43e270-dd5e-40f4-b853-e350ec925feb"
+      },
+      {
+        "kind": "song",
+        "title": "Сияй",
+        "originalTitle": "Сияй",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "298f2953-bfcc-4d64-9f6d-9d8081bb61eb"
+      },
+      {
+        "kind": "genre",
+        "value": "Edm",
+        "peak": false,
+        "uid": "db57e113-b298-48d7-8a08-207f9e3b2f07"
+      },
+      {
+        "kind": "song",
+        "title": "Monaco",
+        "originalTitle": "Monaco",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "8b30ec19-ba83-4e49-aca1-3ef8f72bbce0"
+      },
+      {
+        "kind": "time",
+        "value": "2:07",
+        "uid": "568c7bdb-ff2f-4af3-9eb8-638c2c13d736"
+      },
+      {
+        "kind": "song",
+        "title": "Nicky minaj - starship toby nize",
+        "originalTitle": "Nicky minaj - starship toby nize",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c4fe032a-e92f-4f72-8e9d-b81ba413ddf1"
+      },
+      {
+        "kind": "song",
+        "title": "אודיה 10 רמות מעליו",
+        "originalTitle": "אודיה 10 רמות מעליו",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "4bc287ce-e8d8-482a-a46f-b6df5fd551a2"
+      },
+      {
+        "kind": "song",
+        "title": "Sandstorm zans remix",
+        "originalTitle": "Sandstorm zans remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "65c46faf-4206-4f75-809d-903f67d3c9cf"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "7692cdcb-7109-4219-9ec9-a28099f7a431"
+      },
+      {
+        "kind": "song",
+        "title": "Dansa kuduro",
+        "originalTitle": "Dansa kuduro",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "f41a8cab-6f98-4009-967a-dfb0d5e333e5"
+      },
+      {
+        "kind": "time",
+        "value": "2:15",
+        "uid": "d0b6defb-b87e-4090-85ed-adb90428100f"
+      },
+      {
+        "kind": "genre",
+        "value": "Edm",
+        "peak": true,
+        "uid": "d08a27a2-39e1-455c-8568-0c00ceda8042"
+      },
+      {
+        "kind": "song",
+        "title": "Камин remix",
+        "originalTitle": "Камин remix",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "d2701ae5-136b-41b2-88f7-fb62277d8c0d"
+      },
+      {
+        "kind": "song",
+        "title": "solto - Bam bam",
+        "originalTitle": "solto - Bam bam",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "4438f943-ca40-48e3-ab58-7ba893186b1e"
+      },
+      {
+        "kind": "song",
+        "title": "volkoder - Unique moment",
+        "originalTitle": "volkoder - Unique moment",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "54a668c1-8cc1-4aeb-81f8-24c184477deb"
+      },
+      {
+        "kind": "song",
+        "title": "carsen - crank that (solja boy supermen)",
+        "originalTitle": "carsen - crank that (solja boy supermen)",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "24ab2dfd-1d90-4456-97c1-557131ac6d45"
+      },
+      {
+        "kind": "time",
+        "value": "2:24",
+        "uid": "f1770bfc-13a4-4d6d-be5e-27df29bae591"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "82ab28bf-936d-401b-9f05-c87168fab6d2"
+      },
+      {
+        "kind": "song",
+        "title": "שחר סאול דובשניה",
+        "originalTitle": "שחר סאול דובשניה",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "bc284d66-3e2f-4dc1-a22a-f36c7646676d"
+      },
+      {
+        "kind": "song",
+        "title": "כך זה אופק אדנק x shake it to the max",
+        "originalTitle": "כך זה אופק אדנק x shake it to the max",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "0b75a79f-5bb7-4912-8da7-78ddafa17540"
+      },
+      {
+        "kind": "song",
+        "title": "Yeah",
+        "originalTitle": "Yeah",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "45034e52-c4df-475b-8e97-0c9b702cffe5"
+      },
+      {
+        "kind": "song",
+        "title": "Macarena",
+        "originalTitle": "Macarena",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "abf43d68-cf2f-4f16-9092-f061d219e622"
+      },
+      {
+        "kind": "song",
+        "title": "Malrboro",
+        "originalTitle": "Malrboro",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "965cc1c2-2a95-4cbf-9eb4-a79ad8da9cf1"
+      },
+      {
+        "kind": "time",
+        "value": "2:30",
+        "uid": "71366bfe-8ff5-4864-b1a9-dc26f57cf3ee"
+      },
+      {
+        "kind": "genre",
+        "value": "House",
+        "peak": false,
+        "uid": "8bf4e2b3-fd0c-422b-8096-2ab504f30305"
+      },
+      {
+        "kind": "song",
+        "title": "5sta familly - я буду",
+        "originalTitle": "5sta familly - я буду",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "793026cd-f049-42ce-a7db-939e0cc5f8df"
+      },
+      {
+        "kind": "song",
+        "title": "Artic asti - лампочки",
+        "originalTitle": "Artic asti - лампочки",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "96f237d3-a894-44b0-8e01-3906438394f2"
+      },
+      {
+        "kind": "song",
+        "title": "I got love",
+        "originalTitle": "I got love",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "dddfde69-3e5f-48e4-b5ee-9a7ec5eb47b0"
+      },
+      {
+        "kind": "genre",
+        "value": "Dance",
+        "peak": true,
+        "uid": "9f301bbb-448d-4d3f-97bd-b3373fe85603"
+      },
+      {
+        "kind": "song",
+        "title": "Osher cohen - שונא את תל אביב x darco we we we",
+        "originalTitle": "Osher cohen - שונא את תל אביב x darco we we we",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "f3656b3f-542f-4613-a57a-55e65db4dcc3"
+      },
+      {
+        "kind": "song",
+        "title": "Hugel movin to the sun",
+        "originalTitle": "Hugel movin to the sun",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "aa3f224e-e037-41b1-b74a-4d92e4f9186f"
+      },
+      {
+        "kind": "time",
+        "value": "2:40",
+        "uid": "5203ac36-0006-4b86-b9eb-1f6160ec1a7a"
+      },
+      {
+        "kind": "song",
+        "title": "Франциский поцелуй",
+        "originalTitle": "Франциский поцелуй",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "4e2185e5-6973-406b-9723-0b34016c9a13"
+      },
+      {
+        "kind": "song",
+        "title": "Amanda",
+        "originalTitle": "Amanda",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "ae1a0c22-a6cd-40c5-b8cb-953b69a72d71"
+      },
+      {
+        "kind": "song",
+        "title": "Osher cohen - מנגן ושר",
+        "originalTitle": "Osher cohen - מנגן ושר",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "d9f82367-319b-4665-adf6-9646a2b7bc96"
+      },
+      {
+        "kind": "song",
+        "title": "Bittuev - Как быть",
+        "originalTitle": "Bittuev - Как быть",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "aa1ededa-d119-49c0-bfb7-a2abd25f44cd"
+      },
+      {
+        "kind": "song",
+        "title": "Rhytm of the night remix",
+        "originalTitle": "Rhytm of the night remix",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "751d6063-0d2c-488c-a5a5-aa520a3e49bf"
+      },
+      {
+        "kind": "song",
+        "title": "Салют вера x adriatique racer",
+        "originalTitle": "Салют вера x adriatique racer",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "a1548c72-42b4-4e08-9e6d-9734216926a1"
+      },
+      {
+        "kind": "song",
+        "title": "Харизма גרסה edm",
+        "originalTitle": "Харизма גרסה edm",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "f6a79392-d1e9-454c-bbd7-0c4f981a1d0a"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "84cb02ef-1472-403a-8ba1-3f7ad10822fd"
+      },
+      {
+        "kind": "song",
+        "title": "גל מלכה - בא לה לרקוד",
+        "originalTitle": "גל מלכה - בא לה לרקוד",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "d579da38-26f7-4637-9a2c-a2b61c4e0ade"
+      },
+      {
+        "kind": "time",
+        "value": "2:50",
+        "uid": "b824cbc7-b495-4bfe-9db4-f04803b881cf"
+      },
+      {
+        "kind": "song",
+        "title": "Gasolina",
+        "originalTitle": "Gasolina",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "ec35c306-fc08-410f-8682-5f7fc62dd6ea"
+      },
+      {
+        "kind": "song",
+        "title": "Gyal you a party animal feat daddy yanki",
+        "originalTitle": "Gyal you a party animal feat daddy yanki",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "a9ff0ec8-92a4-4737-bb51-b8d199d7914b"
+      },
+      {
+        "kind": "song",
+        "title": "סטאטיק ובנאל רונדלים",
+        "originalTitle": "סטאטיק ובנאל רונדלים",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "aa6db0fa-f205-4a5d-ad1c-d600311ce4c6"
+      },
+      {
+        "kind": "song",
+        "title": "החוף של טרמפלטוני",
+        "originalTitle": "החוף של טרמפלטוני",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "4e05fd4e-de15-4fce-bf7b-008d035027cb"
+      },
+      {
+        "kind": "song",
+        "title": "Husband x beyonse crazy in love",
+        "originalTitle": "Husband x beyonse crazy in love",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "127a09e3-e5a5-4600-b05a-f21630a61eb9"
+      },
+      {
+        "kind": "song",
+        "title": "Шаде",
+        "originalTitle": "Шаде",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "fcd61155-1989-4fbe-9cbd-a605635ca4e9"
+      },
+      {
+        "kind": "time",
+        "value": "3:00",
+        "uid": "daf3fd4c-5624-47d1-ab1e-9c16457c81b9"
+      },
+      {
+        "kind": "genre",
+        "value": "Afro tech",
+        "peak": false,
+        "uid": "64130e25-1825-4133-a122-b99ce7f3be12"
+      },
+      {
+        "kind": "song",
+        "title": "Асфальт",
+        "originalTitle": "Асфальт",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "100d1edc-b153-4373-abce-d3e802b1548e"
+      },
+      {
+        "kind": "peak",
+        "uid": "8d48d53c-386e-4cc5-9308-1cd5d111dbf8"
+      },
+      {
+        "kind": "song",
+        "title": "Baiana x Красиво afro tech",
+        "originalTitle": "Baiana x Красиво afro tech",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "b8e9fbb8-530e-4c8c-85de-f8f00eaa29c0"
+      },
+      {
+        "kind": "song",
+        "title": "Моргенштер - последняя любовь",
+        "originalTitle": "Моргенштер - последняя любовь",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "071270da-4f3a-4555-9923-05ea033404b1"
+      },
+      {
+        "kind": "song",
+        "title": "топит dj rem remix",
+        "originalTitle": "топит dj rem remix",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "84fafcc5-be52-4c59-8689-7b910765335f"
+      },
+      {
+        "kind": "time",
+        "value": "3:10",
+        "uid": "b7b8fc6d-8f5f-45ba-80a6-859ec0ae9275"
+      },
+      {
+        "kind": "song",
+        "title": "רולקס וקסקט",
+        "originalTitle": "רולקס וקסקט",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "e58c432c-b705-4bb8-b048-cfbe219e26c7"
+      },
+      {
+        "kind": "song",
+        "title": "Kenobix - head voice",
+        "originalTitle": "Kenobix - head voice",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c8dc1b27-2946-4fbe-992a-9376dcd35ea8"
+      },
+      {
+        "kind": "genre",
+        "value": "Tribal dance",
+        "peak": false,
+        "uid": "8eafd59d-e3d7-470e-a648-5a893d742242"
+      },
+      {
+        "kind": "song",
+        "title": "Who let the dogs out",
+        "originalTitle": "Who let the dogs out",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "c3eae570-c9a4-4b7c-8236-ff77d9dad210"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "f0474c7a-d368-4e8c-9544-f2578a7b1f04"
+      },
+      {
+        "kind": "time",
+        "value": "3:17",
+        "uid": "9e081890-7bac-4741-a986-49725c845cca"
+      },
+      {
+        "kind": "song",
+        "title": "Christina aguilera - Jinie in a botle",
+        "originalTitle": "Christina aguilera - Jinie in a botle",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "4a24dd31-8d40-438d-ab88-9cc8b1dc05eb"
+      },
+      {
+        "kind": "song",
+        "title": "Kazka - plakala",
+        "originalTitle": "Kazka - plakala",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "08c571b5-a860-4557-b7ad-6b4013480118"
+      },
+      {
+        "kind": "song",
+        "title": "אדנק טן טן טן",
+        "originalTitle": "אדנק טן טן טן",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "fcdccacb-2523-4811-855d-f1466562435b"
+      },
+      {
+        "kind": "song",
+        "title": "נתנאל דהן - מלכת הקרח",
+        "originalTitle": "נתנאל דהן - מלכת הקרח",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "8972e7b8-84f6-45e2-a7bb-53d04abc9ba0"
+      },
+      {
+        "kind": "song",
+        "title": "Slim shady",
+        "originalTitle": "Slim shady",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "20b27e6d-dfd0-4e10-ae08-787035e0785d"
+      },
+      {
+        "kind": "song",
+        "title": "Я ухожу красиво",
+        "originalTitle": "Я ухожу красиво",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "e4c15a72-f3b3-4a40-8a7d-473b7504d3a9"
+      },
+      {
+        "kind": "song",
+        "title": "Ritmo",
+        "originalTitle": "Ritmo",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "2824daf7-303f-4a9f-a28b-7eef40502f48"
+      },
+      {
+        "kind": "time",
+        "value": "3:25",
+        "uid": "f556ae33-7e62-4d74-ad00-5f345dc5fbf2"
+      },
+      {
+        "kind": "song",
+        "title": "Тимоти - в клубе",
+        "originalTitle": "Тимоти - в клубе",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "2435ba0f-ef12-469c-934e-317f2626a24a"
+      },
+      {
+        "kind": "song",
+        "title": "Jony - kometa",
+        "originalTitle": "Jony - kometa",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "42986b8d-7c46-4f4f-8e85-1d7e109df6ee"
+      },
+      {
+        "kind": "song",
+        "title": "Fatman scoop - be haitfull x magenta riddm",
+        "originalTitle": "Fatman scoop - be haitfull x magenta riddm",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "e3cb5df8-5108-4c0a-842e-e93d8c6f8707"
+      },
+      {
+        "kind": "genre",
+        "value": "Edm",
+        "peak": true,
+        "uid": "0b69cc66-78e0-4cef-b73e-d04db8783f24"
+      },
+      {
+        "kind": "time",
+        "value": "3:31",
+        "uid": "63bb74da-a35f-4fd4-957a-cfe11db9096c"
+      },
+      {
+        "kind": "song",
+        "title": "Asher swisa mor avraaminim in",
+        "originalTitle": "Asher swisa mor avraaminim in",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "e944eee2-097f-4816-b006-4815775b9715"
+      },
+      {
+        "kind": "song",
+        "title": "Я танцую до утра x el sonida shorty",
+        "originalTitle": "Я танцую до утра x el sonida shorty",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "1a3a25af-4d9b-494b-b449-c612c3377f04"
+      },
+      {
+        "kind": "song",
+        "title": "Satisfaction",
+        "originalTitle": "Satisfaction",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "2020eb6e-e6e4-4aaa-91ee-0780deeee9d7"
+      },
+      {
+        "kind": "song",
+        "title": "כולם גנבים",
+        "originalTitle": "כולם גנבים",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "67f82c92-1be4-4aab-a082-1893af7bc8c3"
+      },
+      {
+        "kind": "song",
+        "title": "Beni al",
+        "originalTitle": "Beni al",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "ad5a5e0a-04b2-4de8-b959-5964ad94498b"
+      },
+      {
+        "kind": "song",
+        "title": "Si ai",
+        "originalTitle": "Si ai",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": true,
+        "uid": "9cdb8b61-75f9-4388-a893-3d8b761d368a"
+      },
+      {
+        "kind": "song",
+        "title": "Винтаж - эва x hills",
+        "originalTitle": "Винтаж - эва x hills",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": true,
+        "uid": "29590b70-523d-4930-af55-1f717ac6010b"
+      },
+      {
+        "kind": "time",
+        "value": "3:40",
+        "uid": "50bfe73a-a29e-4015-a88f-98a52b4cc475"
+      },
+      {
+        "kind": "genre",
+        "value": "House/ dance",
+        "peak": false,
+        "uid": "bae214b9-c4cb-4990-933f-0e60f23695c7"
+      },
+      {
+        "kind": "song",
+        "title": "По весне",
+        "originalTitle": "По весне",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "335939ae-17dc-44c9-ada2-fed2e4eac927"
+      },
+      {
+        "kind": "song",
+        "title": "Добро - Юность x fire fire dance remix",
+        "originalTitle": "Добро - Юность x fire fire dance remix",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "c06362be-9ab0-433e-95ec-7f0ba42e45ff"
+      },
+      {
+        "kind": "song",
+        "title": "השם יתברך תמיד אוהב אותי",
+        "originalTitle": "השם יתברך תמיד אוהב אותי",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "aa483da6-f506-482d-aee2-65b2def0fb05"
+      },
+      {
+        "kind": "song",
+        "title": "Argy - anima x love tonight",
+        "originalTitle": "Argy - anima x love tonight",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "9db687a1-4a08-4270-943d-f2eb68359df0"
+      },
+      {
+        "kind": "time",
+        "value": "3:45",
+        "uid": "f0b71cbb-bfb2-4db0-9648-468df87a7cb0"
+      },
+      {
+        "kind": "song",
+        "title": "Space motion - alarma",
+        "originalTitle": "Space motion - alarma",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "f531f85d-c409-4ce1-9efa-ff89f51588ab"
+      },
+      {
+        "kind": "song",
+        "title": "Jedry cohen - hayde",
+        "originalTitle": "Jedry cohen - hayde",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "2e3dbb3e-1591-46a5-be38-b44ea566113a"
+      },
+      {
+        "kind": "time",
+        "value": "3:49",
+        "uid": "2a52a12f-9f6b-4b4f-a13c-360cbc751b31"
+      },
+      {
+        "kind": "genre",
+        "value": "Tribal house",
+        "peak": false,
+        "uid": "5519bc44-a620-4db7-ae33-c80b6b8c3687"
+      },
+      {
+        "kind": "song",
+        "title": "Suavemente",
+        "originalTitle": "Suavemente",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "12a4062e-d942-435b-9de7-7415a1463854"
+      },
+      {
+        "kind": "song",
+        "title": "stephanie",
+        "originalTitle": "stephanie",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "6acb29a0-0779-4f8b-ae42-e1f33089b5f8"
+      },
+      {
+        "kind": "genre",
+        "value": "Indie dance",
+        "peak": false,
+        "uid": "cd5b71f3-ab4f-4693-9b10-11e985f9cfb5"
+      },
+      {
+        "kind": "song",
+        "title": "morinio - eonovyal",
+        "originalTitle": "morinio - eonovyal",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "d6525463-0281-4944-873e-2d3f919a0da6"
+      },
+      {
+        "kind": "genre",
+        "value": "Tech house",
+        "peak": false,
+        "uid": "1c6870eb-0b21-4b00-8f58-47d8d5475b3b"
+      },
+      {
+        "kind": "song",
+        "title": "Ben adam patumba",
+        "originalTitle": "Ben adam patumba",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "aaa2acde-30bd-4b5b-9c5f-81da50f55305"
+      },
+      {
+        "kind": "song",
+        "title": "trfn- Milkshake",
+        "originalTitle": "trfn- Milkshake",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "7edd7b82-c954-4550-bbd5-f64b3c1db818"
+      },
+      {
+        "kind": "song",
+        "title": "Darco - baziman",
+        "originalTitle": "Darco - baziman",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "c61e7ea5-6d64-4f41-a3a3-2a469eb09448"
+      },
+      {
+        "kind": "time",
+        "value": "3:56",
+        "uid": "37b43882-3846-42ba-973d-022360ba4418"
+      },
+      {
+        "kind": "song",
+        "title": "Sweet dreams x all i need a love tonight",
+        "originalTitle": "Sweet dreams x all i need a love tonight",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "cc1a7d74-f56c-4a79-83b6-0c77487828b6"
+      },
+      {
+        "kind": "song",
+        "title": "Max steeler- love tonight",
+        "originalTitle": "Max steeler- love tonight",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "5ea2b5d5-100d-40d6-b08a-45097bc349ca"
+      },
+      {
+        "kind": "song",
+        "title": "Rasa - marimba",
+        "originalTitle": "Rasa - marimba",
+        "isBanger": false,
+        "isToDownload": true,
+        "isMyIdea": false,
+        "uid": "1a8e74ea-5ae3-4a31-a911-4fa7cdb11fb6"
+      },
+      {
+        "kind": "time",
+        "value": "4:00",
+        "uid": "e5052d84-be88-46d9-8251-d90fd0e7d2c1"
+      },
+      {
+        "kind": "genre",
+        "value": "Hip hop",
+        "peak": false,
+        "uid": "1ac22cfe-d435-4aec-b1cc-996030f8b811"
+      },
+      {
+        "kind": "song",
+        "title": "Me pregunto",
+        "originalTitle": "Me pregunto",
+        "isBanger": false,
+        "isToDownload": false,
+        "isMyIdea": false,
+        "uid": "a3c4d615-6b0f-4aa7-9f62-e77c4611c92d"
+      }
+    ]
+  }
+}

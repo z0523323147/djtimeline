@@ -1,8 +1,26 @@
 # Project plan
 
+## Active direction — track-first plans, automatic sections and offline recovery
+
+This update supersedes the earlier manual Add section/Add song workflow and explicit-save-only milestone. Detailed requirements and unresolved responsive ruler tradeoff: [track-first requirements](docs/track-first-requirements.md). Existing implementation evidence below is historical; these changes are planned, not shipped.
+
+1. **M6 / E16 — model and additive migration (P0).** Introduce document v2 with stable track UUIDs, genre, exact/range/unknown start evidence, optional explicit end and day offset. Preserve v1 source events/provenance and stable identities; produce a pure interval/section adapter, validation and compatibility matrix. Keep existing documents/older clients working and reject a legacy save that would erase v2 timing. Never rewrite an estimated imported start as exact. Resolve overlap, same-minute and midnight cases before UI implementation.
+2. **M7 / E17 + E18 — workspace and focused editor (P1, interaction regression P0).** Empty connected home plus persistent searchable plans rail/mobile drawer. Track modal owns independent state; replace section creation with title/genre/Now start/optional end. Automatic grouping and gap-aware timeline derive from committed tracks. Preserve copy/edit/search/multilingual behavior. The next reviewable UI slice includes plan switching, Add track, All tracks independence and bright selection.
+3. **M8 / E19 + E13 — automatic save and resilient cache (P0).** Scope acknowledged snapshots/outbox/drafts by project/user/plan; prove storage on Chrome file://. Serialize/coalesce revisioned saves, distinguish device versus cloud acknowledgement, permit safe cached-plan switching offline, reconcile session/remote revisions before replay. Connect to existing E13-S2 for live second-session updates after single-session durability.
+4. **M9 / E20 + E8 — ruler and themes (P1).** Prototype one full-height grid with five-minute major and one-minute minor ticks, readable genre labels, visible hip-hop switches and real gaps. Measure the 43-label phone constraint before choosing a responsive compromise. Introduce shared light/dark/system tokens; retain all sections and useful track space. No chart dependency is selected without a measured source/packaging benefit.
+5. **M10 / E21 + E11-S3 + E13-S3 — import and portable backups (P0/P1).** Parse the user's pasted default set and prepare a validated import manifest. User clarified it is not already a database plan: create a new private plan, do not replace existing plans. Complete through the authenticated app, acknowledge then read back. Add selected/all-own-plan JSON export/restore and original-template import with preview, limits and recovery.
+6. **Release / E14 extensions (P0).** Test pure interval derivation and migration, real hosted ownership/concurrency, offline queue/reload/reconnect/expired-auth, cross-account cache isolation, imports/retries and accessibility in both themes and both builds. Record hosted evidence separately from synthetic mocks.
+
+Implementation ownership: orchestrator integrates; UI/UX reviews hierarchy/prototypes; architecture owns model/DB compatibility; synchronization owns cache/outbox; QA/accessibility validates acceptance. Role descriptions alone do not trigger delegation.
+
+Auth remains Supabase email/password without SMTP, as selected by the user. Administrative manual password reset replaces the initial mail-recovery requirement; a safe admin-only workflow is documented separately. Email addresses remain unverified with confirmation off. No privileged reset credential is exposed in the app. Hosting/CAPTCHA/SMTP are not dependencies of this selected downloadable release.
+
+No account passwords or service-role keys are needed for import. The exact cloud plan name can be chosen in the import dialog; default proposed name is Imported party — 12:30–4:00. Current remote content storage/migration state still requires verification.
+
+
 Updated: 2026-10-12. User confirms a real private plan was created. The next milestone is full database-backed plan management: list/open existing plans, add/edit songs and sections, and persist their complete content. The first full-content app slice is implemented locally and tested; migration 004 must be applied to activate it in the user's database. Cross-device notifications and the remaining release gates are pending.
 
-## Current milestone: complete plans in Supabase
+## Previous milestone — full-content foundation
 
 Success means: sign in → see my existing plans from the database → open one → add a genre/time section and songs → see the timeline update → receive a database save acknowledgement → reload or open another device and see the same content. A plan name alone is not completion. Song data means titles, flags, order, genre context and timing evidence; audio files remain outside this milestone.
 

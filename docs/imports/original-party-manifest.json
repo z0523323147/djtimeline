@@ -1,0 +1,26 @@
+{
+  "status": "Prepared locally; NOT uploaded to Supabase",
+  "source": "src/data/example-notes.txt",
+  "sourceSha256": "0a0074bcb24ec012b25ca10b8c920c69690a022402098b682cfd6f450959b467",
+  "payloadSha256": "a680c4f3dd30dad02527a69fab68860aa2606efff8f14930df3eb8e332c968c1",
+  "documentVersion": 1,
+  "intendedDestination": "New private plan owned by the signed-in user; never replace an existing plan",
+  "counts": {
+    "tracks": 126,
+    "timeBlocks": 25,
+    "legacySections": 26,
+    "download": 42,
+    "peak": 25,
+    "ideas": 2
+  },
+  "firstTrack": "Shakira beautiful life 116 bpm",
+  "lastTrack": "Me pregunto",
+  "timing": "Source markers/ranges only; no invented exact per-track start, end, date or AM/PM",
+  "nextSteps": [
+    "Verify migration 004 and authenticated owner context",
+    "Preview source versus local title corrections and choose name",
+    "Use createPlanDocument with retry-stable operation UUID",
+    "Read back and verify content after server acknowledgement"
+  ],
+  "restoreSupport": "Current app accepts pasted/.txt notes. This JSON is prepared canonical API payload, not yet supported as a user-facing backup import."
+}

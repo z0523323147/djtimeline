@@ -1,12 +1,173 @@
 # Product backlog
 
+## Active queue — track-first planner (2026-10-12)
+
+Authority: [track-first requirements](docs/track-first-requirements.md), R1–R8. Everything below is **Todo** unless explicitly described as prepared; checked historical tasks retain their evidence but do not imply this iteration is implemented. This queue supersedes the earlier active release order.
+
+Execute: E16-S1/S2 → E17-S1 + E18-S1/S2 → E19-S1/S2 → E20-S1/S2 → E21-S1/S2 → E14 hosted/release extensions. Existing E13-S2 owns cross-device notifications; do not build a second sync path. Import preparation can proceed alongside model planning, but remote upload requires authenticated owner context and confirmed migration availability.
+
+Scope reconciliation:
+
+- E12-S1 manual section editor and E12-S2 destination-section selection are **Superseded by E16/E18** for future editing. Retain imported timing evidence and implemented legacy code until the additive migration ships. Sections become derived, not authored.
+- E12-S3 move-between-sections is replaced by explicit track time/genre editing; reorder of tied/untimed tracks remains possible. E12-S4 removal/undo survives, but no user-authored section deletion is required.
+- E13-S1 remains the save/revision contract; E19 adds automatic scheduling and durable cache rather than another repository. E13-S3 structured recovery is delivered with E21-S2.
+- E11-S2 remains the ownership/list/open contract; E17 adds empty-first shell and persistent navigation. E11-S3 source import is fulfilled with E21-S1; E3-S1 remains optional corrected text export with explicit loss reporting.
+- E8-S1 visual tokens are delivered with E20-S2. E9's completed macro/navigation behavior is preserved; five-minute ruler is a new acceptance requirement.
+- E15-S2-T2 mail delivery/recovery is superseded for the selected initial release by manual administrator recovery without SMTP. Unverified email ownership remains a stated limitation; E15-S3 hosting is conditional future scope, not a downloadable-release blocker.
+
+## E16 — Track timing model and derived sections · P0 · Todo
+
+### E16-S1 — Define track-first document v2 and timing derivation · P0 · Todo
+
+Requirements: R2/R3. Owner: data architecture. Dependencies: existing E11-S1.
+
+- [ ] E16-S1-T1: Define UUID/title/originalTitle/genre/flags/start evidence/optional end/day offset/source provenance and documented size limits.
+- [ ] E16-S1-T2: Convert v1 source records without fabricating exact times or discarding UUIDs/unknown genres/flags; retain a compatibility adapter.
+- [ ] E16-S1-T3: Implement pure ordering, inferred endings, explicit gap derivation, same-genre merging, tied starts and open-ended final caps.
+- [ ] E16-S1-T4: Validate overnight/day offset and explicit overlaps; generate field errors and preserve user input.
+- [ ] E16-S1-T5: Prove parser parity plus interval fixtures; define edits to imported uncertain starts separately from new exact starts.
+
+AC: House 01:00 + House 01:05 yields one continuous genre section. Explicit 01:07 finish followed by Hip hop 01:12 leaves a five-minute blank gap. No end inherits the next known start; final unknown end is a selectable cap. Same-minute tracks remain listed without invented duration. 23:58→next-day 00:03 works; retrospective edits do not add a day silently. Adjacent same-genre source markers/peak flags do not add unexplained dividers. Imported uncertain genre changes and unknown first genre remain honest. Model derivation requires no browser API.
+
+### E16-S2 — Additive database compatibility and validation · P0 · Todo
+
+Owner: database architecture. Dependencies: E16-S1, existing E10-S2/E14-S1.
+
+- [ ] E16-S2-T1: Prepare migration after 004 supporting v1/v2 document validation and atomic conversion, including count/revision/receipt behavior.
+- [ ] E16-S2-T2: Prevent older clients overwriting v2 content with lossy v1 saves; document actionable upgrade errors.
+- [ ] E16-S2-T3: Test existing plan preservation, RLS/owner immutability, direct-write denial, invalid endings/overlaps, rollback and idempotent retries.
+- [ ] E16-S2-T4: Verify applied hosted migration state before rollout; run actual A/B/anonymous known-ID tests.
+
+AC: No plan/owner/name is reset, old v1 reads remain supported, new track fields persist on reload, and incompatible old writes cannot erase end times. Invalid documents fail atomically. Local SQL tests and actual hosted privacy checks are separately recorded.
+
+## E17 — Empty-first workspace and convenient plan switching · P1 · Todo
+
+### E17-S1 — Keep My plans accessible beside an empty or active workspace · P1 · Todo
+
+Requirements: R1. Owner: UI/UX. Dependencies: existing E11-S2, E19-S1 before offline release.
+
+- [ ] E17-S1-T1: Replace default example/auto-open-last-plan with explicit selection and a quiet empty main workspace.
+- [ ] E17-S1-T2: Add desktop rail/collapse and phone plan drawer with selected state, search, counts and pagination beyond 50 plans.
+- [ ] E17-S1-T3: Create/open/rename plans without losing pending per-plan changes; guard delayed loads and account switches.
+- [ ] E17-S1-T4: Migrate legacy local set into discoverable named local data; example notes stay explicitly importable. Keep offline edition auth/network-free.
+
+AC: Login/reload shows no timeline until the user opens a plan. Create opens a blank plan. With two plans, switching displays only the selected document and preserves queued changes; a failed load cannot show the previous plan under a new name. Mobile navigation leaves readable main content and 44px targets. More than 50 plans can be found. A user's cached data never appears in another account.
+
+## E18 — Focused Add track and genre suggestions · P1 · Todo
+
+### E18-S1 — Isolate creation from browsing and replace persistent forms · P0 · Todo
+
+Requirements: R2/R4. Owner: UI/UX. Dependencies: E16-S1, E17-S1 shell.
+
+- [ ] E18-S1-T1: Remove All tracks handler's songForm=true coupling; isolate navigation/filter/creation state.
+- [ ] E18-S1-T2: Replace Add section/Add song controls with a hover/focus-emphasized, always discoverable + Add track action.
+- [ ] E18-S1-T3: Implement compact modal/dimmed inert background, phone sheet/reflow, field errors, Cancel/Escape and focus return.
+- [ ] E18-S1-T4: Capture Now once on opening, allow start/day override and optional end; commit title/genre/timing atomically and derive timeline immediately.
+- [ ] E18-S1-T5: Preserve dirty form drafts on deliberate dismissal; keep existing title editing/copy/Google search/flags/removal undo.
+
+AC: All tracks, section selection and filters never open/close/edit the creation form. Only Add track opens it. Start defaults to the device's current minute and stays fixed during typing. A valid track needs no section creation. Cancel writes nothing; successful Add closes the form, reveals the track and schedules save. Missing title/genre, invalid end and overlap preserve inputs with focused errors. Touch and keyboard can add without hover. Underlying controls cannot activate while the modal is open.
+
+### E18-S2 — Suggest distinct existing genres without restricting new input · P1 · Todo
+
+Requirements: R2. Owner: UI/UX + data. Dependencies: E18-S1.
+
+- [ ] E18-S2-T1: Build an owner-scoped genre vocabulary from all plan metadata/authorized documents, not just the first page; define efficient vocabulary refresh without adding a global catalog.
+- [ ] E18-S2-T2: Implement editable combobox with trim/case-insensitive dedup, prefix/substring matching, and custom genre entry.
+- [ ] E18-S2-T3: Verify keyboard list selection, Enter/Escape precedence, screen-reader labels, multilingual names and offline cached suggestions.
+
+AC: Typing hi suggests Hip hop once despite spacing/case variants. House and Tech house stay distinct. A new genre is accepted. Suggestions contain no other user's labels. Cached suggestions work offline; absent cache permits manual input. Selecting a suggestion does not accidentally submit the dialog.
+
+## E19 — Automatic acknowledged saves and offline cache · P0 · Todo
+
+### E19-S1 — Persist complete cached plans and pending operations · P0 · Todo
+
+Requirements: R6. Owner: synchronization. Dependencies: E16-S1, existing E13-S1.
+
+- [ ] E19-S1-T1: Prove IndexedDB on Chrome file:// and add validated localStorage fallback/capability reporting.
+- [ ] E19-S1-T2: Store metadata, acknowledged snapshot, revision, pending operation and drafts by project/user/plan; version/upgrade cache safely.
+- [ ] E19-S1-T3: Reopen and edit previously cached plans offline after reload; distinguish uncached/unavailable and storage-denied session-only states.
+- [ ] E19-S1-T4: Lock retained private recovery on sign-out/account switch and enforce owner context before replay; add explicit cache removal/export handling.
+
+AC: Open online→offline→add track→reload restores the queued track. Two cached plans switch independently. Acknowledged plans also reopen offline, not only dirty drafts. Denied storage never reports a durable device save. B cannot see or replay A's cache. Changing file location/origin has documented effects; no encrypted-cache claim without actual encryption.
+
+### E19-S2 — Autosave commits, reconnect and resolve conflicts · P0 · Todo
+
+Requirements: R6. Owner: synchronization. Dependencies: E19-S1/E16-S2, existing E13-S1. Realtime stays E13-S2.
+
+- [ ] E19-S2-T1: Schedule serialized/coalesced saves after add/edit/delete/undo/import commits, keeping immutable owner/plan/revision/operation IDs.
+- [ ] E19-S2-T2: Replace mandatory Save with quiet state plus Retry on failure; persist next changes while an earlier save is in flight.
+- [ ] E19-S2-T3: On reconnect/focus, validate auth then fetch revision and replay safely; preserve ambiguity receipts and expired-session drafts.
+- [ ] E19-S2-T4: Allow plan switching with retained queues; offer conflict copy/account version without destructive automatic merging.
+
+AC: Add track is stored without a second Save click. Saved to account only follows acknowledgement; offline commit reports device-pending. A dropped response and retry produce one edit. Two same-revision clients yield a recoverable conflict. Late saves never enter another plan/account. A changed remote revision never silently overwrites queued work. Local rendering does not depend on Realtime.
+
+## E20 — Five-minute timeline and light/dark visual system · P1 · Todo
+
+### E20-S1 — Prototype and ship readable ruler/grid with real gaps · P1 · Todo
+
+Requirements: R3/R5. Owner: UI/UX + timeline. Dependencies: E16-S1.
+
+- [ ] E20-S1-T1: Prototype complete five-minute labels/grid on desktop and two responsive phone treatments using the 210-minute baseline.
+- [ ] E20-S1-T2: Measure collision/height/first-track visibility and review the phone compromise before implementing omitted macro labels or extra inspection UI.
+- [ ] E20-S1-T3: Render major five-minute and legible minor one-minute full-height grid; preserve empty gaps, genre labels, click targets and bright selection.
+- [ ] E20-S1-T4: Verify hip-hop boundaries, unknown ranges/final cap, arbitrary offsets and overnight labels; no fake durations or scrolling workaround.
+
+AC: Label/tick/grid coordinates agree; desktop five-minute HH:mm labels are legible. Real gaps have no genre fill. Exact/uncertain hip-hop boundaries remain clear. The agreed phone treatment maintains five-minute reading without overlapping labels, tiny text or concealed sections. All-sections macro remains available without internal scrolling. Do not close this story while the full-label phone requirement is unresolved.
+
+### E20-S2 — Implement minimal hierarchy and Dark/Light/System themes · P1 · Todo
+
+Requirements: R8. Owner: UI/UX + accessibility. Dependencies: E17/E18; fulfills E8-S1 tokens.
+
+- [ ] E20-S2-T1: Review header/rail/toolbar/track actions; remove persistent creation chrome and repetitive copy.
+- [ ] E20-S2-T2: Define semantic tokens for light/dark surfaces, text, grid, focus, selection, hip-hop and peak; retain system/default override.
+- [ ] E20-S2-T3: Verify both themes, reduced motion, Hebrew/Russian/English, enlarged text, contrast and mobile/short viewport controls.
+
+AC: System preference is default; chosen theme survives reload. Both themes preserve genre/peak meanings without relying only on color. Modal masks background, track rows remain spacious, no horizontal page overflow, names/actions remain readable and directly usable. Theme toggle never changes editor/browsing state.
+
+## E21 — Import the original set and portable own-account backup · P0/P1 · Todo
+
+### E21-S1 — Import supplied notes as a new private database plan · P0 · Todo
+
+Requirements: R7. Owner: data + integration. Dependencies: existing E11-S3, confirmed migration 004 (v1 import) or E16-S2 (v2); signed-in account.
+
+- [x] E21-S1-T1: Prepare canonical import/manifest from the supplied default source; confirm 126 tracks, 25 blocks, 26 legacy sections, 42 download, 25 peak and 2 idea tracks. Prepared locally in docs/imports/original-party-plan.json and original-party-manifest.json; schema validation/count check passed. NOT uploaded.
+- [ ] E21-S1-T2: Preview original versus browser corrections, warnings and new-plan name; user clarified this is NOT an existing DB plan. Never overwrite an unrelated plan.
+- [ ] E21-S1-T3: Atomic owner-scoped create-with-document using retry-stable operation ID; keep local source until acknowledgement.
+- [ ] E21-S1-T4: Read back/reload from Supabase, verify titles/markers/timing and record actual hosted evidence.
+- [ ] E21-S1-T5: Keep original pasted/.txt template import; add named replace/append preview, overlap checks and pre-replace recovery.
+
+AC: A new private plan contains the supplied set after reload without copying browser storage. Initial unspecified genre, uncertain changes, multilingual titles and final unknown ending are preserved. Repeated retries do not duplicate the plan. Cancel/parse/permission failure preserves existing data. A/B access remains isolated. Prepared JSON alone is not database-import completion.
+
+### E21-S2 — Export/restore one plan or all own plans to a local file · P1 · Todo
+
+Requirements: R7. Owner: data + synchronization. Dependencies: E16-S1/E19-S1; fulfills E13-S3 backup.
+
+- [ ] E21-S2-T1: Define portable versioned JSON format with document/provenance/end times/flags/metadata and optional clearly marked pending drafts; exclude auth/system/other-user data.
+- [ ] E21-S2-T2: Export selected or all own plans across all pages; handle fetch failures/offline cached-only scope explicitly.
+- [ ] E21-S2-T3: Validate/preview restore; create new current-owner identities with per-plan idempotent receipts and clear partial multi-plan results.
+- [ ] E21-S2-T4: Verify lossless JSON round trip, hostile/oversized/unsupported data, duplicates and interruption recovery; document text export's limitations.
+
+AC: Export→restore reproduces names, track order/genres/timing evidence/explicit ends/flags without secrets. A forged owner in backup never controls ownership. An all-plan export is never falsely called complete after a failed page/document fetch. Interrupted restore can retry without duplicate plans; replacing data is never the default. Original-template import remains accepted; JSON is the lossless format.
+
+## E14 extensions — track-first release evidence · P0 · Todo
+
+- [ ] E14-TF-T1: Validate v1→v2 additive compatibility, hosted owner/revision validation and no lossy old-client write.
+- [ ] E14-TF-T2: Browser flows for Now override/end gaps/genre suggestions/modal cancellation/All tracks independence/empty launch/switching.
+- [ ] E14-TF-T3: Offline cached snapshots + pending edits/reload/reconnect/expired auth/conflict/drop response/storage denial/account switch.
+- [ ] E14-TF-T4: Actual authenticated import/readback, all-own-plan backup/restore and second-session convergence.
+- [ ] E14-TF-T5: Both themes, desktop/phone/short/200% reflow, keyboard/dialog focus and five-minute ruler collision evidence.
+- [ ] E14-TF-T6: Shared Astro/Svelte builds, connected Chrome double-click behavior, network-free offline audit and reproducible packaging.
+
+Release AC: R1–R8 have evidence; all unresolved P0 conditions and the ruler phone choice are resolved. Local/mock success is distinguished from hosted verification; no private account/session credentials enter Git or artifacts. Planning alone does not mark any story Done.
+
+
 Updated: 2026-10-12. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. Cloud stories are **Todo** or **In progress** as marked; remaining refinements are **Todo**. E6-S1 is **Superseded**, not Done. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
 Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 16 Node tests, 54 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
-## Active release: full database-backed plans
+## Previous release queue — superseded by track-first active queue
 
 User confirmed real plan creation on 2026-10-12. The new full-content app slice is implemented and locally tested; migration 004 remains to be applied to activate document storage in the hosted project. Real creation is confirmed by the user, not full content/reload/isolation.
 
