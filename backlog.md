@@ -6,6 +6,25 @@ Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usa
 
 Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 16 Node tests, 54 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
+## Active release: full database-backed plans
+
+User confirmed real plan creation on 2026-10-12. The metadata-only message accurately describes the current implementation; the tasks below remove that limitation. Real creation is confirmed by the user, not full content/reload/isolation.
+
+Execute existing stories in this order, without creating duplicate epics:
+
+1. E11-S1 — stable content model and timeline adapter.
+2. E10-S2 — additive document/backfill migration, ownership and revisioned save API; database QA runs alongside it.
+3. E13-S1 — repository, acknowledged saves, retry/conflict/draft recovery.
+4. E11-S2 — open existing database plans in the shared workspace; create/open/rename and paged database list.
+5. E12-S1/S2 — add/edit sections and songs, recompute the timeline, persist corrections.
+6. E11-S3 — import notes and migrate the corrected local set explicitly.
+7. E13-S2 — live same-account notifications/catch-up after durable saving works.
+8. E14-S1/S2/S3 — actual database isolation, persistence/concurrency, mobile/keyboard and connected/offline release evidence.
+
+First reviewable slice: open the existing blank plan, add a section/song, see Saved to your account, reload and see that song from Supabase. Core tasks are P0. E12-S4 removal/undo is P1; reorder/archive/optional metadata follow the core slice.
+
+Release AC: two plans retain different complete song sets after switching/reload/login; the same account loads them on another device; A/B/anonymous known-ID access is denied; retries/conflicts do not lose or duplicate content; existing timeline/copy/search/import behavior passes; offline HTML remains independent. Songs mean names, flags, order and genre/time context, not audio uploads.
+
 ## E1 — Complete, usable party navigation · P0
 
 ### E1-S1 — Represent the final section in the timeline · P0 · Done
@@ -487,6 +506,13 @@ Dependencies: E10-S1, E11-S1.
 - [ ] E10-S2-T2 · P0: Configure RLS/grants and immutable ownership on every exposed resource; implement least-privileged create/save/rename operations.
 - [ ] E10-S2-T3 · P0: Validate document shape/limits/UUIDs server-side, compare expected revision, and deny direct-write bypasses.
 
+- [ ] E10-S2-T4 · P0: Prepare migration 004+ to backfill empty versioned documents for every existing plan, retaining IDs/names/owners/timestamps; provide fresh-project and upgrade verification.
+- [ ] E10-S2-T5 · P0: Implement load/create-with-document/save RPC contracts; upgrade legacy create RPC to atomically add a blank document while preserving its arguments/return shape for older HTML files.
+- [ ] E10-S2-T6 · P0: Use public.party_map_user_id() for new owner checks; restrict writer grants to document/receipt resources and test with writer Auth schema usage absent.
+- [ ] E10-S2-T7 · P0: Validate schema/version/unique IDs/references/timing/title limits and explicit document byte/event caps on server; store operation fingerprint/result receipts with defined retention and reject ID reuse with a different payload.
+
+Milestone AC: The user's existing plan opens empty after upgrade. Metadata/content/counts/revision commit atomically. Older clients still create a blank document. Parent ownership governs document/receipt reads. A failed migration rolls back; existing plans are never reset.
+
 AC: A owns its plans; B and anonymous requests cannot read or mutate them using known IDs or forged owner fields. Metadata/document creation is atomic. Concurrent saves of the same revision give one success and one retained-draft conflict. Retrying the same operation yields one logical result without duplicate plans/songs. Malformed/oversized documents are rejected without partial writes. Restrict RPC execute privileges and verify any definer ownership/search_path protections with database tests.
 
 ### E10-S3 — Sign in, restore sessions and sign out safely · P0 · In progress
@@ -499,7 +525,7 @@ Dependencies: E10-S1, E10-S2.
 
 AC: Real email/password signup/login/reload/logout works in Chrome from the downloaded HTML, including an ordinary recipient outside the Supabase project team. Invalid/expired login and delivery/network failures preserve local notes. Signing in alone uploads nothing. Switching to B never displays A's plans, drafts or late request/event results. Storage denial does not imply durable login/save. Login dialog supports labelled fields, keyboard, cancel/focus restoration and 44px controls. Offline HTML remains login-free.
 
-## E11 — Multiple private club plans · P1 · Todo
+## E11 — Multiple private club plans · P0 · Todo
 
 This replaces the optional E6-S1 named-set proposal; demand is now explicit. Names are metadata, UUIDs are identity.
 
@@ -511,25 +537,42 @@ Dependencies: E10-S1's adapter contract; can proceed with fixtures while connect
 - [ ] E11-S1-T2 · P0: Implement DOM-free derivation into the existing timeline model; define authored exact/range/unknown boundaries and inheritance.
 - [ ] E11-S1-T3 · P0: Convert legacy notes after applying title corrections, with stable retry identities and validation fixtures.
 
+- [ ] E11-S1-T4 · P0: Define canonical schema-v1 validation and stable section/song relationships; document explicit exact/range/unknown timing and empty-section behavior.
+- [ ] E11-S1-T5 · P0: Add local/Supabase document adapters to the current shared Svelte planner; avoid a second cloud renderer.
+
+Milestone AC: The same document renders identically from a database snapshot and a local fixture. Insert/edit/remove preserves surviving UUIDs; only one canonical document supplies tracks and timeline context.
+
 AC: Insert/rename/reorder never changes surviving song UUIDs. Conversion preserves 126 tracks/25 blocks/26 sections, flags and corrected multilingual titles. Known ranges, rollover and unknown endings stay intact; estimates never become evidence. Repeated same-genre parts do not create unexplained dividers. Empty documents are valid blank plans. Empty committed sections remain visible/selectable with stable IDs rather than being discarded by the legacy track-derived renderer. A single canonical document owns editable data; raw notes remain provenance.
 
-### E11-S2 — Create, list, open and rename club plans · P1 · In progress
+### E11-S2 — Create, list, open and rename club plans · P0 · In progress
 
 Dependencies: E10-S3, E11-S1, E13-S1.
 
-- [ ] E11-S2-T1 · P1: Add a compact plan picker/account header and My plans dialog with metadata-only paging/search.
-- [ ] E11-S2-T2 · P1: Create blank plans with required name and optional club/date; implement open/rename.
-- [ ] E11-S2-T3 · P1: Scope selection/filters/loading state by stable plan identity and handle switching during pending saves.
+- [ ] E11-S2-T1 · P0: Add a compact plan picker/account header and My plans dialog with metadata-only paging/search.
+- [ ] E11-S2-T2 · P0: Create blank plans with required name and optional club/date; implement open/rename.
+- [ ] E11-S2-T3 · P0: Scope selection/filters/loading state by stable plan identity and handle switching during pending saves.
+
+- [ ] E11-S2-T4 · P0: Make every My plans row an accessible Open action; load its metadata/document from Supabase and show loading/retry/empty states.
+- [ ] E11-S2-T5 · P0: Connect the selected document to PartyApp instead of local raw notes; show active plan name, My plans/New plan and cloud save status above the shared timeline/tracks.
+- [ ] E11-S2-T6 · P0: Load paged metadata on login and refresh/focus; add database-backed name search, song count and updated time without fetching all plan documents.
+- [ ] E11-S2-T7 · P0: Open newly created plans immediately, support rename, and replace the metadata-only message only for full-content cloud workspaces. Keep guest data explicitly separate.
+
+Milestone AC: The already-created plan is clickable and opens. Two different plans keep their own songs/filters/context across switches and reload. Failed loading never displays old tracks under the selected name. The My plans list reflects the database, including a plan created in another session after refresh.
 
 AC: Two same-named plans keep independent songs, metadata and corrections after reload. Blank plan has Add first section/Import notes actions and no fabricated timeline. Failed loading leaves the current plan intact. Previous tracks are never shown under the next plan's name. Switching preserves or resolves pending work instead of redirecting its writes. Many plans use a paged metadata list; opening one fetches its content rather than all documents. The timeline remains the workspace rather than a new dashboard.
 
-### E11-S3 — Import notes and migrate the current local set explicitly · P1 · Todo
+### E11-S3 — Import notes and migrate the current local set explicitly · P0 · Todo
 
 Dependencies: E11-S2, E13-S1. Coordinate with E3-S2 import preview and E3-S1 export.
 
-- [ ] E11-S3-T1 · P1: Add a parsed preview with destination/name/song/section counts and representative corrected titles.
-- [ ] E11-S3-T2 · P1: Default to creating a new plan; make replacing a selected plan an explicit action.
-- [ ] E11-S3-T3 · P1: Offer Save this set to my account, preserving legacy data until the server acknowledges the migrated copy.
+- [ ] E11-S3-T1 · P0: Add a parsed preview with destination/name/song/section counts and representative corrected titles.
+- [ ] E11-S3-T2 · P0: Default to creating a new plan; make replacing a selected plan an explicit action.
+- [ ] E11-S3-T3 · P0: Offer Save this set to my account, preserving legacy data until the server acknowledges the migrated copy.
+
+- [ ] E11-S3-T4 · P0: Import full notes into a new cloud document atomically; offer Save this set to my account with corrected legacy titles and a preview.
+- [ ] E11-S3-T5 · P0: Keep guest/local notes until server acknowledgement and provide recoverable failure/ambiguous retry without duplicate plans.
+
+Milestone AC: Imported songs, genre/time markers and flags exist in the database after reload on another device. Cancel changes neither database nor current plan. Replacing a document requires explicit destination confirmation.
 
 AC: Sign-in does not silently migrate/upload. Cancel/invalid input changes nothing. Corrected copy/search titles and timing evidence survive migration. Ambiguous save retries do not duplicate imported plans. Failed import retains its recoverable draft and original destination. Replacement commits atomically; other devices cannot see half an imported plan.
 
@@ -542,25 +585,34 @@ Dependencies: E11-S2, E13-S2.
 
 AC: Archiving preserves all content and can be restored. Failure leaves the active plan intact. Remote archive makes an open plan unavailable for further saves while preserving any local draft. No permanent delete is introduced in this story; direct hard-delete permissions/event handling remain separate reviewed scope.
 
-## E12 — Create songs/sections and update the timeline immediately · P1 · Todo
+## E12 — Create songs/sections and update the timeline immediately · P0 · Todo
 
-### E12-S1 — Add/edit genre sections and timing evidence · P1 · Todo
+### E12-S1 — Add/edit genre sections and timing evidence · P0 · Todo
 
 Dependencies: E11-S1, E11-S2, E13-S1.
 
-- [ ] E12-S1-T1 · P1: Build a section editor for full genre names and recorded time, known range or time not noted.
-- [ ] E12-S1-T2 · P1: Validate order/bounds, preview and commit/cancel semantics; handle first section and final unknown ending.
-- [ ] E12-S1-T3 · P1: Recompute macro overview, genre sequence and hip-hop boundaries from committed local state before cloud acknowledgement.
+- [ ] E12-S1-T1 · P0: Build a section editor for full genre names and recorded time, known range or time not noted.
+- [ ] E12-S1-T2 · P0: Validate order/bounds, preview and commit/cancel semantics; handle first section and final unknown ending.
+- [ ] E12-S1-T3 · P0: Recompute macro overview, genre sequence and hip-hop boundaries from committed local state before cloud acknowledgement.
+
+- [ ] E12-S1-T4 · P0: Add first-section action in blank database plans and persist genre/timing/peak context through the shared revisioned save flow.
+
+Milestone AC: An empty cloud plan becomes a usable timeline with an empty selectable section, then a song; no exact time is invented for an unknown boundary. Section edits survive reopening from Supabase.
 
 AC: Save changes the timeline on the next render without reload; Cancel changes nothing. Exact/range/unknown source evidence remains distinguishable. Invalid time/order input keeps the draft and focuses the error. Empty plans can acquire their first section without invented dates/AM/PM/end time. Add first section → Add song works, and empty sections between populated sections remain accessible. Genre names remain full, multilingual and selectable without internal timeline scrolling. Title edits do not silently change neighboring genre/timing inheritance.
 
-### E12-S2 — Add and edit songs with live local feedback · P1 · Todo
+### E12-S2 — Add and edit songs with live local feedback · P0 · Todo
 
 Dependencies: E12-S1.
 
-- [ ] E12-S2-T1 · P1: Add song to selected section, or explicitly choose a destination from All tracks.
-- [ ] E12-S2-T2 · P1: Extend song editing to title and peak/download/idea flags with validation and draft cancellation.
-- [ ] E12-S2-T3 · P1: Keep counts, list, selection, peak indicators, copy/search and save status consistent after commit.
+- [ ] E12-S2-T1 · P0: Add song to selected section, or explicitly choose a destination from All tracks.
+- [ ] E12-S2-T2 · P0: Extend song editing to title and peak/download/idea flags with validation and draft cancellation.
+- [ ] E12-S2-T3 · P0: Keep counts, list, selection, peak indicators, copy/search and save status consistent after commit.
+
+- [ ] E12-S2-T4 · P0: Persist added songs and title/flag edits in the active database document, including original title, stable UUID, destination section and order.
+- [ ] E12-S2-T5 · P0: Add a reachable Add song control on desktop/phone; support Enter to submit and cancel/focus restoration, with an explicit destination when All tracks is selected.
+
+Milestone AC: Add two songs, rename one, change flags, reload and sign in on another device: all committed fields and section placement restore from Supabase. Copy/search use the stored corrected title. No browser-local corrections override another plan's songs.
 
 AC: A new song is visible immediately before the cloud response; list/count/timeline derive the same document revision. Title/flag changes preserve song UUID and source timing evidence. Empty title is rejected with draft/focus intact. Copy and Google search use the committed current title. Cancel makes no changes. Local rendering does not wait for Realtime. All tracks and combined filters work across newly created content.
 
@@ -573,6 +625,15 @@ Dependencies: E12-S2, E13-S1.
 
 AC: No drag-only control is required. Flags/titles/UUIDs survive reorder. Cross-section moves visibly adopt the destination context and can be undone. No estimated position becomes an exact timestamp. Cloud save is atomic and concurrent moves follow the revision/conflict policy.
 
+### E12-S4 — Remove songs/sections with recovery · P1 · Todo
+
+Dependencies: E12-S2, E13-S1.
+
+- [ ] E12-S4-T1 · P1: Remove a song with immediate undo, preserving surviving UUIDs/order and saving one coherent document.
+- [ ] E12-S4-T2 · P1: Confirm removal of a populated section including its song count; offer undo and retain drafts on failed saves.
+
+AC: Removal and undo update tracks/counts/timeline consistently and survive database reload after acknowledgement. Empty sections can be removed intentionally. No plan hard-delete or direct database DELETE permission is introduced. Concurrent removal follows revision conflict handling.
+
 ## E13 — Durable saves and live same-account synchronization · P0 · Todo
 
 ### E13-S1 — Preserve drafts through saves, retries and conflicts · P0 · Todo
@@ -582,6 +643,12 @@ Dependencies: E10-S2, E11-S1; required before production plan editing.
 - [ ] E13-S1-T1 · P0: Implement committed snapshot/editor draft/pending-operation state with per-plan serialized saves.
 - [ ] E13-S1-T2 · P0: Show acknowledged saving/saved/error/device-only states and idempotent retry.
 - [ ] E13-S1-T3 · P0: Detect stale revisions and offer account version or local copy, preserving unsaved work on plan/account transitions.
+
+- [ ] E13-S1-T4 · P0: Implement typed PlanRepository methods list/load/createWithDocument/save/rename and a Supabase adapter; keep browser storage for recovery, not proof of a cloud save.
+- [ ] E13-S1-T5 · P0: Commit edits locally then serialize/coalesce acknowledged document saves with expected revision, owner/plan identity and retry-stable operation IDs.
+- [ ] E13-S1-T6 · P0: Preserve pending work on navigation/logout using account-scoped recovery or an explicit wait/export decision; implement Save my changes as a copy for stale revisions.
+
+Milestone AC: A song is Saved only after database acknowledgement. Offline/network/permission failure preserves the edited draft. A delayed save cannot reach another plan/account; copying a conflict creates a new plan without overwriting the original.
 
 AC: Saved appears only after acknowledgement. Failed/rejected writes keep a recoverable draft; denied local storage is reported as session-only. Two same-revision clients cannot silently overwrite one another. Retries use the same operation UUID and do not duplicate content. Switching plans/accounts cannot submit pending edits to a different owner/destination. Network writes follow committed edits, not every keystroke.
 
@@ -614,6 +681,11 @@ Dependencies: E10-S2; run throughout implementation.
 - [ ] E14-S1-T2 · P0: Test known-ID direct access, direct-write bypass, stale revisions, transaction rollback and duplicate operation IDs.
 - [ ] E14-S1-T3 · P0: Verify private channel authorization and no cross-user notifications on staging.
 
+- [ ] E14-S1-T4 · P0: Test migration against both an empty database and existing metadata plans; include synthetic request identity under the restricted role and real A/B document read/save denial.
+- [ ] E14-S1-T5 · P0: Test document validation, retry fingerprint collisions/retention, atomic create/import, stale saves and unchanged owners; exercise APIs directly rather than only UI filters.
+
+Milestone AC: Database tests prove content privacy and integrity. User-confirmed metadata creation does not close document/RLS/concurrency acceptance.
+
 AC: Tests demonstrate expected allowed operations and denied cross-owner/anonymous operations, not just policy text inspection. Concurrent commits yield an explicit conflict. No partial imports/reorders or duplicated retry data. Any definer/Realtime policies have least-privilege evidence; no broad authenticated-user policy is copied from tutorials. Mocks alone cannot close this story.
 
 ### E14-S2 — Verify auth, editing, sync and accessibility · P0 · Todo
@@ -623,6 +695,11 @@ Dependencies: E10-S3, E11-S2–S3, E12-S1–S2, E13-S1–S3.
 - [ ] E14-S2-T1 · P0: Add deterministic mocked model/repository/browser checks for errors, storage denial, races and account transitions.
 - [ ] E14-S2-T2 · P0: Use staging and disposable users for real chosen auth flow, reload/logout, isolation, two-session edits, reconnect and conflicts.
 - [ ] E14-S2-T3 · P1: Review mobile/desktop/short/200% reflow, keyboard/focus, dialogs/status announcements and multilingual names.
+
+- [ ] E14-S2-T4 · P0: Add an end-to-end full-content journey: open existing plan → add section/two songs → edit flags/title → Saved → reload → switch second plan → restore first → sign out/in.
+- [ ] E14-S2-T5 · P0: Run the journey in actual connected Chrome HTML and a second same-account session; verify network failures/storage denial, no cross-account late results and phone/keyboard controls.
+
+Milestone AC: Actual Supabase content restores without copying local storage. A second session can load the saved document; live convergence is tested separately after E13-S2.
 
 AC: Create/open/rename two plans, edit sections/add songs, filter/copy/search/import and reload restore correct content. New local changes render without reload; measure the under-100ms fixture target separately from staging network convergence. Failed saves/auth keep usable recovery. Remote events don't hijack editors or focus. A's late results never enter B's workspace. Existing 54 website/offline workflows continue passing; cloud tests use separate online contexts. Actual screen-reader/native zoom observations are distinguished from reflow simulations.
 
@@ -659,3 +736,7 @@ Cloud stories remain In progress until their full acceptance criteria have real 
 - E10-S2 · P0: User reports Auth schema error persists after targeted repair. Run read-only supabase/diagnostics/private_plan_setup.sql against the matching project; compare actual RPC owners/definitions, caller/writer grants, RLS and triggers before further mutations. AC: actual failure path identified and real create/reload verified. Pending diagnostic output.
 
 - E10-S2 · P0: Diagnostic identifies writer auth_schema_usage=false despite prior repair. Migration 003 replaces Auth-schema dependency with request-subject invoker helper in RPCs/policies, preserving ownership guards. Includes synthetic writer-role assertions. AC: 003 commits and readiness flags true; actual create/reload succeeds; A/B isolation verified. Prepared; application pending.
+
+## User-confirmed progress — 2026-10-12
+
+Real plan creation now succeeds, as reported by the user after the permission repair. The earlier persistent-create blocker is resolved for that tested path. Full content persistence, reload, account isolation and live updates remain pending. E10/E11 stories stay In progress where their remaining AC is unmet; this update is a plan/backlog change, not implementation of song storage.

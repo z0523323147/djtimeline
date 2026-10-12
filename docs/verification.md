@@ -78,3 +78,7 @@ Public Auth settings rechecked: Email enabled, signup enabled, confirmation not 
 
 ## Received database diagnostic — 2026-10-12
 Supplied report confirms writer Auth schema usage false, auth.uid execute true, both RPC owners/security-definer modes correct, authenticated read-only and anonymous denial, and expected owner policies/forced RLS. Prepared migration 003 using an invoker claim helper matching the supplied auth.uid expression; no Auth grant workaround or elevated writer. Includes transactional synthetic writer-role assertions. Local SQL review only; user application/real create and cross-account runtime evidence remain pending.
+
+## User-confirmed plan creation — 2026-10-12
+
+The user reports that a real plan was created successfully. This establishes success for the tested metadata-create path after the permission investigation. It does not establish full song/document storage, reload persistence, cross-account isolation or live sync. Updated plan/backlog prioritize the additive document upgrade, repository/save flow, opening existing plans and full song editing. Documentation-only changes; no new database migration was applied or app feature implemented in this turn.

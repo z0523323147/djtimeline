@@ -33,7 +33,7 @@ pnpm preview
 
 The website and connected HTML now include email/password signup/sign-in, session restoration, local-session sign-out and an owner-specific My plans area. The initial account area lists/creates **plan names**. Tracks remain in the explicitly labelled local planner; cloud song documents and live editing are later work.
 
-The user reports applying the prepared private-plan SQL. Email/signup are enabled and email confirmation is off, allowing basic signup/sign-in without SMTP or email-template changes. Follow [Supabase setup](docs/supabase-setup.md) to create your first account. Email addresses are unverified; password recovery by mail is not provided by this initial flow. Real account login/RLS isolation still need verification.
+The user reports applying the prepared private-plan SQL. Email/signup are enabled and email confirmation is off, allowing basic signup/sign-in without SMTP or email-template changes. Follow [Supabase setup](docs/supabase-setup.md) to create your first account. Email addresses are unverified; password recovery by mail is not provided by this initial flow. The user confirms real plan creation; reload/session and cross-account isolation still need verification. The next milestone is complete database-backed plan content; see [plan.md](plan.md) and the active release queue in [backlog.md](backlog.md).
 
 Copy .env.example to ignored .env.local and fill the project URL/public publishable key. Then:
 
