@@ -7,8 +7,14 @@
   import { copyTitle } from '../lib/clipboard';
   import PartyPage from '../views/PartyPage.svelte';
   import TracksPage from '../views/TracksPage.svelte';
+  import AccountArea from '../views/AccountArea.svelte';
+  import type { AccountService, AccountUser } from '../lib/account';
   import '../styles/tokens.css';
   import '../styles/app.css';
+  export let cloud: AccountService | undefined = undefined;
+  export let setupError = '';
+  let accountMode = false;
+  let accountUser: AccountUser | null = null;
   let raw = example;
   let model = parseNotes(raw);
   let selected = 0, filters = emptyFilters();
@@ -29,6 +35,12 @@
   });
   function notify(message: string) {
     notice = message; clearTimeout(timer); timer = setTimeout(() => notice = '', 4000);
+  }
+  async function switchArea() {
+    accountMode = !accountMode;
+    await tick();
+    const target = accountMode ? document.getElementById('account-email') ?? document.getElementById('account-title') : document.getElementById('overview-heading');
+    target?.focus({ preventScroll: true });
   }
   async function select(id: number, trackId?: number) {
     if (!model.sections[id]) return;
@@ -80,13 +92,21 @@
   }
 </script>
 <div class="app">
-  <a class="skip" href="#detail">Skip to track details</a>
-  <header><div><h1><span class="logo">◈</span> Party map</h1><p>{model.blocks[0]?.time ?? 'No time'} → {model.blocks.at(-1)?.time ?? 'No time'} · {model.tracks.length} tracks</p></div>
-    <div class="header-actions"><button onclick={() => { importError = ''; dialog.showModal(); }}>Import notes</button></div>
+  <a class="skip" href={accountMode ? '#account-title' : '#detail'}>{accountMode ? 'Skip to account' : 'Skip to track details'}</a>
+  <header><div><h1><span class="logo">◈</span> Party map</h1><p>{accountMode ? 'Private account' : `${model.blocks[0]?.time ?? 'No time'} → ${model.blocks.at(-1)?.time ?? 'No time'} · ${model.tracks.length} tracks`}</p></div>
+    <div class="header-actions">
+      {#if cloud}<button onclick={switchArea}>{accountMode ? 'Local planner' : accountUser ? 'My plans' : 'Sign in'}</button>{/if}
+      {#if !accountMode}<button onclick={() => { importError = ''; dialog.showModal(); }}>Import notes</button>{/if}
+    </div>
   </header>
   <main>
+    {#if setupError}<p role="alert">{setupError}</p>{/if}
+    {#if cloud}<AccountArea service={cloud} active={accountMode} onUser={next => { const changed = next?.id !== accountUser?.id; accountUser = next; if (next && changed) accountMode = true; }} />{/if}
+    {#if !accountMode}
+    {#if cloud}<p class="local-mode-note">Local planner · notes and corrections stay on this browser</p>{/if}
     <PartyPage {model} {selected} active={allTracks || filterActive(filters)} {select} />
     <TracksPage {model} {selected} {allTracks} {showAll} bind:filters {storageAvailable} {select} {save} {copy} bind:heading />
+    {/if}
   </main>
   <dialog bind:this={dialog} aria-labelledby="import-title">
     <h2 id="import-title">Import your set notes</h2>

@@ -1,20 +1,24 @@
 import { mkdir, writeFile, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { build } from 'vite';
+import { build, loadEnv } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { verifyOfflineHtml } from './check-offline.mjs';
 import { embedApp } from './embed.mjs';
 
-const destination = resolve('dist/party-map.html');
+const connected = process.argv.includes('--connected');
+const env = connected ? loadEnv('production', process.cwd(), 'PUBLIC_') : {};
+if (connected && (!env.PUBLIC_SUPABASE_URL || !env.PUBLIC_SUPABASE_PUBLISHABLE_KEY)) throw new Error('Connected build needs PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_PUBLISHABLE_KEY.');
+const destination = resolve(connected ? 'dist/party-map-connected.html' : 'dist/party-map.html');
 
 try {
   const compiled = await build({
     configFile: false,
+    define: connected ? { 'import.meta.env.PUBLIC_SUPABASE_URL': JSON.stringify(env.PUBLIC_SUPABASE_URL), 'import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(env.PUBLIC_SUPABASE_PUBLISHABLE_KEY) } : {},
     plugins: [svelte()],
     build: {
       write: false,
       cssCodeSplit: false,
-      lib: { entry: resolve('src/offline/main.ts'), name: 'PartyMap', formats: ['iife'] },
+      lib: { entry: resolve(connected ? 'src/connected/main.ts' : 'src/offline/main.ts'), name: 'PartyMap', formats: ['iife'] },
       rolldownOptions: { output: { codeSplitting: false } },
     },
   });
@@ -33,7 +37,7 @@ try {
   await writeFile(temporary, html, 'utf8');
   await rename(temporary, destination);
   console.log(`Built ${destination} (${result.bytes} bytes).`);
-  console.log('Single HTML file; no required sibling assets. Google search remains an intentional outbound action.');
+  console.log(connected ? 'Single connected HTML; internet is required for account login/private plans.' : 'Single HTML file; no required sibling assets. Google search remains an intentional outbound action.');
 } catch (error) {
   console.error(`Offline build failed: ${error.message}`);
   process.exitCode = 1;

@@ -27,6 +27,23 @@ pnpm preview
 
 `pnpm build:site` and `pnpm build:offline` rebuild either output independently and preserve the other. The offline build compiles the shared Svelte root into one embedded classic script with embedded CSS and example notes. It requires no server, CDN, fonts, service worker, or sibling assets. Download search intentionally opens Google and requires internet access.
 
+## Email sign-in and private account area
+
+![Email sign-in preview](party-map-sign-in.png)
+
+The website and connected HTML now include email verification-code signup/sign-in, session restoration, local-session sign-out and an owner-specific My plans area. The initial account area lists/creates **plan names**. Tracks remain in the explicitly labelled local planner; cloud song documents and live editing are later work.
+
+Before real use, follow [Supabase setup](docs/supabase-setup.md): apply the prepared private-plan SQL, change the email template to send a code, and configure custom SMTP for ordinary recipients. The browser key cannot do these admin steps. The migration has not been applied and real email login/RLS isolation have not yet been verified.
+
+Copy .env.example to ignored .env.local and fill the project URL/public publishable key. Then:
+
+```sh
+pnpm build:site
+pnpm build:connected
+```
+
+Open dist/party-map-connected.html directly in Chrome with internet enabled. It embeds its SDK/styles/scripts and has no sibling assets. The existing dist/party-map.html stays network-free and has no account requirement. No SMTP/admin/session secrets belong in browser configuration.
+
 ## Features
 
 - Full-width party timeline above the track list, with a compact whole-party overview, pink hip-hop, and amber peaks.
@@ -79,7 +96,7 @@ pnpm test:e2e
 node scripts/check-reproducible.mjs
 ```
 
-The current suite contains 16 Node tests and 54 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
+The current suite contains 16 Node tests and 66 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
 
 Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
 
@@ -101,6 +118,6 @@ The bundled set remains **126 tracks, 25 blocks, 26 sections, 42 download choice
 
 ## Remaining work
 
-Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Supabase login, multiple private club plans, structured song/section editing and live same-account synchronization are the next requested milestone. They are planned, not connected or implemented. See [plan.md](plan.md), [backlog.md](backlog.md), and [Supabase connection checklist](docs/supabase-connection.md). The existing offline HTML remains network-free; the proposed connected single HTML needs internet for cloud features.
+Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Email-code UI, private account navigation and a metadata SQL migration are implemented/prepared. Real email delivery, applied database privacy, cloud song documents, structured editing and live synchronization remain pending. See [plan.md](plan.md), [backlog.md](backlog.md), and [Supabase connection checklist](docs/supabase-connection.md). The existing offline HTML remains network-free; the proposed connected single HTML needs internet for cloud features.
 
 Repository: [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No hosted deployment or license is configured.

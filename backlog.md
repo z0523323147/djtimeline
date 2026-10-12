@@ -1,6 +1,6 @@
 # Product backlog
 
-Updated: 2026-10-12. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. New cloud epics E10–E14 and remaining refinements are **Todo**. E6-S1 is **Superseded**, not Done. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-12. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. Cloud stories are **Todo** or **In progress** as marked; remaining refinements are **Todo**. E6-S1 is **Superseded**, not Done. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
@@ -457,7 +457,7 @@ Evidence: 54 browser workflow checks, 16 model/packaging tests, both builds, rep
 
 Scope: authenticated cloud plans, preserving the standalone offline output. Assumptions and architecture: plan.md, Supabase club-plan roadmap. No Supabase changes have been made.
 
-### E10-S0 — Prove email-code login for a double-click HTML file · P0 · Todo
+### E10-S0 — Prove email-code login for a double-click HTML file · P0 · In progress
 
 User choices: double-click HTML with no local server; avoid Google Cloud OAuth resources. Confirmed method: email verification code. Project base URL/public key have been supplied; no session/provider is configured by this planning change.
 
@@ -467,7 +467,7 @@ User choices: double-click HTML with no local server; avoid Google Cloud OAuth r
 
 AC: Real email-code auth produces a valid owner session in the double-click downloaded-page workflow, and subsequent authenticated Supabase fetch/reload/logout succeeds in supported browsers. No token copy/paste, embedded secret or disabled browser protection is used; entering the user's one-time email code is the intended flow. If safe direct-file login cannot be demonstrated, record the blocker and present concrete alternatives rather than mark the flow Done or silently introduce hosted delivery. No OAuth callback or hosted bridge is required by the proposed email-code flow; verify real delivery and do not claim default SMTP supports arbitrary recipients. The offline app remains usable throughout.
 
-### E10-S1 — Confirm setup and separate connected/offline adapters · P0 · Todo
+### E10-S1 — Confirm setup and separate connected/offline adapters · P0 · In progress
 
 As a DJ, I want the downloadable connected page to use my Supabase project while retaining a usable offline edition.
 
@@ -479,7 +479,7 @@ Dependencies: E10-S0 for finalized auth delivery; adapter/model fixture work can
 
 AC: No secret/service-role key is requested or shipped. Missing cloud configuration leaves local use possible. Offline initialization makes no Supabase requests. Connected HTML bundles its assets and honestly requires internet for cloud features. Direct file email-code auth support is determined by E10-S0; any different delivery needs the user's agreement. Existing tables/providers remain untouched until their migration is reviewed.
 
-### E10-S2 — Enforce private ownership and atomic versioned saves · P0 · Todo
+### E10-S2 — Enforce private ownership and atomic versioned saves · P0 · In progress
 
 Dependencies: E10-S1, E11-S1.
 
@@ -489,7 +489,7 @@ Dependencies: E10-S1, E11-S1.
 
 AC: A owns its plans; B and anonymous requests cannot read or mutate them using known IDs or forged owner fields. Metadata/document creation is atomic. Concurrent saves of the same revision give one success and one retained-draft conflict. Retrying the same operation yields one logical result without duplicate plans/songs. Malformed/oversized documents are rejected without partial writes. Restrict RPC execute privileges and verify any definer ownership/search_path protections with database tests.
 
-### E10-S3 — Sign in, restore sessions and sign out safely · P0 · Todo
+### E10-S3 — Sign in, restore sessions and sign out safely · P0 · In progress
 
 Dependencies: E10-S1, E10-S2.
 
@@ -513,7 +513,7 @@ Dependencies: E10-S1's adapter contract; can proceed with fixtures while connect
 
 AC: Insert/rename/reorder never changes surviving song UUIDs. Conversion preserves 126 tracks/25 blocks/26 sections, flags and corrected multilingual titles. Known ranges, rollover and unknown endings stay intact; estimates never become evidence. Repeated same-genre parts do not create unexplained dividers. Empty documents are valid blank plans. Empty committed sections remain visible/selectable with stable IDs rather than being discarded by the legacy track-derived renderer. A single canonical document owns editable data; raw notes remain provenance.
 
-### E11-S2 — Create, list, open and rename club plans · P1 · Todo
+### E11-S2 — Create, list, open and rename club plans · P1 · In progress
 
 Dependencies: E10-S3, E11-S1, E13-S1.
 
@@ -635,3 +635,9 @@ Dependencies: E14-S1–S2 plus E10-S1's build contract.
 - [ ] E14-S3-T3 · P1: Record staging measurements/screenshots/limitations, update setup/README/backlog and prepare reviewed migrations/deployment.
 
 AC: Connected HTML has no required sibling assets and authenticates/saves/synchronizes against staging in the downloadable workflow established by E10-S0; any required callback/helper infrastructure is explicitly agreed and documented. Offline HTML still opens without login/network and makes no automatic Supabase requests. No secret key/token/private test data enters commits/artifacts/logs/screenshots. Document unsupported file-origin/provider cases rather than claim parity. No existing production schema is reset to make tests pass. All P0 gates have real evidence; production deployment is a separately authorized action.
+
+## Initial email/account implementation evidence — 2026-10-12
+
+Account adapter/UI and connected build are implemented; metadata SQL/setup is prepared, not applied. E10-S0–S3/E11-S2 remain In progress because their server/real-email acceptance criteria are not met. Public settings confirm Email Auth and signup are enabled; a real file:// GET reaches Auth settings with HTTP 200. Cloud account tests use intercepted synthetic responses, not real users or email.
+
+The My plans area currently lists/creates plan names only; it does not open/save cloud track content. Existing local planner data is not uploaded. Model/documents, cloud song editing, concurrency and Realtime remain Todo. Real SMTP, code template, database/RLS application and two-user isolation are activation gates in docs/supabase-setup.md.

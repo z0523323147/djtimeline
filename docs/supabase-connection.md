@@ -1,6 +1,6 @@
 # Supabase connection checklist
 
-Updated: 2026-10-12. Planning only: no Supabase project is connected and no remote schema/provider setting has changed.
+Updated: 2026-10-12. Initial account UI is built and configured locally. Public Auth/file-origin connectivity is verified; no remote schema/provider setting has changed, and real code delivery/login remain unverified.
 
 ## Received and selected
 
@@ -12,7 +12,7 @@ Updated: 2026-10-12. Planning only: no Supabase project is connected and no remo
 - Delivery: double-click the downloadable HTML (`file://`), with no local server. A hosted frontend, callback bridge or launcher is not approved.
 - Google was the first choice, but the user prefers another method if Google Cloud resources are needed. Google does require an OAuth client ID/secret configured in Google Cloud/Supabase. Confirmed method: email verification-code login, avoiding Google OAuth setup and a redirect round trip. [Google setup requirements](https://supabase.com/docs/guides/auth/social-login/auth-google), [email code login](https://supabase.com/docs/guides/auth/auth-email-passwordless).
 
-The first implementation gate remains real file-origin authentication and persistence in the target browser. Email verification code is confirmed by the user; it has not been implemented or validated. Email/password is an alternative if requested.
+The first implementation gate remains real file-origin authentication and persistence in the target browser. Email verification code is confirmed by the user; the client flow is implemented and mock-tested; real code delivery/login are not validated. Email/password is an alternative if requested.
 
 ## Still needed
 
@@ -36,3 +36,5 @@ Supabase preparation will be a reviewed migration/provider checklist tailored to
 ## Completion evidence
 
 Connection is complete only after real email-code login works in the downloaded file, private plans survive reload, A/B/anonymous isolation passes direct-access tests, and a second authorized session observes committed edits. Mocked UI tests and the existing 16 model/54 browser checks do not establish a Supabase connection. Keep no-network offline verification separate.
+
+Use [supabase-setup.md](supabase-setup.md) for the concrete SQL/email-template/SMTP steps now prepared. The first private area contains plan names; song documents and live editing are later migrations.

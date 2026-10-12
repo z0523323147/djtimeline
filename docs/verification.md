@@ -1,4 +1,4 @@
-# Verification — 2026-10-11
+# Verification — updated 2026-10-12
 
 E9-S1–S5 are implemented in the shared Astro/Svelte app. One proportional time overview sits above a chronological genre sequence and the track workspace. Both outputs use the same components and styles.
 
@@ -45,3 +45,17 @@ Refreshed and visually reviewed: party-map-preview.png, party-map-mobile.png, pa
 Other browsers may restrict file-origin storage/clipboard differently; the app reports session-only saves or copy failure. Native screen-reader review, quota-specific testing, import preview/restore, portable export, and shortcuts remain in the backlog. GitHub Actions is configured; local results do not imply remote CI passed. No hosting deployment is configured.
 
 All tracks follow-up: six additional workflow checks verify 126 tracks in source order, time/genre tags, filters and Reset preserving all-track scope, corrected copy/search, return to a selected section, and import resetting the scope. A plain dotted-outline explanation appears only when the existing timing area is expanded. Desktop proof: party-map-all-tracks.png.
+
+## Email/private-area implementation — 2026-10-12
+
+The initial account UI and typed Supabase adapter are implemented in CloudApp, AccountArea and lib/supabase.ts. The website and connected HTML expose Sign in; the separate offline entry initializes only the local planner. Supabase SDK 2.117.3 is pinned. Public config is in ignored .env.local; CI uses a synthetic publishable fixture, never a real session or secret.
+
+- Checks: Astro/Svelte zero errors/warnings (three existing clipboard hints); 16 model/packaging tests pass.
+- 66 Chromium checks pass: original 54 planner workflows plus 12 intercepted-account checks across website/connected-file × desktop/phone. Account checks cover code errors, signup/sign-in, focus, plan creation, reload, sign-out, A→B clearing, late A responses, mail setup failure, missing schema, denied storage and return to local planner.
+- Account tests synthesize server responses. They establish UI/adaptor behavior, not real email delivery or server RLS. No actual user account/code/session was created or logged.
+- Real read-only public settings check: Email Auth enabled, signup enabled, email confirmation required. A real Chrome file-origin fetch of /auth/v1/settings returns HTTP 200 with email/signup enabled. This proves Auth endpoint connectivity from file://, not successful code delivery or end-to-end authentication.
+- All three builds pass. Offline HTML: 87,661 bytes, reproducible SHA-256 d6dda588c995e25ed2550afdf49d029fef634f6aadf5597b2828cbde1163dd71. Connected HTML: 304,091 bytes, SDK/CSS/JS embedded, no sibling assets. Offline request audits still find no network/sibling requests.
+- Prepared SQL enforces metadata ownership with RLS, immutable identity, a restricted NOLOGIN/NOBYPASSRLS writer and owner-checked RPCs. Expected owner is passed to create to prevent an A request acquiring B's token after an account transition. SQL has not been executed against PostgreSQL/Supabase; actual A/B/anonymous allow/deny tests remain required.
+- Private account area stores/lists/creates plan names only after schema setup. It does not upload local notes, persist songs or open a cloud timeline. Existing local planner is explicitly labelled browser-local. Canonical documents and Realtime remain pending.
+
+Activation steps are in [supabase-setup.md](supabase-setup.md): user applies the SQL in the dashboard, changes the email template to {{ .Token }}, and configures custom SMTP for ordinary recipient emails. The public browser key cannot make those admin changes. Stories remain In progress; no cloud story is marked Done from mock evidence. Screenshots party-map-sign-in.png and party-map-sign-in-mobile.png show the real signed-out UI with no test account or credentials.

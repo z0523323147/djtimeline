@@ -5,6 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ASTRO_TELEMETRY_DISABLED: '1'
+      # Synthetic public configuration; all account API requests are mocked.
+      PUBLIC_SUPABASE_URL: 'https://aemfewsfcrcmtafnypxa.supabase.co'
+      PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ci_fixture_only'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -15,6 +18,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
+      - run: pnpm build:connected
       - run: pnpm check:offline
       - run: pnpm test
       - run: pnpm exec playwright install --with-deps chromium

@@ -30,7 +30,7 @@
 </script>
 <section class="overview" aria-labelledby="overview-heading">
   <div class="timeline-head">
-    <h2 id="overview-heading">Party timeline</h2>
+    <h2 id="overview-heading" tabindex="-1">Party timeline</h2>
     <div class="legend" aria-label="Genre colors"><span><i class="dot" style="--color:var(--cyan)"></i>Other genres</span><span><i class="dot" style="--color:var(--hip)"></i>Hip-hop</span><span><i class="dot" style="--color:var(--fire)"></i>Peak</span></div>
   </div>
   <div class="party-summary" bind:clientWidth={mapWidth}>
