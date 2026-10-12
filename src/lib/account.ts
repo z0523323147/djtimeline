@@ -4,8 +4,8 @@ export interface AccountService {
   persistentSession: boolean;
   getUser: () => Promise<AccountUser | null>;
   subscribe: (listener: (user: AccountUser | null) => void) => () => void;
-  requestCode: (email: string) => Promise<void>;
-  verifyCode: (email: string, code: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   listPlans: (userId: string, page: number) => Promise<PrivatePlan[]>;
   createPlan: (id: string, name: string, userId: string) => Promise<PrivatePlan>;
@@ -13,8 +13,9 @@ export interface AccountService {
 export function accountError(error: unknown): string {
   const value = error as { code?: string; message?: string };
   if (value?.code === 'PGRST205' || value?.code === 'PGRST202') return 'Your account is signed in. The private-plan database setup is not installed yet. Follow the Supabase setup guide, then retry.';
-  if (value?.code === 'over_email_send_rate_limit') return 'Too many code requests. Wait a little before trying again.';
-  if (value?.code === 'email_address_not_authorized') return 'This project cannot send to that email yet. Custom SMTP must be configured for users outside the project team.';
-  if (value?.code === 'otp_expired') return 'That code is invalid or expired. Request a new code and try again.';
+  if (value?.code === 'invalid_credentials') return 'Email or password is incorrect. Try again, or create an account if you are new.';
+  if (value?.code === 'email_not_confirmed') return 'This account requires email confirmation. Contact the project owner to check the Supabase email settings.';
+  if (value?.code === 'user_already_exists') return 'An account already exists for this email. Choose Sign in.';
+  if (value?.code === 'weak_password') return 'Choose a stronger password that meets the project password requirements.';
   return value?.message || 'Could not connect. Check your internet connection and try again.';
 }

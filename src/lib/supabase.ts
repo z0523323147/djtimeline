@@ -36,13 +36,14 @@ export function createAccountService(url: string, key: string): AccountService {
       });
       return () => data.subscription.unsubscribe();
     },
-    async requestCode(email) {
-      const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    async signIn(email, password) {
+      const { error } = await client.auth.signInWithPassword({ email, password });
       if (error) throw error;
     },
-    async verifyCode(email, token) {
-      const { error } = await client.auth.verifyOtp({ email, token, type: 'email' });
+    async signUp(email, password) {
+      const { data, error } = await client.auth.signUp({ email, password });
       if (error) throw error;
+      return Boolean(data.session);
     },
     async signOut() {
       const { error } = await client.auth.signOut({ scope: 'local' });

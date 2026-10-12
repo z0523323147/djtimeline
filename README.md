@@ -31,9 +31,9 @@ pnpm preview
 
 ![Email sign-in preview](party-map-sign-in.png)
 
-The website and connected HTML now include email verification-code signup/sign-in, session restoration, local-session sign-out and an owner-specific My plans area. The initial account area lists/creates **plan names**. Tracks remain in the explicitly labelled local planner; cloud song documents and live editing are later work.
+The website and connected HTML now include email/password signup/sign-in, session restoration, local-session sign-out and an owner-specific My plans area. The initial account area lists/creates **plan names**. Tracks remain in the explicitly labelled local planner; cloud song documents and live editing are later work.
 
-Before real use, follow [Supabase setup](docs/supabase-setup.md): apply the prepared private-plan SQL, change the email template to send a code, and configure custom SMTP for ordinary recipients. The browser key cannot do these admin steps. The migration has not been applied and real email login/RLS isolation have not yet been verified.
+The user reports applying the prepared private-plan SQL. Email/signup are enabled and email confirmation is off, allowing basic signup/sign-in without SMTP or email-template changes. Follow [Supabase setup](docs/supabase-setup.md) to create your first account. Email addresses are unverified; password recovery by mail is not provided by this initial flow. Real account login/RLS isolation still need verification.
 
 Copy .env.example to ignored .env.local and fill the project URL/public publishable key. Then:
 
@@ -96,7 +96,7 @@ pnpm test:e2e
 node scripts/check-reproducible.mjs
 ```
 
-The current suite contains 16 Node tests and 66 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
+The current suite contains 16 Node tests and 70 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Direct-file tests disable networking and observe requests across all workflows. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
 
 Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
 

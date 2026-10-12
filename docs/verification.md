@@ -59,3 +59,13 @@ The initial account UI and typed Supabase adapter are implemented in CloudApp, A
 - Private account area stores/lists/creates plan names only after schema setup. It does not upload local notes, persist songs or open a cloud timeline. Existing local planner is explicitly labelled browser-local. Canonical documents and Realtime remain pending.
 
 Activation steps are in [supabase-setup.md](supabase-setup.md): user applies the SQL in the dashboard, changes the email template to {{ .Token }}, and configures custom SMTP for ordinary recipient emails. The public browser key cannot make those admin changes. Stories remain In progress; no cloud story is marked Done from mock evidence. Screenshots party-map-sign-in.png and party-map-sign-in-mobile.png show the real signed-out UI with no test account or credentials.
+
+
+## Password login update — 2026-10-12
+
+- Astro/Svelte checks pass (0 errors/warnings; three existing clipboard deprecation hints). All builds pass.
+- 16 Node tests and 70 browser workflows pass: 54 baseline planner checks and 16 mocked password-account checks across website/connected-file and desktop/phone. Covers wrong credentials, signup with/without a session, confirmation-required responses, reload/logout, plan creation, A/B clearing, delayed results, missing schema and denied storage. Mocks do not prove server isolation.
+- Offline HTML: 87,331 bytes; reproducible SHA-256 `30796d728b9b86ff7cd767a2b7f269c7aa48e0c84c67bb684cf0f73c8275b26c`. Connected HTML: 303,738 bytes.
+- Read-only Auth settings show Email enabled, signup enabled, confirmation disabled. User reports SQL applied. Real account signup/login and two-user database tests remain pending; no real accounts were created by the agent.
+- This supersedes the historical code-template/SMTP activation instructions above. Basic password auth needs no email sending with confirmation off; email ownership is unverified and mail-based recovery is not implemented.
+- Live read-only anonymous request to club_plans with select=id and limit=0 returned HTTP 401 / PostgreSQL 42501 (permission denied). No rows were read or changed. This confirms anonymous denial only, not authenticated A/B ownership isolation.

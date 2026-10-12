@@ -1,33 +1,26 @@
-# Supabase email sign-in and private account setup
+# Supabase email/password and private account setup
 
-Prepared 2026-10-12 for Chrome and a double-click connected HTML file. Each recipient signs in with their own email verification code and sees their own **My plans** area. No Google Cloud account or OAuth client is needed.
+Updated 2026-10-12 for Chrome and the double-click connected HTML. Each recipient creates their own email/password account and gets a private **My plans** area. No Google Cloud resources, email templates or SMTP are needed for this selected basic login flow.
 
-The repository contains a proposed metadata migration. It has **not been applied to your Supabase project**. Real email delivery, direct-file login, session persistence and account isolation must be verified before calling the connection complete. The separate offline HTML remains usable without login or network.
+The user reports running the prepared SQL. Public Auth settings confirm Email enabled, signup enabled and email confirmation disabled. Real signup/session persistence and two-user database isolation still need verification. The separate offline HTML remains usable without login or network.
 
-## 1. Enable email accounts
+## 1. Current authentication settings
 
-Open your project in the [Supabase dashboard](https://supabase.com/dashboard). In **Authentication → Sign In / Providers**, enable the **Email** provider and allow new users to sign up. Dashboard wording can vary. Recipients are app users, not Supabase project-team members.
+In Supabase **Authentication → Sign In / Providers**, Email and signup must be enabled, with **Confirm email off** for this SMTP-free flow. These settings are already confirmed for this project; no further provider changes are needed. The app uses `signUp({ email, password })` and `signInWithPassword`. Signup opens the private area only when Supabase returns a session. [Official password authentication guide](https://supabase.com/docs/guides/auth/passwords).
 
-In **Authentication → Email Templates → Magic Link**, use a code template containing the exact variable `{{ .Token }}`:
+Email addresses are not verified in this configuration. Email confirmation and password recovery by mail require email delivery; neither is part of this initial flow. Keep your password securely and enter it only into the app, never in chat.
 
-```html
-<h2>Your Party Map sign-in code</h2>
-<p>Enter this code in Party Map:</p>
-<p><strong>{{ .Token }}</strong></p>
-<p>If you did not request this code, ignore this email.</p>
-```
+## 2. Try your account
 
-Save the template. This replaces the default magic-link experience with a code entered in the open HTML page. The app requests signup/sign-in with `signInWithOtp`, then verifies the email and code using `verifyOtp` with type `email`. New users can be created by this flow when signup is enabled. [Official email-code guide](https://supabase.com/docs/guides/auth/auth-email-passwordless).
-
-## 2. Configure delivery for other users
-
-To send codes to ordinary recipient addresses, configure **custom SMTP** in the Authentication email settings. Choose an email-delivery provider, follow its sender/domain verification instructions, and enter its SMTP host, port, username, password and approved sender directly in Supabase. Mail credentials must never be placed in the HTML, committed to Git, or sent in chat.
-
-Supabase's default email service is restricted to project-team addresses and is unsuitable for distributing this page to other users. Email sign-in can be implemented before SMTP is configured, but delivery to those recipients remains blocked until configuration succeeds. [Official SMTP setup and restrictions](https://supabase.com/docs/guides/auth/auth-smtp).
+1. Open the newly built `dist/party-map-connected.html` in Chrome with internet enabled, or refresh the local website.
+2. Click **Sign in**, then **New here? Create account**. Enter your email and a password (at least 6 characters, subject to your Supabase password policy).
+3. Click **Create account**. You should enter **My plans** immediately.
+4. Create a named plan, reload, and confirm it remains. Sign out and sign in again with the same email/password.
+5. A recipient follows the same steps with their own email/password. They should start with an empty private area.
 
 ## 3. Apply the private metadata migration
 
-The user reported an empty database. Check the project's Table Editor first. If `club_plans`, either RPC below, or a `party_map_plan_writer` role already exists, stop and review that existing schema rather than resetting it.
+The user reports this migration has already been run. Do not run it again unless troubleshooting a failed transaction. For a fresh project, check the project's Table Editor first. If `club_plans`, either RPC below, or a `party_map_plan_writer` role already exists, stop and review that existing schema rather than resetting it.
 
 1. Open **SQL Editor → New query**.
 2. Paste the entire contents of [202610120001_private_plans.sql](../supabase/migrations/202610120001_private_plans.sql).
@@ -59,11 +52,11 @@ This first migration stores **plan names only**. It does not store songs, upload
 
 ## 6. Verify with two ordinary accounts
 
-After SMTP and schema setup, test the connected file in Chrome with internet enabled:
+After the reported schema setup, test the connected file in Chrome with internet enabled:
 
-1. Account A requests and enters a code, creates a plan, reloads and signs out.
+1. Account A creates an email/password account, creates a plan, reloads and signs out.
 2. A second ordinary email address signs in as B; it cannot see A's plan. B creates its own plan and sees it after reload.
 3. With A and B's actual authenticated API sessions, test a known foreign UUID: SELECT returns no foreign rows and rename/create collisions fail. Anonymous requests and authenticated direct writes fail. Repeat A's create UUID and confirm no duplicate plan or rename.
-4. Check invalid/expired codes, mail/network errors, denied storage and logout. Private data and delayed results from A must never appear in B's account area.
+4. Check wrong passwords, signup errors, confirmation-required responses, network errors, denied storage and logout. Private data and delayed results from A must never appear in B's account area.
 
-Do not share codes or session tokens in chat, logs or screenshots. Mocked tests alone do not establish server privacy. Record actual outcomes before closing E10-S0, E10-S2/S3 or E14-S1. Direct `file://` support must be tested without a local server or disabled Chrome protections.
+Do not share passwords or session tokens in chat, logs or screenshots. Mocked tests alone do not establish server privacy. Record actual outcomes before closing E10-S0, E10-S2/S3 or E14-S1. Direct `file://` support must be tested without a local server or disabled Chrome protections.

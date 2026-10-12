@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import { accountError, type AccountService, type AccountUser, type PrivatePlan } from '../lib/account';
   export let service: AccountService;
   export let active: boolean;
@@ -7,12 +7,10 @@
   let user: AccountUser | null = null;
   let checking = true, busy = false, loading = false;
   let persistentSession = service.persistentSession;
-  let email = '', sentEmail = '', code = '', error = '', status = '';
+  let email = '', password = '', signup = false, error = '', status = '';
   let plans: PrivatePlan[] = [], page = 0, name = '';
   let operationId: string | null = null, operationName = '';
   let generation = 0, request = 0, alive = true;
-  let codeInput: HTMLInputElement;
-  let retryAt = 0, seconds = 0;
   async function loadPlans() {
     if (!user) return;
     const owner = user.id, version = generation, query = ++request;
@@ -28,7 +26,7 @@
     checking = false; persistentSession = service.persistentSession;
     if (next?.id === user?.id) { user = next; onUser(next); return; }
     generation++; request++; user = next; plans = []; page = 0; name = ''; operationId = null;
-    busy = false; loading = false; code = ''; sentEmail = ''; email = ''; error = ''; status = ''; retryAt = 0; seconds = 0;
+    busy = false; loading = false; password = ''; email = ''; error = ''; status = ''; signup = false;
     onUser(next);
     if (next) void loadPlans();
   }
@@ -37,30 +35,19 @@
     const stop = service.subscribe(updateUser);
     const version = generation;
     service.getUser().then(next => { if (version === generation) updateUser(next); }).catch(e => { if (alive && version === generation) { checking = false; error = accountError(e); } });
-    const clock = setInterval(() => seconds = Math.max(0, Math.ceil((retryAt - Date.now()) / 1000)), 1000);
-    return () => { alive = false; generation++; stop(); clearInterval(clock); };
+    return () => { alive = false; generation++; password = ''; stop(); };
   });
-  async function sendCode() {
-    if (busy || seconds) return;
-    const target = (sentEmail || email).trim(), version = generation;
-    busy = true; error = ''; status = '';
-    try {
-      await service.requestCode(target);
-      if (alive && version === generation) {
-        sentEmail = target; retryAt = Date.now() + 60000; seconds = 60;
-        status = 'Code requested. Check your email and enter the code below.';
-        await tick(); codeInput?.focus();
-      }
-    } catch (e) { if (alive && version === generation) error = accountError(e); }
-    finally { if (alive && version === generation) { busy = false; persistentSession = service.persistentSession; } }
-  }
-  async function verify() {
+  async function authenticate() {
     if (busy) return;
     const version = generation;
-    busy = true; error = '';
-    try { await service.verifyCode(sentEmail, code.trim()); }
-    catch (e) { if (alive && version === generation) error = accountError(e); }
-    finally { if (alive && version === generation) busy = false; }
+    busy = true; error = ''; status = '';
+    try {
+      if (signup) {
+        const signedIn = await service.signUp(email.trim(), password);
+        if (alive && version === generation && !signedIn) status = 'You are not signed in yet. Supabase requires email confirmation or an account already exists. Try Sign in; if confirmation is required, contact the project owner.';
+      } else await service.signIn(email.trim(), password);
+    } catch (e) { if (alive && version === generation) error = accountError(e); }
+    finally { if (alive && version === generation) { password = ''; busy = false; persistentSession = service.persistentSession; } }
   }
   async function signOut() {
     const version = generation; busy = true; error = '';
@@ -98,19 +85,13 @@
   {:else}
     <h2 id="account-title" tabindex="-1">Your own party space</h2>
     <p class="account-subtitle">Sign in or create an account with your email. Your club plans belong to you.</p>
-    {#if !sentEmail}
-      <form class="account-form" onsubmit={e => { e.preventDefault(); void sendCode(); }}>
+      <form class="account-form" onsubmit={e => { e.preventDefault(); void authenticate(); }}>
         <label for="account-email">Email address</label><input id="account-email" type="email" autocomplete="email" bind:value={email} disabled={busy} required maxlength="254" placeholder="you@example.com" />
-        <button disabled={busy} type="submit">{busy ? 'Requesting code…' : 'Send sign-in code'}</button>
+        <label for="account-password">Password</label><input id="account-password" type="password" autocomplete={signup ? 'new-password' : 'current-password'} bind:value={password} disabled={busy} required minlength={signup ? 6 : undefined} aria-describedby={signup ? 'password-hint' : undefined} />
+        {#if signup}<p id="password-hint" class="account-subtitle">Use at least 6 characters.</p>{/if}
+        <button disabled={busy} type="submit">{busy ? (signup ? 'Creating account…' : 'Signing in…') : (signup ? 'Create account' : 'Sign in')}</button>
       </form>
-    {:else}
-      <form class="account-form" onsubmit={e => { e.preventDefault(); void verify(); }}>
-        <p class="account-subtitle">Enter the code for {sentEmail}.</p>
-        <label for="account-code">Email verification code</label><input id="account-code" bind:this={codeInput} bind:value={code} inputmode="numeric" autocomplete="one-time-code" pattern={"[0-9]{6,10}"} required maxlength="10" />
-        <button disabled={busy} type="submit">{busy ? 'Signing in…' : 'Verify and sign in'}</button>
-      </form>
-      <div class="account-secondary"><button disabled={busy || seconds > 0} onclick={sendCode}>{seconds ? `Resend in ${seconds}s` : 'Resend code'}</button><button disabled={busy} onclick={() => { sentEmail = ''; code = ''; status = ''; error = ''; retryAt = 0; seconds = 0; }}>Use another email</button></div>
-    {/if}
+      <div class="account-secondary"><button disabled={busy} onclick={() => { signup = !signup; password = ''; status = ''; error = ''; }}>{signup ? 'Already have an account? Sign in' : 'New here? Create account'}</button></div>
   {/if}
   {#if error}<p class="account-error" role="alert">{error}</p>{#if user}<button disabled={loading} onclick={loadPlans}>Retry loading plans</button>{/if}{/if}
   {#if status}<p class="account-status" role="status">{status}</p>{/if}
