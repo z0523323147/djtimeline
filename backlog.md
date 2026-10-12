@@ -1,5 +1,32 @@
 # Product backlog
 
+## Track-first delivery evidence — 2026-10-12
+
+Implemented locally and covered by model/database/browser checks: E16 v2 timing/genre derivation and prepared additive 005; E17 empty-first navigation/rail/mobile switcher; E18 masked Add track/Now override/genre suggestions; E19 automatic saves, complete LocalStorage snapshots/outbox/reconnect/conflict copies; E20 two-row ruler/themes; E21 original import and selected/all-own-plan JSON export/restore. Actual original-set import/reload and own-account export are verified through the signed-in UI; the user confirms 005 applied. No account backup or session credential is committed.
+
+Story status remains In progress wherever hosted API/privacy, native accessibility, capacity or other AC is unmet. Completed implementation is not a claim of private Realtime push, an IndexedDB backend, or hosted two-account verification.
+
+- E16-S1: **In progress**; T1–T5 implemented/tested for authored intervals and preserved imported uncertainty. Resolved note-clock provenance is retained; pure 24-hour rollover and explicit clock alignment tests pass.
+- E16-S2: **In progress**; T1–T3 implemented/local SQL tests pass; 005 application confirmed. T4 actual hosted A/B/v2 save verification remains.
+- E17-S1: **In progress**; T1–T4 implemented; extra native/accessibility/staging review remains.
+- E18-S1/S2: **In progress**; modal/browsing independence and owner-scoped genre vocabulary are implemented; keyboard/touch/browser coverage is recorded. Native screen-reader observations remain.
+- E19-S1/S2: **In progress**; full snapshot/pending cache and autosave/retry implemented. LocalStorage is selected for this slice with denial/quota feedback. IndexedDB capacity work remains unimplemented; no encrypted-cache guarantee.
+- E20-S1/S2: **In progress**; latest user resolves responsive ruler strategy to five-minute desktop / ten-minute mobile labels on one minute row; light/dark/system and icon/count refinements implemented. Further native visual/accessibility review remains.
+- E21-S1: **In progress**; T1–T4 completed for actual original set, T5 named replacement/recovery exists; append with timing-conflict preview remains future scope.
+- E21-S2: **In progress**; T1–T4 implemented/tested, with owner-scoped resumable import operation IDs; actual backup download validated. Broader interrupted multi-plan hosted restore remains a release gate.
+
+### E20-S3 — Compact time labels, track estimates and icon controls · P1 · Implemented / release review
+
+- [x] E20-S3-T1: Full hour/endpoint times on top; minute-only numbers on one lower row, ten-minute phone resolution, collision/overflow checks.
+- [x] E20-S3-T2: Full HH:mm hip-hop In/Out and range labels; source/author time evidence remains distinct.
+- [x] E20-S3-T3: Per-track start/end display with equal-period estimates marked ~; retain final unknown ending and explicit endings.
+- [x] E20-S3-T4: Floating Back to timeline with focus return/reduced-motion support.
+- [x] E20-S3-T5: Accessible 44px icon copy/edit/search/remove actions; remove track ordinals and show track counts in genre bars.
+
+AC: Hours stay above minutes, the minutes occupy one row at supported desktop/phone widths, timestamps never overlap, and icon actions retain corrected-title behavior. Estimates follow period duration / track count and are not saved as exact. Main clock ambiguity is explicitly resolved before new current-time tracks. Native screen-reader review remains separate from automated browser evidence.
+
+
+
 ## Active queue — track-first planner (2026-10-12)
 
 Authority: [track-first requirements](docs/track-first-requirements.md), R1–R8. Everything below is **Todo** unless explicitly described as prepared; checked historical tasks retain their evidence but do not imply this iteration is implemented. This queue supersedes the earlier active release order.
@@ -933,3 +960,5 @@ AC: Direct requests cannot bypass password policy; ordinary users can verify/rec
 - [ ] E15-S3-T2 · P1: Review XSS paths/session-token exposure and release artifacts for signing keys, admin credentials and real sessions; preserve the standalone/offline contract.
 
 AC: Hosted login runs over HTTPS, malicious notes/titles cannot execute script, and no private signing/admin key ships to clients. Do not claim HttpOnly cookies for the existing browser-storage/file-origin design or add an unapproved application server.
+
+E20-S3 verification: 33 unit/database/packaging and 54 browser checks pass. Actual imported plan clock was corrected to 00:30–04:00 through the signed-in UI and restored after reload. Full times sit above a single minute row. E19 save acknowledgement now compares canonical documents and has a jsonb-order regression.

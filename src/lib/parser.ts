@@ -1,5 +1,5 @@
 export interface Track {
-  id: number; blockId: number; sectionId: number; time: string; genre: string;
+  uid?:string; clock24?:boolean; authored?:boolean; explicitEnd?:number; id: number; blockId: number; sectionId: number; time: string; genre: string;
   title: string; originalTitle: string; isBanger: boolean; isToDownload: boolean;
   isMyIdea: boolean; genreDeclared: boolean; start: number; end: number;
   exact: boolean; boundStart: number; boundEnd: number;
@@ -9,7 +9,7 @@ export interface Section {
   id: number; genre: string; start: number; end: number; exact: boolean;
   boundStart: number; boundEnd: number; tracks: Track[]; time?: string;
 }
-export interface Model { tracks: Track[]; blocks: Block[]; sections: Section[] }
+export interface Model { clock24?:boolean; tracks: Track[]; blocks: Block[]; sections: Section[] }
 
 export type NotesRecord =
   | { kind: 'time'; value: string }
@@ -34,7 +34,7 @@ export function noteRecords(raw: string): NotesRecord[] {
 export function parseNotes(raw: string): Model { return deriveRecords(noteRecords(raw)); }
 
 /** Source markers are evidence; inferred positions are only diagram coordinates. */
-export function deriveRecords(records: readonly NotesRecord[], keepEmpty = false): Model {
+export function deriveRecords(records: readonly NotesRecord[], keepEmpty = false, clock24 = records.some(e=>e.kind==='time'&&(Number(e.value.split(':')[0])===0||Number(e.value.split(':')[0])>12))): Model {
   const tracks: Track[] = [], blocks: Block[] = [];
   const empty: { genre: string; before: number; block?: Block }[] = [];
   let genre = 'Unspecified', peak = false, pendingGenre = false;
@@ -44,7 +44,7 @@ export function deriveRecords(records: readonly NotesRecord[], keepEmpty = false
     if (record.kind === 'time') {
       const [hour, minute] = record.value.split(':').map(Number);
       let start = hour * 60 + minute;
-      while (block && start < block.start) start += 720;
+      while (block && start < block.start) start += clock24?1440:720;
       block = { id: blocks.length, time: record.value, start, end: start, tracks: [] };
       blocks.push(block); continue;
     }
@@ -92,5 +92,6 @@ export function deriveRecords(records: readonly NotesRecord[], keepEmpty = false
     }
     sections.forEach((section,id) => { section.id=id; section.tracks.forEach(track => track.sectionId=id); });
   }
-  return { tracks, blocks, sections };
+  if(clock24)tracks.forEach(t=>t.clock24=true);
+  return { tracks, blocks, sections,...(clock24?{clock24:true}:{}) };
 }

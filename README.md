@@ -1,67 +1,58 @@
-# Party Map — DJ Set Timeline
+# Party Map — DJ timeline
 
-A browser-local DJ planner: see the whole party, open a genre section, and prepare its tracks. Built with Astro and Svelte, with a static website and a single-file offline edition from the same source.
+A track-first DJ planner built with Astro and Svelte. Open a plan, see the whole party timeline, then inspect its tracks. The same source builds a website and downloadable HTML editions.
 
-![Party Map desktop preview](party-map-preview.png)
-
-## Develop
-
-Use Node.js 22.12+ (tested with 24.14.1) and pnpm 12.11.2, pinned in `package.json`.
-
-```sh
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-Open the local URL printed by Astro. If pnpm is not installed, run `npm exec --yes --package=pnpm@12.11.2 -- pnpm install --frozen-lockfile`, then use the same prefix for the commands below. Optional: set `ASTRO_TELEMETRY_DISABLED=1` to disable Astro telemetry.
-
-## Build and share
-
-```sh
-pnpm build
-pnpm preview
-```
-
-- `dist/site/` — static website with bundled assets; serve the entire folder.
-- `dist/party-map.html` — standalone offline app. Open this file directly, or send it without any accompanying files.
-
-`pnpm build:site` and `pnpm build:offline` rebuild either output independently and preserve the other. The offline build compiles the shared Svelte root into one embedded classic script with embedded CSS and example notes. It requires no server, CDN, fonts, service worker, or sibling assets. Download search intentionally opens Google and requires internet access.
-
-## Email sign-in and private account area
-
-![Email sign-in preview](party-map-sign-in.png)
-
-The website and connected HTML include email/password login and private database plans. Open/switch plans, add sections and songs, edit titles/flags, remove songs with undo, rename plans, and explicitly save their complete content. Note import defaults to a new plan; Save set to account migrates the local set with corrected titles. The timeline and track views are shared with the offline planner. Cross-device live notifications remain later work.
-
-The user confirms real metadata plan creation. **Apply migration 004 before using full plan contents:** [202610120004_plan_documents.sql](supabase/migrations/202610120004_plan_documents.sql). This upgrade preserves existing plans, creates their blank documents, and adds revisioned saves and atomic imports. It has passed local PostgreSQL tests; it has not been applied remotely by the agent. Email/signup are enabled and email confirmation is off, allowing basic signup/sign-in without SMTP or email-template changes. Follow [Supabase setup](docs/supabase-setup.md) to create your first account. Email addresses are unverified; password recovery by mail is not provided by this initial flow. The user confirms real plan creation; reload/session and cross-account isolation still need verification. The remaining release gates include actual full-content persistence/account isolation and live notifications; see [plan.md](plan.md) and the active release queue in [backlog.md](backlog.md).
-
-Copy .env.example to ignored .env.local and fill the project URL/public publishable key. Then:
-
-```sh
-pnpm build:site
-pnpm build:connected
-```
-
-Open dist/party-map-connected.html directly in Chrome with internet enabled. It embeds its SDK/styles/scripts and has no sibling assets. The existing dist/party-map.html stays network-free and has no account requirement. No SMTP/admin/session secrets belong in browser configuration.
+![Track-first desktop planner](party-map-track-first-desktop.png)
 
 ## Features
 
-- Full-width party timeline above the track list, with a compact whole-party overview, pink hip-hop, and amber peaks.
-- One proportional time ruler and every hip-hop entry/exit time, including honest ranges for uncertain changes.
-- All genres stay inside clickable, numbered buttons in source order: three rows on desktop and seven on phones for the example set.
-- No scrolling inside the timeline. The full page scrolls normally, with tracks below.
-- Selecting a genre brightens its button and highlights its estimated interval in the overview.
-- The final 4:00 hip-hop section opens its track without an invented ending time.
-- A collapsed recorded-time list jumps directly to the first track at that source marker.
-- **All tracks** shows the entire set in source order, with time/genre labels; selecting a timeline section returns to its tracks.
-- Search with combined genre, peak, download, and idea filters.
-- Copy a track, edit its name, and search Google using its corrected title.
-- Import pasted notes or a `.txt` file. Names support Hebrew, Russian, and English.
-- Browser-local notes and corrections, with explicit session-only feedback when saving fails.
+- Empty initial workspace with searchable My plans, desktop rail/collapse and mobile plan switcher.
+- Compact **Add track** dialog: name, manual genre with existing-genre suggestions, current-time default you can override, and optional ending.
+- Automatic contiguous genre sections. No manual Add section step. An explicit ending before the next track leaves a real blank gap; omitted endings follow the next known start.
+- Two-row ruler: full hours above, minute numbers below on one line. Five-minute desktop / ten-minute phone labels, full hip-hop entry/exit times, and a full-height grid with finer lines when space permits.
+- Genre buttons show track counts; track rows show exact/estimated times without numbering. Icon copy/edit/Google download search/remove controls retain accessible names and tooltips. All tracks, filters, undo and a floating Back to timeline action remain available.
+- Supabase email/password login and private plans. Committed edits save automatically with revisions, stable retry IDs and recoverable conflict copies.
+- Cached complete plans and pending changes reopen offline in the connected HTML. Reconnect retries under the original account; denied/quota-limited storage is reported honestly.
+- Original pasted/.txt notes import with preview. **Import original party** creates a new plan from the 126-track set.
+- JSON backup/export of one plan or all own plans, including pending drafts; validated restore creates new private plans. No auth credentials or other accounts are included.
+- Dark, Light and System themes, multilingual names, keyboard/touch controls and a masked creation dialog.
 
-## Notes format
+## Develop
 
-```text
+Use Node 22.12+ and pnpm 12.11.2 (pinned). Tested with Node 24.14.1.
+
+~~~sh
+pnpm install --frozen-lockfile
+pnpm dev
+~~~
+
+Without a global pnpm installation, prefix commands with npm exec --yes --package=pnpm@12.11.2 -- pnpm.
+
+## Build and download
+
+~~~sh
+pnpm build:site
+pnpm build:offline
+pnpm build:connected
+~~~
+
+- dist/site/ — static website; serve the entire directory.
+- dist/party-map.html — local named plans, no login or automatic network requests. Open directly in Chrome or send the single file.
+- dist/party-map-connected.html — private Supabase plans, inline scripts/styles/SDK and public configuration. Open directly in Chrome; internet is needed for login and cloud synchronization. Previously cached plans work offline.
+
+Connected builds need .env.local copied from .env.example with the project URL and public publishable key. Never bundle secret/service-role keys, passwords or JWT private keys. Independent builds preserve the other output. Google search intentionally needs internet. Hosted page reload while offline is not supported without a service worker; use the downloadable edition for offline reopening.
+
+## Supabase setup
+
+Follow [setup instructions](docs/supabase-setup.md). Apply additive migrations 001/003/004/005 in their documented order; existing projects must not rerun their applied initial migrations. The user confirmed 005 succeeded. Migration [005](supabase/migrations/202610120005_track_timing.sql) validates track-first v2, retains v1 imports, prevents old-client downgrades, and exposes only the current user's genre vocabulary.
+
+Email provider/signup are enabled and confirmation is off for the selected SMTP-free setup. Email ownership is unverified. Manual administrator recovery is supported outside the app; no privileged reset key is embedded. Cloud access remains owner-scoped through RLS and restricted RPCs.
+
+On 2026-10-12 the original set was created as **Imported party — 00:30–04:00** in the signed-in user's Supabase account. After reload/open, 126 tracks, 26 sections, 42 download flags, 25 peaks and 2 ideas were verified. An own-account backup with two plans (126 tracks and an empty plan) was downloaded and validated. No private backup/session data is committed.
+
+## Original notes format
+
+~~~text
 12:30
 (Afro tech)
 First track ---
@@ -70,62 +61,40 @@ Second track ///
 (Hip hop) הפגזות
 Another track --
 Track title (remix)
-```
+~~~
 
-Times and genres persist until replaced. Only a whole parenthesized line declares a genre; parentheses inside names remain intact. `--` or longer marks a download; `///` marks an idea. A standalone `הפגזות` starts a peak section; declaring a genre resets it unless the declaration also has that marker. An inline peak marker affects only that track. Blank and marker-only lines do not create tracks.
+Times/genres persist until replaced. Only a full parenthesized line changes genre; parentheses in track names remain. --/--- marks downloads; /// marks ideas. Standalone Hebrew peak markers persist until the next genre, while inline markers tag only that track. Hebrew, Russian and English names remain intact.
 
-Time markers follow source order with sequential 12-hour rollover, without assuming AM/PM. Changes between markers show the known interval rather than an invented exact minute. Diagram positions inside that interval are approximate. A final section has no invented duration. Untimed or one-marker imports remain browsable.
+Legacy notes retain sequential 12-hour rollover without invented AM/PM, dates, exact per-track start times or final endings. New authored tracks use 24-hour times and explicit day offsets for overnight plans. Editing an imported untimed track can preserve its source timing by leaving the exact start blank. Before adding current-time tracks to an ambiguous imported twelve-hour plan, choose its morning/night or afternoon/evening clock once. Original marker wording is retained in the document. Estimates divide each recorded time period by its track count; ~ marks inferred values and an unknown final ending remains unknown.
 
-Import replaces the active set only after **Use these notes**. Cancel and invalid input preserve it. Limits: 500,000 bytes per file, 500,000 JavaScript string units for pasted text, and at least one track.
+Raw notes limits: 500,000 characters / 500 KB in the selected-plan importer. Account backups support 1–100 plans and 20 MB; document limits remain 10,000 events and 2 MB. JSON is the lossless backup format for optional endings; the original text syntax cannot express every new field.
 
-## Local data
+## Storage and synchronization
 
-Imported notes use the existing `party-map-imported-notes` storage key. Corrections retain the original content-based `party-map-v2-*` keys, so existing saved names remain compatible when migrating on the same origin. Storage is scoped to a browser and origin; changing ports, browsers, hosted URLs, or file contexts can change what is available.
+Browser-local plan/cache data is scoped by project, account and plan. LocalStorage is the current cache implementation; quotas, denial, clearing storage and changing browser/origin/file location can affect recovery. It is not encrypted. Logout removes visible private state; another account cannot replay a retained queue. Closed HTML does not synchronize in the background.
 
-Imports and edits do not rewrite the HTML. Unavailable storage leaves changes usable for the session. The app attempts a clipboard fallback and reports failure honestly. No accounts or cross-device sync are involved. Google receives a track query only when its link is opened.
+The active plan refreshes every 15 seconds and on focus; reconnect/focus retries retained saves after online identity validation. This polling fallback needs no Realtime publication. Private push notifications remain future work; no two-second cross-device guarantee is claimed.
 
-## Validate
+## Verify
 
-```sh
+~~~sh
 pnpm check
-pnpm build
-pnpm check:offline
 pnpm test
-pnpm exec playwright install chromium
+pnpm build:site
+pnpm build:offline
+pnpm build:connected
 pnpm test:e2e
 node scripts/check-reproducible.mjs
-```
+~~~
 
-The current suite contains 25 Node/model/database/package tests and 94 Chromium workflow tests across hosted and direct-file builds at 1280×900, 390×844, and 1280×600. Offline direct-file tests disable networking and observe requests; connected-file account tests intercept synthetic Supabase responses. Database tests execute migrations and role/RLS checks in local PostgreSQL (PGlite), not the hosted project. They cover imports/cancel, editing/reload, combined filters, encoded Google links, keyboard selection, 200% equivalent reflow, complete genre labels, switch-label collisions, rapid switches, hostile text, repeated markers, storage denial, and clipboard fallback/failure.
+See [verification](docs/verification.md) for current counts and evidence. Browser cloud tests intercept synthetic accounts; local PostgreSQL tests cover ownership, additive migration, validation, retries and revision conflicts. These are distinguished from the actual account import/reload/export verified above. Hosted cross-account API isolation and native screen-reader review remain release checks.
 
-Two unchanged offline builds must produce identical bytes. GitHub Actions installs with the frozen lockfile, checks types, builds both outputs, runs tests, checks reproducibility, and uploads the offline HTML. The workflow is configured; its first remote result is separate from local verification. See [docs/verification.md](docs/verification.md) for evidence and limits.
+## Project documents
 
-The bundled set remains **126 tracks, 25 blocks, 26 sections, 42 download choices, 25 peak tracks, and 2 ideas**.
+- [Track-first requirements](docs/track-first-requirements.md)
+- [Implementation plan](plan.md)
+- [Prioritized backlog](backlog.md)
+- [Project instructions](AGENTS.md)
+- [Recommended skills](SKILLS.md) and [role prompts](SUBAGENTS.md)
 
-## Source
-
-- `src/pages/index.astro` — static `/` route and document shell.
-- `src/components/PartyApp.svelte` — shared state and app composition.
-- `src/views/` — Party and Tracks views.
-- `src/lib/` — parser, timeline, filters, storage, and clipboard adapters.
-- `src/data/example-notes.txt` — one bundled data source.
-- `src/styles/` — shared tokens and styles.
-- `src/offline/main.ts` and `scripts/` — standalone compilation and validation.
-- `tests/` — model and browser regression checks.
-- `dj-set-timeline-v2.html` — preserved pre-migration baseline; other root HTML files are historical iterations.
-- [AGENTS.md](AGENTS.md), [plan.md](plan.md), [backlog.md](backlog.md) — instructions, architecture, and prioritized work.
-- [SKILLS.md](SKILLS.md), [SUBAGENTS.md](SUBAGENTS.md) — recommended workflows/roles, not installed runtime configuration.
-
-## Next iteration — track-first plans
-
-The requested next version starts with an empty workspace and convenient private-plan switching. Users add tracks with a default current start time, manual genre suggestions and optional end time; contiguous genre sections and real gaps are derived automatically. A compact Add track dialog, automatic acknowledged saves, offline cache/reconnect, five-minute ruler/grid, light/dark/system themes and portable own-account backup are planned, not implemented. See [requirements](docs/track-first-requirements.md), the active sequence in [plan.md](plan.md) and E16–E21 in [backlog.md](backlog.md).
-
-The user clarified that the default 126-track notes are not already a database plan. Import preparation is local; a new private plan must be created through authenticated Supabase and read back before claiming completion.
-
-## Remaining work
-
-Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Email-code UI, private account navigation and a metadata SQL migration are implemented/prepared. Real email delivery, applied database privacy, cloud song documents, structured editing and live synchronization remain pending. See [plan.md](plan.md), [backlog.md](backlog.md), and [Supabase connection checklist](docs/supabase-connection.md). The existing offline HTML remains network-free; the proposed connected single HTML needs internet for cloud features.
-
-Repository: [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No hosted deployment or license is configured.
-
-Authentication hardening and public-release configuration steps are recorded in [Supabase setup](docs/supabase-setup.md). New-account passwords require 12 characters in the app; set the matching server policy in Supabase. Email confirmation remains off in the current SMTP-free setup. JWT private keys and shared API secrets must never be bundled.
+Active source is src/. Historical HTML iterations are preserved. Astro owns the page shell; shared Svelte components own interaction; pure parsing/timing, account adapters and synchronization remain separate. Repository: [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No public hosted deployment or license is configured.

@@ -18,6 +18,7 @@ test('PostgreSQL upgrade, restricted writer, owner isolation and revisioned docu
   await db.exec('revoke usage on schema auth from party_map_plan_writer');
   assert.equal((await db.query<{ok:boolean}>("select has_schema_privilege('party_map_plan_writer','auth','USAGE') as ok")).rows[0].ok,false);
   await db.exec(readFileSync('supabase/migrations/202610120004_plan_documents.sql','utf8'));
+  await db.exec(readFileSync('supabase/migrations/202610120005_track_timing.sql','utf8'));
   const loaded=await session(a,'select * from public.club_plan_documents where plan_id=$1',[plan]);assert.equal(loaded[0].revision,0);assert.deepEqual(loaded[0].document,{version:1,events:[]});
   assert.equal((await session(b,'select * from public.club_plan_documents where plan_id=$1',[plan])).length,0);
   await assert.rejects(session(null,'select * from public.club_plan_documents'),/permission denied/);
@@ -42,5 +43,12 @@ test('PostgreSQL upgrade, restricted writer, owner isolation and revisioned docu
   const badId=crypto.randomUUID();await assert.rejects(session(a,create,[badId,'Invalid',a,JSON.stringify({version:1,events:[{kind:'song'}]})]),/Invalid plan document/);
   assert.equal((await session(a,'select * from public.club_plans where id=$1',[badId])).length,0);
   const nextPlan=crypto.randomUUID();await session(a,'select public.create_club_plan($1,$2,$3)',[nextPlan,'New party',a]);assert.equal((await session(a,'select * from public.club_plan_documents where plan_id=$1',[nextPlan])).length,1);
+  const timed={version:2,events:[{...doc.events[1],timing:{start:60,end:67,genre:'House'}},{...doc.events[1],uid:crypto.randomUUID(),timing:{start:72,genre:'Hip hop'}}]};
+  const timingResult=(await session(a,save,[plan,a,1,crypto.randomUUID(),JSON.stringify(timed)]))[0].saved;assert.equal(timingResult.revision,2);
+  await assert.rejects(session(a,save,[plan,a,2,crypto.randomUUID(),JSON.stringify(doc)]),/Update your Party Map/);
+  const overlap=structuredClone(timed);overlap.events[0].timing.end=73;
+  await assert.rejects(session(a,save,[plan,a,2,crypto.randomUUID(),JSON.stringify(overlap)]),/Invalid plan document/);
+  assert.deepEqual((await session(a,'select * from public.list_club_plan_genres()')).map(r=>r.list_club_plan_genres),['Hip hop','House']);
+  assert.deepEqual(await session(b,'select * from public.list_club_plan_genres()'),[]);
  }finally{await db.close();}
 });

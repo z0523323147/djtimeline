@@ -5,7 +5,7 @@ import {documentFromNotes,documentModel,validateDocument} from '../src/lib/docum
 import {parseNotes} from '../src/lib/parser.ts';
 test('canonical notes retain timeline parity and stable song identities through corrections',()=>{
  const raw=readFileSync('src/data/example-notes.txt','utf8');const doc=documentFromNotes(raw);
- assert.deepEqual(documentModel(doc),parseNotes(raw));const song=doc.events.find(e=>e.kind==='song')!;const uid=song.uid;
+ assert.deepEqual(JSON.parse(JSON.stringify(documentModel(doc),(k,v)=>k==='uid'?undefined:v)),parseNotes(raw));const song=doc.events.find(e=>e.kind==='song')!;const uid=song.uid;
  if(song.kind==='song')song.title='Corrected (remix) --- literal';
  assert.equal(documentModel(doc).tracks[0].title,'Corrected (remix) --- literal');assert.equal(doc.events.find(e=>e.uid===uid)?.uid,uid);
 });

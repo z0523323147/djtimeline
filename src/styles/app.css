@@ -132,3 +132,41 @@ dialog .dialog-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex
 .plan-editors{display:flex;flex-wrap:wrap;padding:6px 12px;gap:12px}
 .plan-editors details{flex:1 1 120px;border:0;margin:0}
 .plan-editors:has(details[open]){display:grid;padding:18px}
+
+.account-area{max-width:none;margin:0;padding:20px;background:transparent;border:0}
+.account-head{padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.account-head.plan-open h2{position:static;clip-path:none;width:auto;height:auto;overflow:visible}
+.account-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:start}
+.plans-rail{min-width:0;padding-right:18px;border-right:1px solid var(--line)}
+.plans-rail .new-plan-form{flex-direction:column;align-items:stretch;gap:8px;margin:16px 0}
+.plans-rail .new-plan-form>div{width:100%}
+.account-plans{margin:16px 0;max-height:55dvh;overflow:auto}
+.account-plans li{padding:8px 0;border:0}
+.account-plans li>button{flex-direction:column;gap:3px;align-items:start;border-color:transparent;background:transparent}
+.account-plans li>button:hover{background:var(--raised)}
+.account-plans li>button.current-plan{background:var(--raised);border-color:var(--cyan)}
+.account-plans li>span{padding-inline:12px}
+.rail-actions{display:flex;flex-direction:column;gap:8px}
+.rail-actions button{text-align:start;font-size:14px}
+.plan-main{min-width:0}.plan-empty{padding:80px 20px;text-align:center;border:1px dashed var(--line);border-radius:14px}.plan-empty p{color:var(--muted);margin:12px 0 20px}
+.mobile-plans{display:none}.plan-toolbar{padding-top:0}.plan-toolbar h2{font-size:22px}.plan-toolbar .header-actions{flex-wrap:wrap}
+.add-track-button{background:var(--raised);border-color:var(--line);white-space:nowrap}.add-track-button:hover,.add-track-button:focus-visible{border-color:var(--cyan);box-shadow:0 2px 12px var(--shadow)}
+.primary{background:var(--cyan);color:var(--panel);border-color:var(--cyan)}
+.track-dialog{width:min(460px,calc(100% - 24px));padding:24px;box-shadow:0 24px 100px var(--shadow)}
+.track-dialog form>label{margin-top:18px}.dialog-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.dialog-heading button{font-size:22px;padding:2px 12px;background:transparent;border:0}
+.track-dialog input,.track-dialog select{background:var(--bg)}
+.genre-field{position:relative;margin-top:16px}.genre-field ul{position:absolute;z-index:5;top:100%;left:0;right:0;list-style:none;padding:6px;margin:4px 0;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 30px var(--shadow)}.genre-field button{width:100%;text-align:start;border:0;background:transparent}.genre-field li[aria-selected=true] button{background:var(--raised)}
+.time-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.time-fields label span{font-size:12px}.track-options{margin-top:16px}.track-dialog .dialog-actions{border-top:1px solid var(--line);padding-top:16px}
+.ruler-grid{stroke:var(--line);stroke-width:1;opacity:.7}.minor-grid{stroke:var(--line);stroke-width:.7;opacity:.3}
+.account-error,.import-error{color:var(--danger)!important}.account-form button{background:var(--raised);border-color:var(--cyan)}
+.section-buttons button.lit{color:var(--panel);border-color:var(--text);box-shadow:0 0 0 1px var(--text)}.section-buttons button.lit .ordinal{color:var(--panel)}
+@media(max-width:850px){.account-layout{grid-template-columns:minmax(0,1fr)}.plans-rail{display:none;border:0;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px}.plans-rail.drawer-open{display:block}.mobile-plans{display:block;width:100%;text-align:start;margin-bottom:14px}.account-area{padding:0}.plan-empty{padding:48px 16px}.track-dialog{padding:20px}.account-plans{max-height:35dvh}.track-dialog .time-fields{gap:8px}.cloud-plan .overview{padding-inline:10px}}
+
+.desktop-plan-toggle{margin-bottom:16px}.account-layout.rail-collapsed{grid-template-columns:minmax(0,1fr)}.account-layout.rail-collapsed .plans-rail{display:none}
+@media(max-width:850px){.desktop-plan-toggle{display:none}.account-layout.rail-collapsed .plans-rail.drawer-open{display:block}}
+
+.track-time{font-variant-numeric:tabular-nums;color:var(--text)}.estimate-tag{color:var(--muted);font-size:11px}.back-to-timeline{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:20;border-color:var(--cyan);background:var(--panel);box-shadow:0 4px 20px var(--shadow);min-height:46px}.track-list{padding-bottom:60px}
+
+.track{grid-template-columns:minmax(0,1fr) auto;gap:12px}.edit-form{grid-column:1/-1}.actions{gap:4px}.actions button,.actions a.action{width:44px;height:44px;min-height:44px;padding:10px;display:inline-flex;align-items:center;justify-content:center}.actions svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.section-count{font-size:12px;min-width:22px;border-radius:5px;padding:1px 5px;background:var(--raised);color:var(--muted);font-variant-numeric:tabular-nums}.section-buttons button.lit .section-count{color:inherit;background:color-mix(in srgb,var(--panel) 16%,transparent)}
+@media(max-width:850px){.track{grid-template-columns:minmax(0,1fr)}.actions{grid-column:1;gap:6px;margin-top:2px}.section-buttons button{padding-top:20px}.section-count{position:absolute;top:3px;right:4px;font-size:11px;min-width:18px;padding:0 4px}}
+@media(max-width:850px){.account-area:has(.cloud-plan){padding:0}}

@@ -1,6 +1,6 @@
 # Track-first planner requirements
 
-Updated: 2026-10-12. Status: approved direction from the user; implementation and hosted migration remain pending. This document is authoritative for the next iteration and supersedes manual section creation, Add song wording, explicit-save-only editing, automatic last-plan opening, and the example dashboard as the connected app's home screen.
+Updated: 2026-10-12. Status: core implementation complete locally; migration 005 confirmed applied, actual original-set import/reload/export verified. Remaining release evidence and capacity/push refinements are recorded in plan.md. This document is authoritative for the next iteration and supersedes manual section creation, Add song wording, explicit-save-only editing, automatic last-plan opening, and the example dashboard as the connected app's home screen.
 
 ## R1 — Start empty, keep plans within reach
 
@@ -15,7 +15,7 @@ Updated: 2026-10-12. Status: approved direction from the user; implementation an
 
 - Users create/edit tracks; there is no Add section step or destination-section selector. All visible creation labels use Add track; browsing uses All tracks.
 - Minimum fields: track name, manually chosen genre, start time. Optional end time; optional Peak/Download/Idea flags under a compact secondary disclosure.
-- Start time is captured from the device clock when the dialog opens, to the current minute, displayed in 24-hour HH:mm. It does not keep changing while the person types. Every field can be overridden; reopening starts a new draft at the new current time.
+- Before mixing ambiguous imported twelve-hour notes with new clock times, ask once whether the first source time is morning/night or afternoon/evening. Preserve original marker wording as originalValue when the user resolves it; do not guess AM/PM. Start time is captured from the device clock when the dialog opens, to the current minute, displayed in 24-hour HH:mm. It does not keep changing while the person types. Every field can be overridden; reopening starts a new draft at the new current time.
 - Party timing uses elapsed minutes plus an explicit day offset for newly authored tracks. Show next-day input only when required. Never interpret adding a retrospective earlier time as an automatic 24-hour rollover. Legacy 12-hour notes retain their existing relative rollover evidence; no AM/PM/date is invented.
 - Genre is a free-text editable combobox. Suggest distinct genres already used in the signed-in user's plans (cached locally when available), matching typed prefixes then substrings. Trim and case-fold for matching/deduplication while retaining display text. Do not merge different labels such as House, Tech house, and House/ dance. New genres remain allowed; no cross-account suggestions.
 - Order authored tracks by effective start time; stable sequence breaks ties. Same-minute tracks remain visible in the list; their zero-width timing is not stretched into fake duration.
@@ -38,13 +38,14 @@ Updated: 2026-10-12. Status: approved direction from the user; implementation an
 - Enter submits only where appropriate; combobox Enter first selects a suggestion. Escape closes suggestions before the dialog. Cancel never commits. Dirty dismissal retains a per-plan draft or asks to discard; outside clicks cannot silently lose entered text. Restore focus to the opening control. Surface validation inside the dialog.
 - On successful local commit, close the dialog, reveal the new track, derive sections immediately, and start automatic save. If local persistence is denied, keep the form/draft usable and show session-only status instead of claiming durability.
 
-## R5 — Five-minute ruler and timeline grid
+## R5 — Compact two-row ruler and timeline grid
 
-- Use one elapsed-time axis spanning the complete plan, including all confirmed gaps and the final open-ended track. Genre names stay inside bars with full-name accessible selection alternatives for short intervals. Bright fill/outline indicates selection; no black underline.
-- Major tick and full-height vertical grid every five minutes. Minor grid at one-minute intervals when pixel spacing is sufficient; lower contrast than five-minute lines. Labels follow the same coordinates; grid extends across all proportional timeline lanes and empty gaps, not the track table or text-sized navigation cards.
-- Target visible HH:mm labels at every five-minute tick, including honest rollover. No tick changes source evidence. Exact hip-hop entry/exit labels stay visible; uncertain switches keep their ranges.
-- Readability gate: a 210-minute party has 43 five-minute labels including endpoints. These cannot fit legibly in one 390px-wide row. Prototype fit-all + focus ruler against a compact wrapped chronological ruler, measuring height, label collisions and first-track visibility. Do not ship overlapping/shrunken labels or silently omit the requested resolution.
-- Recommended responsive fallback: complete macro overview with all five-minute grid ticks and collision-safe labels, plus a focused five-minute-labelled ruler when a section is selected. This is a proposed compromise, not fulfilled acceptance for all five-minute numbers in the phone macro. Resolve that choice with the user using measured prototypes before closing the ruler story. Keep all sections available without internal timeline scrolling.
+- Latest user direction supersedes the all-five-minute mobile labels/staggered-ruler proposal: full HH:mm hour/endpoint labels stay on the TOP row; intermediate minute-only numbers stay on ONE bottom row.
+- Labels use five-minute resolution on desktop and ten-minute resolution on phones. Extremely long ranges can coarsen labels/grid to avoid collisions and unbounded tick counts; short ordinary party ranges retain the requested resolution.
+- Five-minute major grid extends across proportional timeline lanes and confirmed empty gaps; one-minute minor grid appears when pixel spacing permits. Labels/grid share numeric coordinates; none changes recorded source evidence.
+- Hip-hop entry/exit labels show full HH:mm, including both ends of an uncertain range. Actual gaps have no genre fill, and unknown final endings remain selectable caps.
+- Every track row shows time. Source-period estimates divide the duration to the next recorded marker by that period's track count, then derive each start/end from its position. Display ~ and Estimated; do not persist interpolated timestamps as exact. Explicit endings remain unmarked; omitted authored endings follow the next known start and are marked inferred. An unknown final ending is never guessed.
+- A floating Back to timeline action appears while browsing tracks with the timeline above the viewport. It supports touch/keyboard, focus return and reduced motion.
 
 ## R6 — Automatic database saving and offline cache
 
@@ -70,6 +71,7 @@ Updated: 2026-10-12. Status: approved direction from the user; implementation an
 
 - Use Linear-inspired hierarchy: one navigation rail/drawer, one active-plan header, timeline above generous track rows, restrained borders and progressive disclosure. Remove persistent editor panels and repetitive instructional paragraphs. Keep primary actions visible.
 - Support Dark, Light and System, default System with explicit user override retained on this browser. Preserve hip-hop pink and peak amber meaning in both themes; selected state and grid contrast need separate theme tokens. Respect reduced motion and automatic text direction for Hebrew/Russian/English; time fields are LTR.
+- Copy/edit/Google download search/remove use icon controls with accessible names/tooltips and 44px targets. Track rows have no visible numbering. Genre buttons show their track counts rather than section ordinals.
 - Test 1280×900, 1280×600, 390×844 and 200% reflow with keyboard, touch, dialog focus, error/status announcements and both themes. Measure first-track visibility and no horizontal page overflow. Plan rails may scroll independently; timeline should not acquire internal scrolling to hide dense labels.
 
 ## Role review and sources

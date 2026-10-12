@@ -1,5 +1,5 @@
 {
-  "status": "Prepared locally; NOT uploaded to Supabase",
+  "status": "Imported through authenticated app and verified after database reload on 2026-10-12",
   "source": "src/data/example-notes.txt",
   "sourceSha256": "0a0074bcb24ec012b25ca10b8c920c69690a022402098b682cfd6f450959b467",
   "payloadSha256": "a680c4f3dd30dad02527a69fab68860aa2606efff8f14930df3eb8e332c968c1",
@@ -22,5 +22,6 @@
     "Use createPlanDocument with retry-stable operation UUID",
     "Read back and verify content after server acknowledgement"
   ],
-  "restoreSupport": "Current app accepts pasted/.txt notes. This JSON is prepared canonical API payload, not yet supported as a user-facing backup import."
+  "restoreSupport": "Current app accepts pasted/.txt notes. This JSON is prepared canonical API payload, not yet supported as a user-facing backup import.",
+  "identityNote": "This prepared payload is a reference. The actual notes import assigned independent stable event UUIDs; parity was verified by counts, titles and flags, not byte-identical payload hashes."
 }

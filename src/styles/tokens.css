@@ -10,3 +10,7 @@
   --hip: #ff8bbb;
   --fire: #ffd18c;
 }
+
+:root{--danger:#ffb7b7;--shadow:#0005}
+:root[data-theme=light]{color-scheme:light;--bg:#f4f5f7;--panel:#fff;--raised:#e9edf2;--line:#d2d8e1;--text:#202735;--muted:#596476;--cyan:#197b73;--hip:#b52764;--fire:#986300;--danger:#b32436;--shadow:#18223516}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){color-scheme:light;--bg:#f4f5f7;--panel:#fff;--raised:#e9edf2;--line:#d2d8e1;--text:#202735;--muted:#596476;--cyan:#197b73;--hip:#b52764;--fire:#986300;--danger:#b32436;--shadow:#18223516}}

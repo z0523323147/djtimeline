@@ -77,7 +77,7 @@ test('hip-hop changes retain all recorded pairs and uncertain entries', async ()
   const { hipChanges, position, annotationLanes } = await import('../src/lib/timeline.ts');
   const m = parseNotes(readFileSync('src/data/example-notes.txt', 'utf8'));
   const changes = hipChanges(m);
-  assert.deepEqual(changes.map(c => c.label), ['In 1:50','Out 1:57','In ~2:07–2:15','Out 2:15','In 2:24','Out 2:30','In ~2:40–2:50','Out 3:00','In 3:17','Out 3:31','In 4:00']);
+  assert.deepEqual(changes.map(c => c.label), ['In 01:50','Out 01:57','In ~02:07–02:15','Out 02:15','In 02:24','Out 02:30','In ~02:40–02:50','Out 03:00','In 03:17','Out 03:31','In 04:00']);
   assert.equal(changes.filter(c => c.entering).length, 6);
   assert.equal(changes.at(-1)!.section.start, changes.at(-1)!.section.end);
   assert.equal(position(855, 750, 960, 1000), 500);

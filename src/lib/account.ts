@@ -2,6 +2,9 @@ import type { PlanDocument, PlanSnapshot } from './documents';
 export interface AccountUser { id: string; email: string }
 export interface PrivatePlan { id: string; name: string; created_at: string; updated_at: string; song_count?: number }
 export interface AccountService {
+  localOnly?:boolean;
+  cacheNamespace?:string;
+  listGenres?:()=>Promise<string[]>;
   persistentSession: boolean;
   getUser: () => Promise<AccountUser | null>;
   subscribe: (listener: (user: AccountUser | null) => void) => () => void;

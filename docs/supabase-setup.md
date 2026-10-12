@@ -111,3 +111,14 @@ Confirm email is still off for the user's selected SMTP-free flow. This protects
 Serve a public website over HTTPS. The current browser SDK keeps access/refresh tokens in browser storage; this means malicious same-origin JavaScript could read them. Current imports/titles are escaped by Svelte; an additional hosted CSP and XSS review belong in the public deployment gate. A downloadable file cannot use an application server's HttpOnly session-cookie architecture without changing the delivery design. No permanent username-login alias is implemented; the current identifier is email.
 
 Local-session sign-out does not sign out other devices. Already-issued access JWTs may remain valid until expiry; do not advertise instantaneous global token revocation. Keep Auth/API token verification and database RLS as the authorization boundary. Local PostgreSQL ownership tests and mocked browser tests pass, but actual hosted A/B/API isolation remains a release gate. [Session behavior](https://supabase.com/docs/guides/auth/sessions).
+
+
+## Track-first upgrade (005)
+
+The user confirmed applying 202610120005_track_timing.sql after 004 on 2026-10-12. Do not rerun applied migrations. New track timing uses document v2; original text imports can remain v1 until edited. Old clients cannot overwrite a v2 plan with v1 data. Owner-only list_club_plan_genres supplies existing-genre suggestions without a shared catalog.
+
+Open the latest connected HTML → sign in → deliberately select a plan → + Add track. Start defaults to this browser's current minute and can be overridden; choose genre and optional end. Changes save automatically. Imported twelve-hour notes ask for a one-time clock choice before adding new clock-based tracks; original markers are preserved as provenance.
+
+Original party was created as Imported party — 00:30–04:00 and reloaded from the real account with 126 tracks / 26 sections / 42 downloads / 25 peaks / 2 ideas. Own-account JSON backup was downloaded and validated. This does not establish hosted cross-account isolation or every v2 editing path. Source-time estimates are display-only.
+
+Previously opened plans and pending edits are cached on this browser. With the downloaded connected HTML, reopen offline, edit, then reconnect to retry under the same account. LocalStorage denial/quota/clearing/origin changes limit recovery and are reported. Hosted offline reload needs additional app-shell caching; no service worker is added here. Active online plans poll every 15 seconds/on focus; private Realtime push remains later work.

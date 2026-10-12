@@ -1,5 +1,16 @@
 # Project plan
 
+## Track-first implementation evidence — 2026-10-12
+
+The active M6–M10 slices are implemented locally: document v2 stores per-track timing/genre alongside legacy source events, sections/gaps derive automatically, a compact Add track modal replaces section forms, plan navigation is persistent/empty-first, saves are automatic, complete cached snapshots and retry queues survive direct-file offline reload, original notes and JSON backups import, and light/dark/system themes share tokens.
+
+Migration 005 is confirmed applied by the user. The original set was created through the authenticated UI as Imported party — 00:30–04:00 and reloaded from Supabase: 126 tracks, 26 legacy sections, 42 download flags, 25 peaks and 2 ideas. All-own-plan JSON backup was downloaded and schema-validated (two plans with 126/0 tracks). This proves that account's real import/readback/export, not hosted A/B isolation or every v2 write path.
+
+Implementation decisions: LocalStorage supplies the cache with explicit quota/denial/session-only feedback; IndexedDB is a later capacity improvement, not a shipped backend. Active documents refresh every 15 seconds/on focus; owner-specific Realtime push remains E13-S2. The latest user refinement replaces staggering with a fixed two-row ruler: full hours/endpoint times above, minute-only labels below, five-minute desktop and ten-minute phone resolution. Hip-hop changes show full times. Rows now show calculated time estimates, icon actions and no track numbering; genre badges show track counts. A floating timeline return supports track browsing. Ambiguous imported source clocks require an explicit one-time choice before mixing new current-time tracks.
+
+Remaining gates: real hosted v2 edits/reconnect and A/B/anonymous API tests; private Realtime notifications; cache capacity upgrade, text export and native accessibility observations. No server, SMTP or hosting dependency was introduced. Existing browser workflows were rewritten for the intentional empty-first/modal/autosave changes rather than requiring the obsolete Add section/manual-save interface.
+
+
 ## Active direction — track-first plans, automatic sections and offline recovery
 
 This update supersedes the earlier manual Add section/Add song workflow and explicit-save-only milestone. Detailed requirements and unresolved responsive ruler tradeoff: [track-first requirements](docs/track-first-requirements.md). Existing implementation evidence below is historical; these changes are planned, not shipped.
@@ -15,7 +26,7 @@ Implementation ownership: orchestrator integrates; UI/UX reviews hierarchy/proto
 
 Auth remains Supabase email/password without SMTP, as selected by the user. Administrative manual password reset replaces the initial mail-recovery requirement; a safe admin-only workflow is documented separately. Email addresses remain unverified with confirmation off. No privileged reset credential is exposed in the app. Hosting/CAPTCHA/SMTP are not dependencies of this selected downloadable release.
 
-No account passwords or service-role keys are needed for import. The exact cloud plan name can be chosen in the import dialog; default proposed name is Imported party — 12:30–4:00. Current remote content storage/migration state still requires verification.
+No account passwords or service-role keys are needed for import. The exact cloud plan name can be chosen in the import dialog; default proposed name is Imported party — 00:30–04:00. Current remote content storage/migration state still requires verification.
 
 
 Updated: 2026-10-12. User confirms a real private plan was created. The next milestone is full database-backed plan management: list/open existing plans, add/edit songs and sections, and persist their complete content. The first full-content app slice is implemented locally and tested; migration 004 must be applied to activate it in the user's database. Cross-device notifications and the remaining release gates are pending.
@@ -334,3 +345,5 @@ Local PostgreSQL tests pass for ownership/raw-write denial, missing writer Auth 
 ## Authentication hardening update — 2026-10-12
 
 Retain managed Supabase email/password accounts; custom JWT issuance/static API-key examples are not adopted. Implemented client session-storage/configuration hardening and a 12-character new-password rule. Server password policy, verified public email ownership/recovery, rate-limit review, hosted HTTPS/CSP and real staging account isolation are explicit public-release gates in E15. The current confirmation-off standalone setup remains unchanged; no admin setting, signing key or credential was altered. See docs/supabase-setup.md for required dashboard actions.
+
+User-confirmed clock correction: original 12:30 means 00:30; actual imported account document now restores 00:30–04:00 after reload, retaining original marker provenance. The legacy bundled notes remain a preserved source; ambiguous imports explicitly request clock alignment before adding current-time tracks. Supabase jsonb key order is canonicalized before save acknowledgement.

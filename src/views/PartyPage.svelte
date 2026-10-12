@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import {formatTime} from '../lib/documents';
   import type { Model } from '../lib/parser';
-  import { annotationLanes, boundary, clock, color, hipChanges, isHip, overviewRuns, peakRuns, position } from '../lib/timeline';
+  import { annotationLanes, boundary, clock, fullClock, color, hipChanges, isHip, overviewRuns, peakRuns, position } from '../lib/timeline';
   export let model: Model;
   export let selected: number;
   export let active: boolean;
@@ -17,15 +18,21 @@
   });
   $: width = Math.max(100, mapWidth - 12);
   $: start = model.blocks[0]?.start ?? 0;
-  $: end = model.blocks.at(-1)?.start ?? start;
+  $: end = Math.max(start,...model.blocks.map(b=>b.end),...model.sections.map(s=>s.end));
   $: flow = overviewRuns(model);
   $: peaks = peakRuns(model);
   $: changes = hipChanges(model);
   $: annotations = annotationLanes(changes.map(c => ({ anchor: position(c.section.start, start, end, width), width: measure ? measure(c.label) : c.label.length * 8 })), width);
   $: lanes = Math.max(0, ...annotations.map(a => a.lane + 1));
-  $: chartHeight = 54 + lanes * 24;
-  $: step = width < 600 ? 60 : 30;
-  $: ticks = !model.blocks.length ? [] : [start, ...Array.from({ length: Math.max(0, Math.ceil(end / 10) - Math.floor(start / 10) - 1) }, (_, i) => (Math.floor(start / 10) + i + 1) * 10).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
+  $: gridStep = Math.max(5,Math.ceil((end-start)/2000/5)*5);
+  $: hourStep = Math.max(60,Math.ceil(52/Math.max(.01,width/Math.max(1,end-start))/60)*60);
+  $: step = width < 600 ? 10 : 5;
+  $: minuteStep = Math.max(step,Math.ceil(14/Math.max(.01,width/Math.max(1,end-start))/step)*step);
+  $: hours = ticks.filter(t=>t===start||t===end||t%hourStep===0).filter(t=>t===start||t===end||position(t,start,end,width)>42&&width-position(t,start,end,width)>42);
+  $: minutes = ticks.filter(t=>t!==start&&t!==end&&t%60!==0&&t%minuteStep===0);
+  $: rulerHeight = 58;
+  $: chartHeight = rulerHeight+34+lanes*24;
+  $: ticks = !model.blocks.length ? [] : [start, ...Array.from({ length: Math.max(0, Math.ceil(end / gridStep) - Math.floor(start / gridStep) - 1) }, (_, i) => (Math.floor(start / gridStep) + i + 1) * gridStep).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
   $: current = !active ? model.sections.find(s => s.id === selected) : undefined;
 </script>
 <section class="overview" aria-labelledby="overview-heading">
@@ -36,20 +43,24 @@
   <div class="party-summary" bind:clientWidth={mapWidth}>
     <svg viewBox={`-6 0 ${width + 12} ${chartHeight}`} style={`height:${chartHeight}px`} role="img" aria-label={`Estimated whole-party time scale, ${model.blocks[0]?.time ?? 'Time not noted'} to ${model.blocks.at(-1)?.time ?? 'Time not noted'}. ${changes.map(c => `${c.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(c.section)}`).join('; ')}. Ending not recorded.`}>
       {#if !model.blocks.length}<text class="tick" x="0" y="13">Time not noted</text>{/if}
+      {#if end>start&&width/(end-start)>=4}{#each Array.from({length:Math.max(0,Math.ceil(end)-Math.floor(start))},(_,i)=>Math.floor(start)+i).filter(t=>t>start&&t<end&&t%5!==0) as minute}<line class="minor-grid" x1={position(minute,start,end,width)} x2={position(minute,start,end,width)} y1={rulerHeight-6} y2={chartHeight}/>{/each}{/if}
       {#each ticks as time}
-        {@const x = position(time, start, end, width)}
-        {@const labeled = time === start || time === end || time % step === 0 && x > 55 && width - x > 55 && !changes.some(c => c.section.exact && c.section.start === time)}
-        <line class="ruler-line" x1={x} x2={x} y1="21" y2={labeled ? 28 : 25} />
-        {#if labeled}<text class="tick" x={x} y="13" text-anchor={time === start ? 'start' : time === end ? 'end' : 'middle'}>{time === start && model.blocks[0]?.time === 'Unscheduled' ? 'Time not noted' : clock(time)}</text>{/if}
+       <line class="ruler-grid" x1={position(time,start,end,width)} x2={position(time,start,end,width)} y1={rulerHeight-6} y2={chartHeight}/>
+      {/each}
+      {#each hours as time}
+        <text class="tick ruler-label hour-label" data-minute={time} x={position(time,start,end,width)} y="13" text-anchor={time===end?'end':'start'}>{model.clock24?formatTime(time):fullClock(time)}</text>
+      {/each}
+      {#each minutes as time}
+        <text class="tick ruler-label minute-label" data-minute={time} x={position(time,start,end,width)} y="33" text-anchor="middle">{String(Math.floor(time)%60).padStart(2,'0')}</text>
       {/each}
       {#each flow as run}
-        <rect x={position(run.start,start,end,width)} y="29" width={position(run.end,start,end,width)-position(run.start,start,end,width)} height="12" fill={color(run.genre)} opacity=".65" />
+        <rect x={position(run.start,start,end,width)} y={rulerHeight+3} width={position(run.end,start,end,width)-position(run.start,start,end,width)} height="12" fill={color(run.genre)} opacity=".65" />
       {/each}
       {#each peaks as peak}
-        <rect x={position(peak.start,start,end,width)} y="43" width={Math.max(2,position(peak.end,start,end,width)-position(peak.start,start,end,width))} height="3" fill="var(--fire)" />
+        <rect x={position(peak.start,start,end,width)} y={rulerHeight+17} width={Math.max(2,position(peak.end,start,end,width)-position(peak.start,start,end,width))} height="3" fill="var(--fire)" />
       {/each}
       {#if current}
-        <rect class="overview-selection" data-selected={current.id} x={Math.max(0,position(current.start,start,end,width)-1)} y="28" width={Math.max(2,position(current.end,start,end,width)-position(current.start,start,end,width))} height="14" rx="2" fill={color(current.genre)} />
+        <rect class="overview-selection" data-selected={current.id} x={Math.max(0,position(current.start,start,end,width)-1)} y={rulerHeight+2} width={Math.max(2,position(current.end,start,end,width)-position(current.start,start,end,width))} height="14" rx="2" fill={color(current.genre)} />
       {/if}
       {#each changes as change, i}
         {@const a = annotations[i]}
@@ -57,20 +68,20 @@
         <g class="hip-change" data-entering={change.entering} aria-label={`${change.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(change.section)}`}>
           <title>{change.entering ? 'Into' : 'Out of'} hip-hop · {boundary(change.section)}{change.section.start === change.section.end ? ' · ending not noted' : ''}</title>
           {#if !change.section.exact}
-            <rect class="uncertain-range" x={position(change.section.boundStart,start,end,width)} y="27" width={Math.max(2,position(change.section.boundEnd,start,end,width)-position(change.section.boundStart,start,end,width))} height="16" />
-          {:else}<line class="switch-marker" x1={anchor} x2={anchor} y1="27" y2="46" />{/if}
-          <path class="switch-guide" d={`M${anchor},47 V${52+a.lane*24} L${a.left+a.width/2},${52+a.lane*24}`} />
-          <text class="switch-label" x={a.left} y={68+a.lane*24}>{change.label}</text>
+            <rect class="uncertain-range" x={position(change.section.boundStart,start,end,width)} y={rulerHeight+1} width={Math.max(2,position(change.section.boundEnd,start,end,width)-position(change.section.boundStart,start,end,width))} height="16" />
+          {:else}<line class="switch-marker" x1={anchor} x2={anchor} y1={rulerHeight+1} y2={rulerHeight+20} />{/if}
+          <path class="switch-guide" d={`M${anchor},${rulerHeight+21} V${rulerHeight+26+a.lane*24} L${a.left+a.width/2},${rulerHeight+26+a.lane*24}`} />
+          <text class="switch-label" x={a.left} y={rulerHeight+42+a.lane*24}>{change.label}</text>
         </g>
       {/each}
-      {#if model.sections.some(s => s.end === s.start)}<text class="open-end" x={width} y="39" text-anchor="end"><title>Ending not recorded</title>→</text>{/if}
+      {#if model.sections.some(s => s.end === s.start)}<text class="open-end" x={width} y={rulerHeight+13} text-anchor="end"><title>Ending not recorded</title>→</text>{/if}
     </svg>
   </div>
   <h3 class="sequence-heading">Genre sequence</h3>
   <div class="section-buttons" role="group" aria-label="Genre sequence">
-    {#each model.sections as s, index}
+    {#each model.sections as s}
       <button data-section={s.id} class:wide={s.genre.length > 15 || s.genre === 'Unspecified'} class:terminal-section={s.start === s.end} class:lit={!active && selected === s.id} style={`--genre:${color(s.genre)}`} aria-label={`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`} aria-pressed={!active && selected === s.id} title={`${boundary(s)}${s.start === s.end ? ' · ending not noted' : ''}`} onclick={() => select(s.id)}>
-        <span class="ordinal" aria-hidden="true">{index + 1}</span><span class="genre-name" dir="auto">{isHip(s.genre) ? 'Hip-hop' : s.genre}</span>
+        <span class="genre-name" dir="auto">{isHip(s.genre) ? 'Hip-hop' : s.genre}</span><span class="section-count" aria-label={s.tracks.length+' tracks'}>{s.tracks.length}</span>
       </button>
     {/each}
   </div>

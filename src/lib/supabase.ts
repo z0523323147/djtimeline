@@ -16,11 +16,16 @@ export function createAccountService(url: string, key: string): AccountService {
   });
   const user = (u: User | null): AccountUser | null => u ? { id: u.id, email: u.email ?? '' } : null;
   return {
+    cacheNamespace:new URL(url).hostname,
+    async listGenres(){const {data,error}=await client.rpc('list_club_plan_genres');if(error)throw error;return data as string[];},
     get persistentSession() { return storage.persistentSession; },
     async getUser() {
+      // Offline identity only unlocks this browser's cache; writes always revalidate online.
+      if(!navigator.onLine){const raw=storage.getItem('party-map-auth-'+new URL(url).hostname);if(!raw)return null;const session=JSON.parse(raw);return session?.user?.id&&typeof session.user.email==='string'?user(session.user):null;}
       const { data, error } = await client.auth.getSession();
       if (error) throw error;
       if (!data.session) return null;
+      if(!navigator.onLine)return user(data.session.user);
       const result = await client.auth.getUser();
       if (result.error) throw result.error;
       return user(result.data.user);
@@ -47,7 +52,7 @@ export function createAccountService(url: string, key: string): AccountService {
       if (error) throw error;
     },
     async listPlans(userId, page) {
-      const { data, error } = await client.from('club_plans').select('id,name,created_at,updated_at').eq('owner_id', userId).order('updated_at', { ascending: false }).order('id').range(page * 50, page * 50 + 49);
+      const { data, error } = await client.from('club_plans').select('id,name,created_at,updated_at,song_count').eq('owner_id', userId).order('updated_at', { ascending: false }).order('id').range(page * 50, page * 50 + 49);
       if (error) throw error;
       return data as PrivatePlan[];
     },

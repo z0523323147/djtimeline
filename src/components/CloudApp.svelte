@@ -13,4 +13,4 @@
     catch { setupError = 'Account sign-in is unavailable: Supabase configuration is invalid.'; }
   });
 </script>
-<PartyApp {cloud} {setupError} />
+<PartyApp {cloud} {setupError} connectedMode={true} />
