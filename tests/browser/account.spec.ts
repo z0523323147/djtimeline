@@ -184,3 +184,19 @@ test('explicit local-set migration includes corrected names and leaves guest not
  await page.getByRole('button',{name:'Sign in',exact:true}).click();await login(page,'a@example.test');await page.getByRole('button',{name:'Local planner',exact:true}).click();await page.getByRole('button',{name:'Save set to account',exact:true}).click();await expect(page.locator('.account-area')).toContainText('126 songs from your local set');await page.getByLabel('New plan name',{exact:true}).fill('My migrated set');await page.getByRole('button',{name:'Create plan',exact:true}).click();await expect(page.locator('#cloud-plan-title')).toHaveText('My migrated set');await expect(page.locator('#tracks .title').first()).toHaveText('My corrected local title');
  await page.getByRole('button',{name:'Local planner',exact:true}).click();await expect(page.locator('#tracks .title').first()).toHaveText('My corrected local title');
 });
+
+
+test('blocked persisted logout is reported and successful retry stays signed out after reload',async({page},info)=>{
+ await page.addInitScript(()=>{
+   const real=window.localStorage;let blocked=false;
+   window.addEventListener('test-block-logout',()=>blocked=true);window.addEventListener('test-allow-logout',()=>blocked=false);
+   Object.defineProperty(window,'localStorage',{value:{getItem:(key:string)=>real.getItem(key),setItem:(key:string,value:string)=>real.setItem(key,value),removeItem:(key:string)=>{if(blocked && key.startsWith('party-map-auth-'))throw new DOMException('Blocked','SecurityError');real.removeItem(key);}}});
+ });
+ await mock(page);await page.goto(url(info.project.name));await page.getByRole('button',{name:'Sign in',exact:true}).click();await login(page,'a@example.test');
+ await page.evaluate(()=>window.dispatchEvent(new Event('test-block-logout')));await page.getByRole('button',{name:'Sign out',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Sign-out could not clear');await expect(page.getByRole('heading',{name:'My plans',exact:true})).toBeVisible();
+ await page.evaluate(()=>window.dispatchEvent(new Event('test-allow-logout')));await page.getByRole('button',{name:'Sign out',exact:true}).click();await expect(page.getByLabel('Email address',{exact:true})).toBeVisible();await page.reload();await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page.getByLabel('Email address',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'My plans',exact:true})).toHaveCount(0);
+});
+test('new accounts require twelve characters without restricting existing-account login',async({page},info)=>{
+ await mock(page);await page.goto(url(info.project.name));await page.getByRole('button',{name:'Sign in',exact:true}).click();await page.getByRole('button',{name:'New here? Create account',exact:true}).click();await expect(page.getByLabel('Password',{exact:true})).toHaveAttribute('minlength','12');await page.getByLabel('Email address',{exact:true}).fill('b@example.test');await page.getByLabel('Password',{exact:true}).fill('short');await page.getByRole('button',{name:'Create account',exact:true}).click();await expect(page.getByRole('heading',{name:'My plans',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'Already have an account? Sign in',exact:true}).click();await expect(page.getByLabel('Password',{exact:true})).not.toHaveAttribute('minlength');await login(page,'a@example.test');
+});

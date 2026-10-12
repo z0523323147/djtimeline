@@ -7,3 +7,7 @@ test-results/
 
 .env*
 !.env.example
+
+# JWT signing material stays server-side and must never be distributed.
+**/*private*.pem
+**/jwt-private.key

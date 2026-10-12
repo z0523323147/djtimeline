@@ -103,8 +103,8 @@
     <p class="account-subtitle">Sign in or create an account with your email. Your club plans belong to you.</p>
       <form class="account-form" onsubmit={e => { e.preventDefault(); void authenticate(); }}>
         <label for="account-email">Email address</label><input id="account-email" type="email" autocomplete="email" bind:value={email} disabled={busy} required maxlength="254" placeholder="you@example.com" />
-        <label for="account-password">Password</label><input id="account-password" type="password" autocomplete={signup ? 'new-password' : 'current-password'} bind:value={password} disabled={busy} required minlength={signup ? 6 : undefined} aria-describedby={signup ? 'password-hint' : undefined} />
-        {#if signup}<p id="password-hint" class="account-subtitle">Use at least 6 characters.</p>{/if}
+        <label for="account-password">Password</label><input id="account-password" type="password" autocomplete={signup ? 'new-password' : 'current-password'} bind:value={password} disabled={busy} required minlength={signup ? 12 : undefined} aria-describedby={signup ? 'password-hint' : undefined} />
+        {#if signup}<p id="password-hint" class="account-subtitle">Use at least 12 characters. A unique passphrase works well.</p>{/if}
         <button disabled={busy} type="submit">{busy ? (signup ? 'Creating account…' : 'Signing in…') : (signup ? 'Create account' : 'Sign in')}</button>
       </form>
       <div class="account-secondary"><button disabled={busy} onclick={() => { signup = !signup; password = ''; status = ''; error = ''; }}>{signup ? 'Already have an account? Sign in' : 'New here? Create account'}</button></div>

@@ -746,3 +746,29 @@ Real plan creation now succeeds, as reported by the user after the permission re
 Checked subtasks above represent implemented code/prepared SQL and local verification, not completed hosted release acceptance. The new document migration is not applied by the agent. First release slice is ready for the user to apply 004 and test real open/add/save/reload. Full stories remain In progress until all AC and hosted gates pass.
 
 Implemented behavior includes database plan opening/restoration/switching, explicit revisioned save, title/flag editing, removal with scoped undo, rename, atomic import, explicit corrected local-set migration, recovery/export/conflict copies and shared timeline rendering. Follow-up work: live notification/catch-up, database plan search/count refinements, editing authored time ranges/sections, reorder/archive, structured backup restore, denied-storage recovery refinements and actual hosted two-account/device checks.
+
+## E15 — Harden email/password login before public release · P0 · In progress
+
+### E15-S1 — Harden client session and key handling · P0 · In progress
+
+- [x] E15-S1-T1 · P0: Read persistent auth storage authoritatively across tabs; remove the stale-memory preference.
+- [x] E15-S1-T2 · P0: Surface blocked token removal and clear older persisted credentials before session-only write fallback.
+- [x] E15-S1-T3 · P0: Reject secret/service-role keys and insecure Auth URLs; require 12-character new-account passwords without restricting existing password sign-in.
+- [x] E15-S1-T4 · P0: Add storage/configuration regressions and browser logout-cleanup/signup-rule checks.
+
+AC: External token changes/removal are observed; failed cleanup cannot report successful sign-out; failed writes cannot silently leave an older account token in persistent storage; privileged browser keys are rejected. Browser and model tests pass; hosted behavior is separately verified. Keep Supabase JWT validation/RLS authoritative.
+
+### E15-S2 — Verify production Auth configuration · P0 · Todo
+
+- [ ] E15-S2-T1 · P0: Set/verify backend password minimum of at least 12, password rules, Auth rate limits and supported leaked-password protection.
+- [ ] E15-S2-T2 · P0: Agree/configure email ownership verification and recovery with working delivery and an in-page-code or hosted-callback flow compatible with the chosen delivery.
+- [ ] E15-S2-T3 · P0: Run real expired/invalid JWT, session logout/refresh and A/B/anonymous known-ID database tests after migrations.
+
+AC: Direct requests cannot bypass password policy; ordinary users can verify/recover accounts through the agreed flow; invalid JWTs and foreign ownership operations are denied on hosted Supabase. Confirmation-off email ownership is never described as verified. Dashboard policy/key rotation changes are not inferred from public-client metadata. No account passwords/private keys are sent in chat.
+
+### E15-S3 — Verify public website delivery · P1 · Todo
+
+- [ ] E15-S3-T1 · P1: Confirm the actual hosting URL and enforce HTTPS with a tested CSP compatible with Astro hydration and Supabase endpoints.
+- [ ] E15-S3-T2 · P1: Review XSS paths/session-token exposure and release artifacts for signing keys, admin credentials and real sessions; preserve the standalone/offline contract.
+
+AC: Hosted login runs over HTTPS, malicious notes/titles cannot execute script, and no private signing/admin key ships to clients. Do not claim HttpOnly cookies for the existing browser-storage/file-origin design or add an unapproved application server.

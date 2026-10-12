@@ -27,7 +27,7 @@ Email addresses are not verified in this configuration. Email confirmation and p
 ## 2. Try your account
 
 1. Open the newly built `dist/party-map-connected.html` in Chrome with internet enabled, or refresh the local website.
-2. Click **Sign in**, then **New here? Create account**. Enter your email and a password (at least 6 characters, subject to your Supabase password policy).
+2. Click **Sign in**, then **New here? Create account**. Enter your email and a password (at least 12 characters for new accounts, subject to your Supabase password policy).
 3. Click **Create account**. You should enter **My plans** immediately.
 4. Create a named plan, reload, and confirm it remains. Sign out and sign in again with the same email/password.
 5. A recipient follows the same steps with their own email/password. They should start with an empty private area.
@@ -97,3 +97,17 @@ After the reported schema setup, test the connected file in Chrome with internet
 4. Check wrong passwords, signup errors, confirmation-required responses, network errors, denied storage and logout. Private data and delayed results from A must never appear in B's account area.
 
 Do not share passwords or session tokens in chat, logs or screenshots. Mocked tests alone do not establish server privacy. Record actual outcomes before closing E10-S0, E10-S2/S3 or E14-S1. Direct `file://` support must be tested without a local server or disabled Chrome protections.
+
+## Password-login hardening — 2026-10-12
+
+Keep Supabase Auth as the email/password identity provider. The supplied Node example issues client JWTs, and the .NET example authenticates a single static API key; neither implements this app's individual password accounts. No private signing key or shared API secret belongs in the browser/downloadable HTML. Supabase's managed signing-key system is described in [JWT signing keys](https://supabase.com/docs/guides/auth/signing-keys). Public JWKS metadata for this project currently reports ES256, EC, P-256; private keys were not accessed or generated.
+
+The client now requires 12 characters for new passwords, rejects non-HTTPS Auth URLs and secret/service-role client keys, reads persistent sessions instead of stale per-tab memory, and reports failed persisted-token removal as a logout error. Memory fallback on write failure first clears the previous persisted value. Passwords remain transient form inputs and are cleared after requests. Existing-account login does not add a new frontend minimum that would lock out earlier users.
+
+**Dashboard actions still required for a public release:** set the Supabase server-side minimum password length to 12 or stronger, review password rules and Auth rate limits, and enable leaked-password protection if your plan supports it. Frontend validation can be bypassed, so it is not server policy. The public settings endpoint does not expose this project's password minimum, and the agent has not changed it. [Password security](https://supabase.com/docs/guides/auth/password-security), [rate limits](https://supabase.com/docs/guides/auth/rate-limits).
+
+Confirm email is still off for the user's selected SMTP-free flow. This protects accounts with passwords but does not verify ownership of their email addresses, and mail recovery is not implemented. For verified public signup/recovery, configure delivery and a compatible confirmation flow: in-page email codes for the standalone file or an approved hosted callback for a website. Do not simply enable confirmation and leave links pointing at an unavailable local URL. SMTP/provider changes and their flow are a separate deployment step. [Email configuration](https://supabase.com/docs/guides/auth/general-configuration), [mail delivery](https://supabase.com/docs/guides/auth/auth-smtp).
+
+Serve a public website over HTTPS. The current browser SDK keeps access/refresh tokens in browser storage; this means malicious same-origin JavaScript could read them. Current imports/titles are escaped by Svelte; an additional hosted CSP and XSS review belong in the public deployment gate. A downloadable file cannot use an application server's HttpOnly session-cookie architecture without changing the delivery design. No permanent username-login alias is implemented; the current identifier is email.
+
+Local-session sign-out does not sign out other devices. Already-issued access JWTs may remain valid until expiry; do not advertise instantaneous global token revocation. Keep Auth/API token verification and database RLS as the authorization boundary. Local PostgreSQL ownership tests and mocked browser tests pass, but actual hosted A/B/API isolation remains a release gate. [Session behavior](https://supabase.com/docs/guides/auth/sessions).
