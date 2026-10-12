@@ -461,7 +461,7 @@ Scope: authenticated cloud plans, preserving the standalone offline output. Assu
 
 User choices: double-click HTML with no local server; avoid Google Cloud OAuth resources. Confirmed method: email verification code. Project base URL/public key have been supplied; no session/provider is configured by this planning change.
 
-- [ ] E10-S0-T1 · P0: Confirm target browsers/devices and email provider/delivery readiness; no local server is allowed.
+- [ ] E10-S0-T1 · P0: Target Google Chrome with a double-click file; verify email provider/custom SMTP delivery to ordinary app users; no local server is allowed.
 - [ ] E10-S0-T2 · P0: Prototype in-page email-code request/verify, file-origin Auth/API fetch, session storage/reload/refresh, invalid/expired code and denied storage/network.
 - [ ] E10-S0-T3 · P0: Record supported/unsupported results and smallest alternative if needed; get the user's agreement before changing the no-server delivery or adopting a different login method.
 
@@ -473,7 +473,7 @@ As a DJ, I want the downloadable connected page to use my Supabase project while
 
 Dependencies: E10-S0 for finalized auth delivery; adapter/model fixture work can proceed provisionally.
 
-- [ ] E10-S1-T1 · P0: Resolve project URL/public key, existing schema, login/signup policy, deployment origin, direct-file expectations and migration workflow using docs/supabase-connection.md.
+- [ ] E10-S1-T1 · P0: Use the supplied URL/public key, Chrome, reported empty database, public email-code signup and double-click/no-server delivery. Resolve custom SMTP and reviewed migration workflow using docs/supabase-connection.md.
 - [ ] E10-S1-T2 · P0: Add ignored local environment configuration, documented public env example, pinned browser SDK and injected repository interfaces.
 - [ ] E10-S1-T3 · P0: Define website, connected-single-HTML and network-free offline entry points; prepare the connected packager without duplicating planner logic.
 
@@ -493,11 +493,11 @@ AC: A owns its plans; B and anonymous requests cannot read or mutate them using 
 
 Dependencies: E10-S1, E10-S2.
 
-- [ ] E10-S3-T1 · P0: Implement email-code request/verification, Email provider/code template, delivery readiness and chosen signup policy.
+- [ ] E10-S3-T1 · P0: Implement email-code request/verification, Email provider/code template, custom SMTP delivery and public app-user signup.
 - [ ] E10-S3-T2 · P0: Restore/refresh sessions, handle code/callback errors and implement explicit local-session sign-out.
 - [ ] E10-S3-T3 · P0: Isolate guest/account drafts and clear private UI, caches, channels and delayed results on account transitions.
 
-AC: Real email-code login/reload/logout works from the downloaded HTML in supported browsers. Invalid/expired login and delivery/network failures preserve local notes. Signing in alone uploads nothing. Switching to B never displays A's plans, drafts or late request/event results. Storage denial does not imply durable login/save. Login dialog supports labelled fields, keyboard, cancel/focus restoration and 44px controls. Offline HTML remains login-free.
+AC: Real email-code signup/login/reload/logout works in Chrome from the downloaded HTML, including an ordinary recipient outside the Supabase project team. Invalid/expired login and delivery/network failures preserve local notes. Signing in alone uploads nothing. Switching to B never displays A's plans, drafts or late request/event results. Storage denial does not imply durable login/save. Login dialog supports labelled fields, keyboard, cancel/focus restoration and 44px controls. Offline HTML remains login-free.
 
 ## E11 — Multiple private club plans · P1 · Todo
 

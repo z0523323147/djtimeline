@@ -163,13 +163,13 @@ Place switch labels in compact lanes above/below the overview. Measure rendered 
 
 ## Supabase club-plan roadmap — 2026-10-12
 
-Status: planned, not implemented. This is now the next product milestone. Multiple plans are explicitly requested and are no longer an optional experiment. Existing browser-local behavior and the completed E9 UI remain the baseline. Project URL/public browser key have been supplied. Double-click HTML with no local server is required. After learning Google needs an OAuth client in Google Cloud, the user preferred another method; email verification-code login is now confirmed. File-origin auth and existing-project details remain pending. [the connection checklist](docs/supabase-connection.md) records those decisions.
+Status: planned, not implemented. This is now the next product milestone. Multiple plans are explicitly requested and are no longer an optional experiment. Existing browser-local behavior and the completed E9 UI remain the baseline. Project URL/public browser key have been supplied. Double-click HTML with no local server is required. After learning Google needs an OAuth client in Google Cloud, the user preferred another method; email verification-code login is now confirmed. Target browser is Chrome; the user reports the project is empty. Recipients of the file must be able to sign up and keep their own private plans. File-origin validation, custom SMTP and schema application remain pending. [the connection checklist](docs/supabase-connection.md) records those decisions.
 
 ### Outcome and scope
 
 A DJ signs in, keeps several private club plans, creates a blank plan or imports notes, adds songs and genre/time sections, and sees the timeline update immediately. Opening the same plan in another signed-in tab/device also receives committed changes. Preserve the full-width timeline above tracks, compact genre sequence, All tracks, corrected-title copy/Google search, multilingual names, and honest uncertain times.
 
-Selected delivery: downloadable HTML, double-click with no local server. Confirmed login: email verification code, following the user's preference to avoid Google Cloud OAuth setup. Plans are proposed owner-private; signup policy and shared-plan needs remain pending. The public key was received in the conversation and is not copied into planning documents. Shared editing/invitations, roles, presence, audio uploads, streaming integrations, billing, and a global song catalog are separate future scope. A plan stores song names/flags, not audio files.
+Selected delivery: downloadable HTML, double-click with no local server. Confirmed login: email verification code, following the user's preference to avoid Google Cloud OAuth setup. Public email-code signup is required for recipients of the file. Plans are private per account; collaborative sharing remains separate scope. The public key was received in the conversation and is not copied into planning documents. Shared editing/invitations, roles, presence, audio uploads, streaming integrations, billing, and a global song catalog are separate future scope. A plan stores song names/flags, not audio files.
 
 ### Roles and orchestration
 
@@ -224,7 +224,7 @@ Use a browser client configured only with `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPA
 
 Enable RLS on exposed plan/content tables, restrict grants, and require authenticated ownership for reads and supported writes. Ownership is immutable and document/receipt access follows its plan. Validate both existing and proposed rows; a caller cannot set another owner's UUID. UI filtering and channel names are not authorization. [RLS guide](https://supabase.com/docs/guides/database/postgres/row-level-security).
 
-Google login requires a Google Cloud OAuth client, so the user prefers a different method. Use the confirmed email-code method: configure the Email provider/template to send a code instead of its default magic link, request it and verify the entered code in the local page. This avoids a redirect callback but still needs file-origin Auth/API/storage verification. Decide personal/invited versus public signup and confirm SMTP readiness before promising general email delivery. [Passwordless login](https://supabase.com/docs/guides/auth/auth-email-passwordless), [SMTP guidance](https://supabase.com/docs/guides/auth/auth-smtp).
+Google login requires a Google Cloud OAuth client, so the user prefers a different method. Use the confirmed email-code method: configure the Email provider/template to send a code instead of its default magic link, request it and verify the entered code in the local page. This avoids a redirect callback but still needs file-origin Auth/API/storage verification. Enable signup for ordinary app users and configure custom SMTP before releasing to recipients. Do not add recipients to the Supabase project team as an email-delivery workaround. [Passwordless login](https://supabase.com/docs/guides/auth/auth-email-passwordless), [SMTP guidance](https://supabase.com/docs/guides/auth/auth-smtp).
 
 
 Restore/refresh sessions before fetching private data. Sign out here explicitly uses local-session scope; offer global sign-out only if separately designed. Clear visible account data, subscriptions and cached cloud snapshots on logout/account changes; retain recoverable pending work only in an account-scoped draft flow. Cancel or ignore delayed results using account/plan generation guards. [Sign-out scopes](https://supabase.com/docs/reference/javascript/auth-signout).
@@ -250,7 +250,7 @@ Add portable structured-plan export/recovery in the same milestone, coordinated 
 
 ### Implementation order and QA gates
 
-1. E10-S0: prove email-code Auth/API/session support for the required double-click downloadable file before committing to cloud delivery. E10-S1: confirm remaining origin/signup decisions and preserve the project schema; prepare configuration and adapter/build boundaries.
+1. E10-S0: prove email-code Auth/API/session support for the required double-click downloadable file before committing to cloud delivery. E10-S1: configure confirmed Chrome/file-origin/public-signup requirements, custom SMTP and the empty-project migration workflow; prepare configuration and adapter/build boundaries.
 2. E11-S1: canonical model/UUID/legacy conversion spike with parity fixtures; E10-S2: schema, RLS, RPC and operation receipts using that contract.
 3. E10-S3: real email-code login. E13-S1: acknowledged save/draft/retry/conflict state machine. Then E11-S2: private plan create/list/open/rename; one named plan survives reload before adding editing features.
 4. E11-S3: explicit import and local-to-cloud migration; E12-S1–S2: sections and songs with immediate recomputation.
