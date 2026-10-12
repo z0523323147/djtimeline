@@ -6,6 +6,7 @@
   export let model: Model;
   export let selected: number;
   export let focused = false;
+  export let highlighted = false;
   export let resetScale: () => void = () => {};
   export let select: (id: number, trackId?: number) => void;
   let mapWidth = 1000;
@@ -30,6 +31,13 @@
   $: display = model.clock24?formatTime:fullClock;
   $: next = current ? model.sections[current.id+1] : undefined;
   $: ending = current ? next?.start===current.end?changeTime(next):current.end>current.start?(current.tracks.at(-1)?.explicitEnd!==undefined?'':'~')+display(current.end):'not recorded' : '';
+  $: entryLabel = current ? 'Start '+changeTime(current) : '';
+  $: exitLabel = 'End '+ending;
+  $: entryWidth = entryLabel.length*7;
+  $: exitWidth = exitLabel.length*7;
+  $: entryX = current ? Math.max(0,Math.min(width-entryWidth,position(current.start,start,end,width)-entryWidth/2)) : 0;
+  $: exitX = current ? Math.max(entryX+entryWidth+8,Math.min(width-exitWidth,position(current.end,start,end,width)-exitWidth/2)) : 0;
+  $: labelShift = Math.max(0,exitX+exitWidth-width);
 </script>
 <section class="timeline-dock" bind:this={dock} aria-labelledby="overview-heading">
   <div class="timeline-head">
@@ -37,7 +45,7 @@
     <div class="legend" aria-label="Genre colors"><span><i class="dot" style="--color:var(--cyan)"></i>Other genres</span><span><i class="dot" style="--color:var(--hip)"></i>Hip-hop</span><span><i class="dot" style="--color:var(--fire)"></i>Peak</span></div>
   </div>
   <div class="party-summary" bind:clientWidth={mapWidth}>
-    <svg viewBox={'-6 0 '+(width+12)+' 66'} style="height:66px" role="group" aria-label="Party time ruler">
+    <svg viewBox={'-6 0 '+(width+12)+' '+(highlighted?92:66)} style={'height:'+(highlighted?92:66)+'px'} role="group" aria-label="Party time ruler">
       {#if !model.blocks.length}<text class="tick" x="0" y="13">Time not noted</text>{/if}
       {#each ticks as time}<line class="ruler-grid" x1={position(time,start,end,width)} x2={position(time,start,end,width)} y1="34" y2="66"/>{/each}
       {#if end>start&&width/(end-start)>=4}{#each Array.from({length:Math.max(0,Math.ceil(end)-Math.floor(start))},(_,i)=>Math.floor(start)+i).filter(t=>t>start&&t<end&&t%5!==0) as minute}<line class="minor-grid" x1={position(minute,start,end,width)} x2={position(minute,start,end,width)} y1="34" y2="66"/>{/each}{/if}
@@ -53,9 +61,17 @@
           {#if section.tracks.some(t=>t.isBanger)}<line x1={left} x2={Math.min(width,left+barWidth)} y1="62" y2="62" stroke="var(--fire)" stroke-width="2"/>{/if}
         </g>
       {/each}
+      {#if highlighted&&current}
+        <g class="section-boundaries" aria-label={entryLabel+', '+exitLabel}>
+          <line class="boundary-guide" x1={position(current.start,start,end,width)} x2={Math.max(0,entryX-labelShift)+entryWidth/2} y1="64" y2="70"/>
+          <line class="boundary-guide" x1={position(current.end,start,end,width)} x2={exitX-labelShift+exitWidth/2} y1="64" y2="70"/>
+          <text class="boundary-label entry-time" x={Math.max(0,entryX-labelShift)} y="84">{entryLabel}</text>
+          <text class="boundary-label exit-time" x={exitX-labelShift} y="84">{exitLabel}</text>
+        </g>
+      {/if}
     </svg>
   </div>
-  {#if focused&&current}<div class="ruler-focus"><span dir="auto">{current.genre}</span><span class="selected-times" dir="ltr">In {changeTime(current)} · Out {ending}</span><button class="scale-reset" aria-label="Show full time scale" onclick={resetScale}>Full scale</button></div>{/if}
+  {#if highlighted&&current}<div class="ruler-focus"><span dir="auto">{current.genre}</span><span class="selected-times" dir="ltr">In {changeTime(current)} · Out {ending}</span><button class="scale-reset" aria-label={focused?'Show full time scale':'Show section times only'} onclick={resetScale}>{focused?'Full scale':'Section times'}</button></div>{/if}
 </section>
 <section class="overview" aria-label="Genre sections">
   <h3 class="sequence-heading">Genre sequence</h3>

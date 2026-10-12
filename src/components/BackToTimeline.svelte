@@ -8,6 +8,6 @@
   window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);update();
   return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);};
  });
- function back(){const timeline=document.querySelector('.overview');timeline?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});(document.getElementById('overview-heading') as HTMLElement|null)?.focus({preventScroll:true});}
+ function back(){window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});(document.getElementById('overview-heading') as HTMLElement|null)?.focus({preventScroll:true});}
 </script>
-{#if visible}<button class="back-to-timeline" onclick={back} aria-label="Back to party timeline">↑ Timeline</button>{/if}
+{#if visible}<button class="back-to-timeline" onclick={back} aria-label="Back to party timeline">↑ Top</button>{/if}

@@ -5,6 +5,7 @@
   import { blankDocument, documentFromNotes, documentModel, songEvent, validateDocument, type PlanDocument, type PlanEvent } from '../lib/documents';
   import { emptyFilters } from '../lib/search';
   import { copyTitle } from '../lib/clipboard';
+  import BackToTimeline from '../components/BackToTimeline.svelte';
   import TrackDialog from '../components/TrackDialog.svelte';
   import {planSync} from '../lib/plan-sync';
   import {downloadBackup} from '../lib/backups';
@@ -25,6 +26,7 @@
   let pending: {id:string;revision:number;document:PlanDocument} | null = null;
   let selected = 0, allTracks = false, filters = emptyFilters();
   let rulerFocused = false;
+  let rulerSelection = false, fullScalePinned = false;
   let heading: HTMLHeadingElement | undefined;
   let importDialog:HTMLDialogElement | undefined;
   let importText='', importName='', importNew=true, importError='';
@@ -55,13 +57,14 @@
   function undoRemoval(){if(!undo)return;const events=[...document.events];let index=events.findIndex(e=>e.uid===undo!.next);if(index<0){const previous=events.findIndex(e=>e.uid===undo!.previous);index=previous<0?events.length:previous+1;}events.splice(index,0,undo.event);commit({...document,events});undo=null;}
   async function rename() {if(!renameName.trim() || saving)return;saving=true;try{await service.renamePlan(plan.id,renameName.trim());if(alive){plan={...plan,name:renameName.trim()};renaming=false;status='Plan renamed';onChanged();}}catch(e){if(alive)error=accountError(e);}finally{if(alive)saving=false;}}
   async function select(id:number){
-    selected=id;rulerFocused=true;allTracks=false;filters=emptyFilters();await tick();
+    selected=id;rulerFocused=true;rulerSelection=true;fullScalePinned=false;allTracks=false;filters=emptyFilters();await tick();
     const parent=heading?.closest<HTMLElement>('.cloud-plan');
     const dock=parent?.querySelector('.timeline-dock');
     if(dock)parent?.style.setProperty('--timeline-offset',(dock.getBoundingClientRect().height+16)+'px');
     heading?.scrollIntoView({block:'start',behavior:'instant'});heading?.focus({preventScroll:true});
   }
-  function followSection(id:number){selected=id;rulerFocused=true;}
+  function followSection(id:number){selected=id;rulerSelection=true;if(!fullScalePinned)rulerFocused=true;}
+  function toggleScale(){rulerFocused=!rulerFocused;fullScalePinned=!rulerFocused;}
   async function copy(track:Track){try{await copyTitle(track.title);status='Track name copied.';}catch{error='Copy unavailable. Select the track name and copy it manually.';}}
   async function copyAsPlan() {
     if(saving)return;
@@ -91,10 +94,11 @@
   {#if !storageAvailable}<p role="status">Browser storage is unavailable. Offline recovery lasts only for this session. Export pending changes before closing.</p>{/if}
   {#if loading}<p role="status">Loading plan…</p>
   {:else if !error || document.events.length}
-    {#if model.tracks.length}<PartyPage {model} {selected} focused={rulerFocused} resetScale={()=>rulerFocused=false} {select}/>{/if}
+    {#if model.tracks.length}<PartyPage {model} {selected} focused={rulerFocused} highlighted={rulerSelection} resetScale={toggleScale} {select}/>{/if}
     <TracksPage onSectionVisible={followSection} {model} {selected} {allTracks} showAll={()=>{allTracks=true;filters=emptyFilters();}} bind:filters {storageAvailable} emptyHint="Add your first track or import notes" {select} save={correct} {updateFlags} {removeSong} {copy} editTrack={t=>trackDialog.open(findEvent(t.id),{genre:t.genre,peak:t.isBanger})} bind:heading/>
   {:else}<button onclick={()=>load()}>Retry opening plan</button>{/if}
   <dialog bind:this={clockDialog} aria-labelledby="clock-choice-title"><h2 id="clock-choice-title">Match your note times</h2><p>Choose when the first recorded time means. This aligns your notes with new track times.</p><div class="dialog-actions"><button onclick={()=>clockDialog.close()}>Cancel</button><button onclick={()=>{commit(alignNoteClock(document,false));clockDialog.close();trackDialog.open();}}>{formatTime((model.blocks.find(b=>b.time!=='Unscheduled')?.start??0)%720)} · night / morning</button><button onclick={()=>{commit(alignNoteClock(document,true));clockDialog.close();trackDialog.open();}}>{formatTime((model.blocks.find(b=>b.time!=='Unscheduled')?.start??0)%720+720)} · afternoon / evening</button></div></dialog>
+  <BackToTimeline/>
   <TrackDialog draftKey={'party-map-track-draft-'+(service.cacheNamespace??'default')+'-'+user.id+'-'+plan.id} bind:this={trackDialog} genres={[...knownGenres,...model.tracks.map(t=>t.genre)]} onSave={saveTrack}/>
   <dialog bind:this={importDialog} aria-labelledby="cloud-import-title">
     <h2 id="cloud-import-title">Import notes into your account</h2>

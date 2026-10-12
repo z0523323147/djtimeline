@@ -971,3 +971,12 @@ E20-S3 verification: 33 unit/database/packaging and 54 browser checks pass. Actu
 - E22-S4 · P1 · Done: QA/delivery. T1 desktop/phone/short regressions; T2 direct-file checks; T3 docs/screenshots/GitHub. AC: focused hours, click/keyboard navigation, sticky persistence, gaps and unknown endings verified; builds/checks pass.
 
 E22 delivery evidence: 60 Chromium workflows pass at desktop/phone/short sizes across site/offline/connected outputs; 33 Node/model/database/packaging checks pass. Zero Svelte errors/warnings; all three builds succeed. The signed-in original plan was opened and the ruler selected Hip hop at 01:50–01:57, scrolled its heading below the top dock, and hid minute labels. UI-only navigation did not alter cloud tracks. Full-size genre controls remain available for narrow bars. Native screen-reader review remains tracked under the wider release gates.
+
+### E22-S5 — Boundary labels and navigation regressions · P1
+
+- [x] T1: Anchor Start/End labels to the highlighted interval; separate close labels and retain uncertainty.
+- [x] T2: Preserve explicit Full scale choice during scrolling; offer Section times toggle without changing filters.
+- [x] T3: Restore floating Top button and reduced-motion/focus support.
+- [x] T4: Test mobile/desktop/short views, label geometry, subsequent scrolling after Full scale, and returning to top.
+
+AC: Click and scroll-follow show current section boundaries; full minute labels survive later scroll events; Top reaches scroll position zero. No tracks/account content changes. This supersedes E22-S2 removal of the floating control.
