@@ -1,6 +1,6 @@
 # Project plan
 
-Updated: 2026-10-11. Build a browser-local DJ planner with Astro and Svelte, producing a static website and self-contained offline HTML.
+Updated: 2026-10-12. Existing product: browser-local Astro/Svelte DJ planner with website and offline HTML. Next milestone: Supabase login, multiple private club plans, structured song editing and live synchronization; see the Supabase roadmap below.
 
 ## Product direction
 
@@ -80,9 +80,10 @@ Imports and corrections are untrusted text. Keep copy and Google search tied to 
 - M1: Shared Astro/Svelte source, website/offline builds, reproducibility, and behavior parity — locally complete; remote CI result awaits the push.
 - M2: Terminal/brief-section navigation and regression checks — complete. Linear refinements, accessibility review, and shortcuts — remaining.
 - M3: Corrected-note export, import preview, restore example, and expanded persistence coverage — remaining.
-- M4: Multiple named sets — optional, validate demand before implementation.
+- M4: Supabase-connected private club plans, authentication and immediate editing — requested, planned; setup inputs pending.
+- M5: Conflict-safe same-account live sync and independent cloud/offline release QA — planned.
 
-Completed next UI iteration: E9-S1–S4. Remaining execution order: E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1. Finish and verify each story's acceptance criteria before marking it Done.
+Completed compact UI iteration: E9-S1–S5. Supabase E10–E14 are now the next milestone, in the dependency order below. The earlier local refinement queue remains: E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2. E6-S1 is superseded by E11, not a second implementation. Finish and verify each story's acceptance criteria before marking it Done.
 
 Design review: Linear’s homepage and product examples (https://linear.app/) informed the neutral dark surfaces, restrained borders, clear hierarchy, quiet row actions, and selected-state emphasis. This is a local adaptation for DJ preparation.
 
@@ -159,3 +160,107 @@ Place switch labels in compact lanes above/below the overview. Measure rendered 
 **E9-S3:** Add the proportional overview ruler, all eleven hip-hop boundary annotations, uncertainty intervals, terminal marker, and shared selection highlighting.
 
 **E9-S4:** Validate both builds and the no-scroll/complete-label constraints, update screenshots/docs, and push the finished implementation. No dependency is adopted without the recorded spike result. Completed: the implementation and acceptance checks pass; statuses and evidence are updated.
+
+## Supabase club-plan roadmap — 2026-10-12
+
+Status: planned, not implemented. This is now the next product milestone. Multiple plans are explicitly requested and are no longer an optional experiment. Existing browser-local behavior and the completed E9 UI remain the baseline. Project URL/public browser key have been supplied. Double-click HTML with no local server is required. After learning Google needs an OAuth client in Google Cloud, the user preferred another method; email verification-code login is now confirmed. File-origin auth and existing-project details remain pending. [the connection checklist](docs/supabase-connection.md) records those decisions.
+
+### Outcome and scope
+
+A DJ signs in, keeps several private club plans, creates a blank plan or imports notes, adds songs and genre/time sections, and sees the timeline update immediately. Opening the same plan in another signed-in tab/device also receives committed changes. Preserve the full-width timeline above tracks, compact genre sequence, All tracks, corrected-title copy/Google search, multilingual names, and honest uncertain times.
+
+Selected delivery: downloadable HTML, double-click with no local server. Confirmed login: email verification code, following the user's preference to avoid Google Cloud OAuth setup. Plans are proposed owner-private; signup policy and shared-plan needs remain pending. The public key was received in the conversation and is not copied into planning documents. Shared editing/invitations, roles, presence, audio uploads, streaming integrations, billing, and a global song catalog are separate future scope. A plan stores song names/flags, not audio files.
+
+### Roles and orchestration
+
+The primary orchestrator owns integration, dependencies and final acceptance. Three authorized read-only specialist reviews informed this roadmap:
+
+- Product/UI/UX: dj-product-planner + timeline-ux-engineer — compact navigation, clear empty states, editor interactions and saving language.
+- Data/architecture: set-data-engineer + Supabase architecture — stable source identities, migration, account ownership and atomic saves.
+- QA/accessibility: browser-qa-release-reviewer + accessibility-reviewer — independent account-isolation, failure, concurrency, keyboard and offline gates.
+
+No specialist changed app files, registered permanent agents, installed packages or contacted Supabase. During implementation, assign isolated ownership: model/repositories to data, Svelte view components/styles to UX, tests to QA; only the orchestrator merges shared-root changes and changes build contracts. [SUBAGENTS.md](SUBAGENTS.md) retains the reusable role prompts.
+
+### Standalone and deployment contract
+
+Keep shared Astro/Svelte source and introduce repository adapters at entry points rather than duplicate the planner.
+
+- Existing website build remains available for development/regression checks. A hosted connected app is a future optional delivery, not part of the selected downloadable-only release. The shared browser client + database RPC design does not need a separate application server.
+- Connected single HTML: planned `pnpm build:connected` producing `dist/party-map-connected.html`, with inline JS/CSS/SDK and public configuration. It has no required sibling assets, but login/cloud saving/live sync need internet. The user selected downloadable-only delivery. First gate E10-S0 determines whether email-code login/API/session persistence work from a directly opened file in the target browser. No hosted app, auth bridge or local launcher is approved.
+- Existing `pnpm build:offline`: preserve `dist/party-map.html` as a genuinely network-free local edition with no auth requirement or automatic Supabase initialization. Keep no-network file-origin tests and reproducible packaging.
+- Opening a connected file directly with `file://` is now the requested delivery assumption, subject to E10-S0. Test email-code verification, API requests and session storage; do not promise it works or declare it categorically impossible. If a redirect-based method is chosen later, its destinations need configured allowlists; that does not apply to the proposed in-page code-entry flow. [Redirect configuration](https://supabase.com/docs/guides/auth/redirect-urls).
+
+Cloud behavior must never be labelled offline. Missing configuration leaves the local planner usable and cloud controls clearly unavailable. Never turn the old offline output into a network-dependent build silently.
+
+### Compact user flow
+
+1. Header adds active plan name/picker, New plan and account control. My plans opens a searchable dialog/list showing name, optional club/date, song count and last edited time; load metadata first, fetch a document only when opened.
+2. Sign in opens a labelled dialog with clear request/verify/error states. Guest local notes remain available; signing in alone does not upload them. Offer an explicit Save this set to my account action.
+3. New plan requires a name; club and event date are optional. Start blank or import notes. Empty plans show Add first section and Import notes, without invented timeline times. A committed empty section remains visible/selectable before its first song and between populated sections; zero songs does not make it disappear.
+4. Add section edits genre and its timing evidence: recorded time, known range, or time not noted. Add song uses the selected section; All tracks requires an explicit destination. Preserve unknown finish times.
+5. Song editor handles title and peak/download/idea flags. Draft preview is separate from committed state; Add/Save updates the list, counts, genre sequence and hip-hop boundaries on the next Svelte render, before server acknowledgement. Cancel changes nothing; network writes do not run on every keystroke.
+6. Move up/down supports keyboard/touch within a section. A cross-section move explicitly selects the destination and adopts its context. Stable song identity and undo preserve corrections/flags.
+7. Restrained status near the plan title distinguishes Saving, Saved to your account, Kept on this device, Save failed — Retry, and Changed elsewhere. Saved requires a server acknowledgement. If browser storage also fails, report that the draft is only in this session.
+
+### Canonical document and database design
+
+The current parser generates numeric IDs from positions and legacy corrections use raw-text hash + track index. Those are view adapters, not durable cloud identities.
+
+Proposed tables, with final names checked against the existing project before migrations:
+
+- `club_plans`: UUID primary key, immutable owner UUID referencing Auth, name, optional club/date metadata, created/updated timestamps and recoverable archive timestamp. Duplicate names are allowed. Add owner/update indexes; list pages never fetch every JSON document.
+- `club_plan_documents`: one row per plan UUID with schema version, revision, canonical JSON document and update timestamp. Access follows the owning plan. Metadata/document creation and document-derived song counts update in one transaction.
+- Private operation receipts: scoped by owner/plan/client-operation UUID to make creation/save retries idempotent. Define bounded receipt retention in the migration; an ambiguous response is retried with the same operation ID.
+
+A canonical document contains ordered, typed source events with UUIDs: recorded time markers, genre declarations, peak markers and songs with original/current titles and flags. Explicit range/unknown boundary evidence is stored when authored; a schema/derivation spike must define its interaction with inherited source markers before editor implementation. Preserve UUIDs across edits/reorder; a derived genre section uses its declaring event UUID or a stable first-song fallback. Array order expresses sequence. Raw imported notes are provenance, not a second editable source of truth.
+
+Derive the existing Model, genre sections, timing bounds and overview from this document through a DOM-free adapter. Numeric positions can remain transient renderer IDs while migrating components. Never persist estimated track spacing as a recorded timestamp. Validate document version/shape, event-ID uniqueness, title/genre lengths, bounds/order and a documented payload limit on both client and server. Preserve the existing 500,000-unit import limit, 500 KB file limit and 500-character corrected-title limit; define JSON overhead/event caps explicitly rather than reuse a raw-text byte limit blindly.
+
+For the private personal-plan MVP, a single document allows coherent saves/imports/reorders. Normalized song rows become a future migration if shared simultaneous editing or cross-plan catalog queries require them. Whole-document conflicts are a conscious first-release tradeoff; no claim of collaborative merging.
+
+### Supabase auth and privacy
+
+Use a browser client configured only with `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` (legacy anon key acceptable). Public configuration ships with the app; secret/service-role keys must not. Ignore local environment files before storing configuration. [API-key guidance](https://supabase.com/docs/guides/getting-started/api-keys).
+
+Enable RLS on exposed plan/content tables, restrict grants, and require authenticated ownership for reads and supported writes. Ownership is immutable and document/receipt access follows its plan. Validate both existing and proposed rows; a caller cannot set another owner's UUID. UI filtering and channel names are not authorization. [RLS guide](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+Google login requires a Google Cloud OAuth client, so the user prefers a different method. Use the confirmed email-code method: configure the Email provider/template to send a code instead of its default magic link, request it and verify the entered code in the local page. This avoids a redirect callback but still needs file-origin Auth/API/storage verification. Decide personal/invited versus public signup and confirm SMTP readiness before promising general email delivery. [Passwordless login](https://supabase.com/docs/guides/auth/auth-email-passwordless), [SMTP guidance](https://supabase.com/docs/guides/auth/auth-smtp).
+
+
+Restore/refresh sessions before fetching private data. Sign out here explicitly uses local-session scope; offer global sign-out only if separately designed. Clear visible account data, subscriptions and cached cloud snapshots on logout/account changes; retain recoverable pending work only in an account-scoped draft flow. Cancel or ignore delayed results using account/plan generation guards. [Sign-out scopes](https://supabase.com/docs/reference/javascript/auth-signout).
+
+### Saving, concurrency and live updates
+
+Introduce `PlanRepository` with local and Supabase implementations, plus a separate sync controller. Plan state carries owner/plan UUID, server revision, committed snapshot, editor draft and pending operations.
+
+- Save a validated snapshot through an atomic `save_club_plan(plan_id, expected_revision, document, client_operation_id)` RPC. It authorizes the caller, validates input, checks the revision, increments it server-side and returns the acknowledged snapshot/revision. Disallow direct writes that bypass revision/idempotency checks. Choose the least-privileged function design that can enforce this: if direct table writes are revoked and a SECURITY DEFINER function is necessary, explicitly check auth.uid/ownership, fix search_path, restrict execute grants and test every bypass. Do not assume an invoker RPC can write after its caller's table grants are removed.
+- Serialize/coalesce pending committed edits per plan. Each operation retains its own plan/owner/base revision; changing the active plan cannot redirect a delayed write. Retry with the same operation UUID. A stale revision preserves the local draft and offers Use account version or Save my changes as a copy; never silently overwrite.
+- Immediate local feedback is independent of Supabase Realtime. A private authorized plan channel broadcasts only plan/revision invalidation metadata after commit, followed by an authorized snapshot refetch. Use a minimal payload, not the full song document. Plan picker refreshes on open/focus and after local saves; active-plan subscription handles its live content.
+- Subscribe before authoritative catch-up, reconcile revisions, ignore duplicate/older notifications, and refetch on reconnect/focus to repair missed events. A remote update cannot close an editor, steal focus or discard its draft. Switching plans/accounts tears down the old channel and guards in-flight fetches.
+- Prefer private Broadcast with owner-specific channel authorization. The permissive authenticated-user example in the docs is not suitable here. Review existing project Realtime settings before changing global access. [Broadcast guidance](https://supabase.com/docs/guides/realtime/subscribing-to-database-changes), [channel authorization](https://supabase.com/docs/guides/realtime/authorization).
+- Archive/restore via authorized updates for the first lifecycle feature; permanent deletion and raw DELETE event handling remain separate scope. Postgres Changes has delete-notification security limitations and must not be treated as automatically private. [Postgres Changes](https://supabase.com/docs/guides/realtime/postgres-changes).
+
+### Existing-data migration and recovery
+
+Load legacy notes and apply their existing title corrections before conversion. Assign UUIDs once and keep their import/draft operation ID stable across retries. Verify that the bundled 126 tracks, 25 time blocks, 26 sections and all marker flags retain parity. Preserve multilingual names, inherited peak state, source ranges, rollover and terminal unknown ending.
+
+Offer migration explicitly; keep legacy notes/corrections until the new copy is acknowledged. Never send them simply because a user signs in. Import into an account defaults to Create a new plan; replacing a selected plan requires preview and explicit destination. Cancel/invalid input changes neither destination nor active plan. A device draft is scoped by project/user/plan and cannot be submitted under a different account.
+
+Add portable structured-plan export/recovery in the same milestone, coordinated with E3-S1 corrected-note export. The backup contains metadata, versioned content and timing evidence, but no auth session/key. Cloud failure must not strand the user's draft. Full background offline synchronization is not promised until the retry/conflict and storage-denial cases pass.
+
+### Implementation order and QA gates
+
+1. E10-S0: prove email-code Auth/API/session support for the required double-click downloadable file before committing to cloud delivery. E10-S1: confirm remaining origin/signup decisions and preserve the project schema; prepare configuration and adapter/build boundaries.
+2. E11-S1: canonical model/UUID/legacy conversion spike with parity fixtures; E10-S2: schema, RLS, RPC and operation receipts using that contract.
+3. E10-S3: real email-code login. E13-S1: acknowledged save/draft/retry/conflict state machine. Then E11-S2: private plan create/list/open/rename; one named plan survives reload before adding editing features.
+4. E11-S3: explicit import and local-to-cloud migration; E12-S1–S2: sections and songs with immediate recomputation.
+5. E13-S2: cross-tab/device live sync; E13-S3: portable recovery; E12-S3: reorder/move; E11-S4: archive/restore. P2 refinements can follow the minimum connected release.
+6. E14-S1–S3: independent database, staging and UX/release gates throughout implementation, with the final connected single-file/offline packaging gate before release.
+
+Test levels remain distinct: pure model/repository tests; mocked browser errors/races; local Supabase migration/policy tests; real staging tests with two disposable accounts and two sessions. Existing 16 Node and 54 browser checks are local/offline baseline evidence only and do not prove cloud login, RLS, email delivery or live synchronization.
+
+Release gates include user A/B/anonymous direct-access denial, hostile documents, owner reassignment denial, actual email-code login in the required double-click downloadable file, reload/session expiry/logout, slow/failed/ambiguous writes, stale revisions, late responses after switching plans/accounts, reconnect catch-up, and duplicate events. Verify cloud UX at 390×844, 1280×900, 1280×600 and 200% reflow with keyboard and mixed-language names. Keep original offline contexts network-blocked.
+
+Performance targets are measurements to establish, not platform guarantees: committed local edits should render on the next Svelte update (target under 100ms for baseline fixtures); another healthy staging session should converge without reload (target under two seconds). Record environment and measured times, including failures. No cloud story is Done from mocks alone.
+
+Implementation is waiting on the setup decisions in [docs/supabase-connection.md](docs/supabase-connection.md); this planning task does not connect a live database, deploy a site or alter Supabase settings.

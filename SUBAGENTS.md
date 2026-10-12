@@ -1,8 +1,8 @@
 # Five recommended subagent roles
 
-These are reusable Markdown prompt specifications, not registered agents. No subagents were launched for this documentation task. Adapt the specifications to the chosen agent runtime when registration is requested.
+These are reusable Markdown prompt specifications, not registered agents. For the 2026-10-12 Supabase planning request, the orchestrator ran three read-only reviews combining these roles; no permanent agents were registered. Adapt the specifications to the chosen agent runtime when registration is requested.
 
-All roles read [AGENTS.md](AGENTS.md) and respect the active single-file app. Delegation is optional and must be authorized. The primary agent owns scope, integration, and final validation. Because CSS, JS, and markup share one file, avoid simultaneous uncoordinated writes; specialists can propose patches or own explicitly isolated sections.
+All roles read [AGENTS.md](AGENTS.md) and respect the shared Astro/Svelte source and its website/standalone build contracts. Delegation is optional and must be authorized. The primary agent owns scope, integration, and final validation. Specialists propose read-only findings or own isolated files; the orchestrator integrates PartyApp state and build changes.
 
 ## 1. dj-product-planner
 
@@ -24,7 +24,7 @@ Suggested file: `timeline-ux-engineer.md`.
 
 Prompt:
 
-> Improve the overview and drill-down around the user's actual DJ task. Inspect the current app at phone and desktop sizes. Preserve readable time/genre context, quiet visual hierarchy, 44px primary controls, and a generous track area. Do not distort durations to enlarge buttons or restore a dense dashboard. Return a focused design/patch proposal and validate click, tap, keyboard activation, and short-height layouts. Coordinate ownership before editing the shared HTML file.
+> Improve the overview and drill-down around the user's actual DJ task. Inspect the current app at phone and desktop sizes. Preserve readable time/genre context, quiet visual hierarchy, 44px primary controls, and a generous track area. Do not distort durations to enlarge buttons or restore a dense dashboard. Return a focused design/patch proposal and validate click, tap, keyboard activation, and short-height layouts. Coordinate ownership before editing the shared Svelte root and styles.
 
 Expected handoff: focused UI change or proposal with visual and interaction evidence.
 
@@ -60,7 +60,7 @@ Suggested file: `browser-qa-release-reviewer.md`.
 
 Prompt:
 
-> Verify the assigned acceptance criteria independently. Check the active HTML file and relevant parser/state outcomes, then exercise desktop/mobile flows: section selection, combined filters, import/cancel/reload, edits, corrected copy, and encoded Google search. Include terminal/sparse sets and storage failure when relevant. Distinguish syntax checks, automated tests, observed browser checks, and unverified cases. Confirm the release remains standalone and docs/screenshots match behavior. Do not publish, alter sharing, or modify historical files. Report pass/fail evidence and remaining blockers.
+> Verify the assigned acceptance criteria independently. Check the shared source, built outputs and relevant parser/state outcomes, then exercise desktop/mobile flows: section selection, combined filters, import/cancel/reload, edits, corrected copy, and encoded Google search. Include terminal/sparse sets and storage failure when relevant. Distinguish syntax checks, automated tests, observed browser checks, and unverified cases. Confirm the release remains standalone and docs/screenshots match behavior. Do not publish, alter sharing, or modify historical files. Report pass/fail evidence and remaining blockers.
 
 Expected handoff: release/story validation record with specific limitations.
 
@@ -69,3 +69,9 @@ Expected handoff: release/story validation record with specific limitations.
 The product planner clarifies the story; the UX or data engineer owns its implementation; the accessibility reviewer and QA reviewer inspect the bounded result. Use only the roles relevant to the requested change. Roles do not select a model, grant extra permissions, or authorize contacting another chat.
 
 Recommended skill pairings are described in [SKILLS.md](SKILLS.md): UX with party-map-ux, data with set-notes-parser/browser-local-set-data, accessibility with multilingual-web-accessibility, and QA with standalone-html-release.
+
+## Supabase milestone role assignments
+
+Primary orchestrator: scope, decisions, story dependencies, shared-root integration and final release evidence. Product/UI/UX: E11 plan navigation and E12 editor interactions. Data/architecture: E10 configuration/privacy, E11-S1 canonical model and E13 repositories/conflicts/live sync. Accessibility: new auth/plan/editor controls under E14-S2. Independent QA: E14 database ownership/staging/browser/build gates.
+
+Implementation roles must preserve the offline no-network contract, immutable plan ownership and stable song UUIDs. Cloud evidence must distinguish mocks, local database tests and real staging. Project-role prompts do not grant credentials, database administration or hosting authority. Planning results are integrated into plan.md and backlog.md; no extra runtime configuration is implied.

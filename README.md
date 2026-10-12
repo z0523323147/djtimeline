@@ -101,6 +101,6 @@ The bundled set remains **126 tracks, 25 blocks, 26 sections, 42 download choice
 
 ## Remaining work
 
-Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Multiple named sets remain an optional extension.
+Linear-inspired visual refinements, portable corrected-note export, import previews and restore-example controls, broader accessibility/storage coverage, shortcuts, and hip-hop window summaries remain tracked in the backlog. Supabase login, multiple private club plans, structured song/section editing and live same-account synchronization are the next requested milestone. They are planned, not connected or implemented. See [plan.md](plan.md), [backlog.md](backlog.md), and [Supabase connection checklist](docs/supabase-connection.md). The existing offline HTML remains network-free; the proposed connected single HTML needs internet for cloud features.
 
 Repository: [z0523323147/djtimeline](https://github.com/z0523323147/djtimeline). No hosted deployment or license is configured.

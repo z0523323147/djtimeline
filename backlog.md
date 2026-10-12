@@ -1,10 +1,10 @@
 # Product backlog
 
-Updated: 2026-10-11. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. Remaining stories are **Todo**. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
+Updated: 2026-10-12. Thirteen stories are **Done**: E7-S1–S4, E1-S1–S2, E5-S1, E8-S3, and E9-S1–S5. New cloud epics E10–E14 and remaining refinements are **Todo**. E6-S1 is **Superseded**, not Done. Existing implemented features are documented in [plan.md](plan.md); this is future work, not a claim that those features are missing.
 
 Priorities: **P0** = release-blocking correctness or coverage; **P1** = core usability/reliability; **P2** = release polish; **P3** = optional extension. AC = acceptance criteria. Subtasks inherit their story priority unless explicitly stated.
 
-Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 15 Node tests, 42 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
+Shared-source foundation completed: Astro/Svelte/pnpm, both outputs, terminal and brief-section navigation, 16 Node tests, 54 browser workflow tests, and reproducibility checks. Evidence: [docs/verification.md](docs/verification.md). Remote CI is configured; local checks are recorded separately.
 
 ## E1 — Complete, usable party navigation · P0
 
@@ -195,24 +195,11 @@ AC:
 - Screenshots match the released behavior and contain no test notes.
 - Hosting preparation does not publish or alter sharing unless requested.
 
-## E6 — Optional set management · P3
+## E6 — Original named-set proposal · Superseded
 
-### E6-S1 — Keep multiple named sets · P3 · Todo
+### E6-S1 — Keep multiple named sets · P1 · Superseded by E11
 
-As a DJ, I may want to switch between event sets without repeatedly replacing one active set.
-
-Subtasks:
-
-- [ ] E6-S1-T1 · P3: Validate demand and define the smallest named-set workflow.
-- [ ] E6-S1-T2 · P3: Scope notes, corrections, and export to stable set identities.
-- [ ] E6-S1-T3 · P3: Design backup, restore, and deletion behavior before implementation.
-
-AC:
-
-- Switching sets preserves each set's own notes and corrected titles.
-- Names are editable and duplicate names do not confuse identity.
-- Export/restore works per set.
-- The party overview remains the primary experience; set management does not become the main dashboard.
+The user explicitly requested multiple club plans with Supabase on 2026-10-12. Demand validation is complete as a planning decision; implementation is not Done. E11 owns stable plan identity, create/list/open/rename, import/migration and recoverable archive. E13-S3/E3-S1 own backup/export. Do not implement a second unrelated browser-only set manager from this older proposal.
 
 ## E7 — Astro/Svelte source with website and offline outputs · P0
 
@@ -335,7 +322,9 @@ AC:
 
 ## Recommended execution order
 
-E9-S1 → E9-S2 → E9-S3 → E9-S4 → E8-S1 → E2-S1 → E3-S1 → E3-S2 → E4-S2 → E4-S1 → E8-S2 → E2-S2 → E5-S2 → E6-S1.
+Next milestone: E10-S0 → E10-S1 → E11-S1 → E10-S2 → E10-S3 → E13-S1 → E11-S2 → E11-S3 → E12-S1 → E12-S2 → E13-S2 → E13-S3, with E14 QA running throughout and final E14-S3 release gates. E12-S3/E11-S4 are P2 refinements.
+
+Earlier local refinements remain Todo and should be coordinated with the new cloud stories: E8-S1, E2-S1, E3-S1–S2, E4-S1–S2, E8-S2, E2-S2 and E5-S2. E9 is complete; E6 is superseded.
 
 A story is Done only after its AC pass and the relevant validation evidence is recorded. Priority belongs to the work, not to the order in which its section appears here.
 
@@ -463,3 +452,186 @@ AC:
 AC: All tracks reveals the full active set; the example contains 126 tracks. Filtering and Reset retain all-track scope. Clicking a timeline section restores its tracks and selection. Import starts with its first section. No selected interval is implied while browsing all tracks. Uncertain changes remain source ranges.
 
 Evidence: 54 browser workflow checks, 16 model/packaging tests, both builds, reproducibility, and docs/verification.md.
+
+## E10 — Supabase connection, private storage and login · P0 · Todo
+
+Scope: authenticated cloud plans, preserving the standalone offline output. Assumptions and architecture: plan.md, Supabase club-plan roadmap. No Supabase changes have been made.
+
+### E10-S0 — Prove email-code login for a double-click HTML file · P0 · Todo
+
+User choices: double-click HTML with no local server; avoid Google Cloud OAuth resources. Confirmed method: email verification code. Project base URL/public key have been supplied; no session/provider is configured by this planning change.
+
+- [ ] E10-S0-T1 · P0: Confirm target browsers/devices and email provider/delivery readiness; no local server is allowed.
+- [ ] E10-S0-T2 · P0: Prototype in-page email-code request/verify, file-origin Auth/API fetch, session storage/reload/refresh, invalid/expired code and denied storage/network.
+- [ ] E10-S0-T3 · P0: Record supported/unsupported results and smallest alternative if needed; get the user's agreement before changing the no-server delivery or adopting a different login method.
+
+AC: Real email-code auth produces a valid owner session in the double-click downloaded-page workflow, and subsequent authenticated Supabase fetch/reload/logout succeeds in supported browsers. No token copy/paste, embedded secret or disabled browser protection is used; entering the user's one-time email code is the intended flow. If safe direct-file login cannot be demonstrated, record the blocker and present concrete alternatives rather than mark the flow Done or silently introduce hosted delivery. No OAuth callback or hosted bridge is required by the proposed email-code flow; verify real delivery and do not claim default SMTP supports arbitrary recipients. The offline app remains usable throughout.
+
+### E10-S1 — Confirm setup and separate connected/offline adapters · P0 · Todo
+
+As a DJ, I want the downloadable connected page to use my Supabase project while retaining a usable offline edition.
+
+Dependencies: E10-S0 for finalized auth delivery; adapter/model fixture work can proceed provisionally.
+
+- [ ] E10-S1-T1 · P0: Resolve project URL/public key, existing schema, login/signup policy, deployment origin, direct-file expectations and migration workflow using docs/supabase-connection.md.
+- [ ] E10-S1-T2 · P0: Add ignored local environment configuration, documented public env example, pinned browser SDK and injected repository interfaces.
+- [ ] E10-S1-T3 · P0: Define website, connected-single-HTML and network-free offline entry points; prepare the connected packager without duplicating planner logic.
+
+AC: No secret/service-role key is requested or shipped. Missing cloud configuration leaves local use possible. Offline initialization makes no Supabase requests. Connected HTML bundles its assets and honestly requires internet for cloud features. Direct file email-code auth support is determined by E10-S0; any different delivery needs the user's agreement. Existing tables/providers remain untouched until their migration is reviewed.
+
+### E10-S2 — Enforce private ownership and atomic versioned saves · P0 · Todo
+
+Dependencies: E10-S1, E11-S1.
+
+- [ ] E10-S2-T1 · P0: Create versioned migrations for plan metadata, document snapshots, indexes, constraints and idempotent operation receipts.
+- [ ] E10-S2-T2 · P0: Configure RLS/grants and immutable ownership on every exposed resource; implement least-privileged create/save/rename operations.
+- [ ] E10-S2-T3 · P0: Validate document shape/limits/UUIDs server-side, compare expected revision, and deny direct-write bypasses.
+
+AC: A owns its plans; B and anonymous requests cannot read or mutate them using known IDs or forged owner fields. Metadata/document creation is atomic. Concurrent saves of the same revision give one success and one retained-draft conflict. Retrying the same operation yields one logical result without duplicate plans/songs. Malformed/oversized documents are rejected without partial writes. Restrict RPC execute privileges and verify any definer ownership/search_path protections with database tests.
+
+### E10-S3 — Sign in, restore sessions and sign out safely · P0 · Todo
+
+Dependencies: E10-S1, E10-S2.
+
+- [ ] E10-S3-T1 · P0: Implement email-code request/verification, Email provider/code template, delivery readiness and chosen signup policy.
+- [ ] E10-S3-T2 · P0: Restore/refresh sessions, handle code/callback errors and implement explicit local-session sign-out.
+- [ ] E10-S3-T3 · P0: Isolate guest/account drafts and clear private UI, caches, channels and delayed results on account transitions.
+
+AC: Real email-code login/reload/logout works from the downloaded HTML in supported browsers. Invalid/expired login and delivery/network failures preserve local notes. Signing in alone uploads nothing. Switching to B never displays A's plans, drafts or late request/event results. Storage denial does not imply durable login/save. Login dialog supports labelled fields, keyboard, cancel/focus restoration and 44px controls. Offline HTML remains login-free.
+
+## E11 — Multiple private club plans · P1 · Todo
+
+This replaces the optional E6-S1 named-set proposal; demand is now explicit. Names are metadata, UUIDs are identity.
+
+### E11-S1 — Establish stable editable documents and legacy parity · P0 · Todo
+
+Dependencies: E10-S1's adapter contract; can proceed with fixtures while connection details are pending.
+
+- [ ] E11-S1-T1 · P0: Define typed versioned source-event documents with stable plan/song/marker IDs and explicit timing provenance.
+- [ ] E11-S1-T2 · P0: Implement DOM-free derivation into the existing timeline model; define authored exact/range/unknown boundaries and inheritance.
+- [ ] E11-S1-T3 · P0: Convert legacy notes after applying title corrections, with stable retry identities and validation fixtures.
+
+AC: Insert/rename/reorder never changes surviving song UUIDs. Conversion preserves 126 tracks/25 blocks/26 sections, flags and corrected multilingual titles. Known ranges, rollover and unknown endings stay intact; estimates never become evidence. Repeated same-genre parts do not create unexplained dividers. Empty documents are valid blank plans. Empty committed sections remain visible/selectable with stable IDs rather than being discarded by the legacy track-derived renderer. A single canonical document owns editable data; raw notes remain provenance.
+
+### E11-S2 — Create, list, open and rename club plans · P1 · Todo
+
+Dependencies: E10-S3, E11-S1, E13-S1.
+
+- [ ] E11-S2-T1 · P1: Add a compact plan picker/account header and My plans dialog with metadata-only paging/search.
+- [ ] E11-S2-T2 · P1: Create blank plans with required name and optional club/date; implement open/rename.
+- [ ] E11-S2-T3 · P1: Scope selection/filters/loading state by stable plan identity and handle switching during pending saves.
+
+AC: Two same-named plans keep independent songs, metadata and corrections after reload. Blank plan has Add first section/Import notes actions and no fabricated timeline. Failed loading leaves the current plan intact. Previous tracks are never shown under the next plan's name. Switching preserves or resolves pending work instead of redirecting its writes. Many plans use a paged metadata list; opening one fetches its content rather than all documents. The timeline remains the workspace rather than a new dashboard.
+
+### E11-S3 — Import notes and migrate the current local set explicitly · P1 · Todo
+
+Dependencies: E11-S2, E13-S1. Coordinate with E3-S2 import preview and E3-S1 export.
+
+- [ ] E11-S3-T1 · P1: Add a parsed preview with destination/name/song/section counts and representative corrected titles.
+- [ ] E11-S3-T2 · P1: Default to creating a new plan; make replacing a selected plan an explicit action.
+- [ ] E11-S3-T3 · P1: Offer Save this set to my account, preserving legacy data until the server acknowledges the migrated copy.
+
+AC: Sign-in does not silently migrate/upload. Cancel/invalid input changes nothing. Corrected copy/search titles and timing evidence survive migration. Ambiguous save retries do not duplicate imported plans. Failed import retains its recoverable draft and original destination. Replacement commits atomically; other devices cannot see half an imported plan.
+
+### E11-S4 — Recoverably archive and restore plans · P2 · Todo
+
+Dependencies: E11-S2, E13-S2.
+
+- [ ] E11-S4-T1 · P2: Add named archive confirmation, archived list and restore action.
+- [ ] E11-S4-T2 · P2: Synchronize archive/restore updates without exposing another account's metadata.
+
+AC: Archiving preserves all content and can be restored. Failure leaves the active plan intact. Remote archive makes an open plan unavailable for further saves while preserving any local draft. No permanent delete is introduced in this story; direct hard-delete permissions/event handling remain separate reviewed scope.
+
+## E12 — Create songs/sections and update the timeline immediately · P1 · Todo
+
+### E12-S1 — Add/edit genre sections and timing evidence · P1 · Todo
+
+Dependencies: E11-S1, E11-S2, E13-S1.
+
+- [ ] E12-S1-T1 · P1: Build a section editor for full genre names and recorded time, known range or time not noted.
+- [ ] E12-S1-T2 · P1: Validate order/bounds, preview and commit/cancel semantics; handle first section and final unknown ending.
+- [ ] E12-S1-T3 · P1: Recompute macro overview, genre sequence and hip-hop boundaries from committed local state before cloud acknowledgement.
+
+AC: Save changes the timeline on the next render without reload; Cancel changes nothing. Exact/range/unknown source evidence remains distinguishable. Invalid time/order input keeps the draft and focuses the error. Empty plans can acquire their first section without invented dates/AM/PM/end time. Add first section → Add song works, and empty sections between populated sections remain accessible. Genre names remain full, multilingual and selectable without internal timeline scrolling. Title edits do not silently change neighboring genre/timing inheritance.
+
+### E12-S2 — Add and edit songs with live local feedback · P1 · Todo
+
+Dependencies: E12-S1.
+
+- [ ] E12-S2-T1 · P1: Add song to selected section, or explicitly choose a destination from All tracks.
+- [ ] E12-S2-T2 · P1: Extend song editing to title and peak/download/idea flags with validation and draft cancellation.
+- [ ] E12-S2-T3 · P1: Keep counts, list, selection, peak indicators, copy/search and save status consistent after commit.
+
+AC: A new song is visible immediately before the cloud response; list/count/timeline derive the same document revision. Title/flag changes preserve song UUID and source timing evidence. Empty title is rejected with draft/focus intact. Copy and Google search use the committed current title. Cancel makes no changes. Local rendering does not wait for Realtime. All tracks and combined filters work across newly created content.
+
+### E12-S3 — Reorder and move songs without losing context · P2 · Todo
+
+Dependencies: E12-S2, E13-S1.
+
+- [ ] E12-S3-T1 · P2: Provide keyboard/touch Move up/down within sections and explicit destination selection for cross-section moves.
+- [ ] E12-S3-T2 · P2: Add undo and recalculate all derived timing/genre/count views from one coherent edit.
+
+AC: No drag-only control is required. Flags/titles/UUIDs survive reorder. Cross-section moves visibly adopt the destination context and can be undone. No estimated position becomes an exact timestamp. Cloud save is atomic and concurrent moves follow the revision/conflict policy.
+
+## E13 — Durable saves and live same-account synchronization · P0 · Todo
+
+### E13-S1 — Preserve drafts through saves, retries and conflicts · P0 · Todo
+
+Dependencies: E10-S2, E11-S1; required before production plan editing.
+
+- [ ] E13-S1-T1 · P0: Implement committed snapshot/editor draft/pending-operation state with per-plan serialized saves.
+- [ ] E13-S1-T2 · P0: Show acknowledged saving/saved/error/device-only states and idempotent retry.
+- [ ] E13-S1-T3 · P0: Detect stale revisions and offer account version or local copy, preserving unsaved work on plan/account transitions.
+
+AC: Saved appears only after acknowledgement. Failed/rejected writes keep a recoverable draft; denied local storage is reported as session-only. Two same-revision clients cannot silently overwrite one another. Retries use the same operation UUID and do not duplicate content. Switching plans/accounts cannot submit pending edits to a different owner/destination. Network writes follow committed edits, not every keystroke.
+
+### E13-S2 — Receive committed changes across tabs/devices · P0 · Todo
+
+Dependencies: E13-S1, E10-S3.
+
+- [ ] E13-S2-T1 · P0: Configure private plan channels with owner-specific authorization and minimal revision notifications.
+- [ ] E13-S2-T2 · P0: Subscribe/catch up/refetch, ignore older events, reconcile reconnect and tear down obsolete channels.
+- [ ] E13-S2-T3 · P0: Preserve open local editors, focus/scroll and drafts when remote content changes.
+
+AC: The same account's second session sees a committed edit without reload. Reconnect refetch repairs missed events; duplicate/out-of-order events cannot regress data. A remote update never discards a draft or steals focus. B cannot receive A's content or plan metadata through private channels/refetch. Subscription names/client filters are not used as security boundaries. Realtime denial does not block local editing or misreport cloud saving. Record convergence latency; the two-second healthy-staging target is not a delivery guarantee.
+
+### E13-S3 — Export and recover pending plan work · P1 · Todo
+
+Dependencies: E11-S1, E13-S1. Coordinate with E3-S1/E4-S2.
+
+- [ ] E13-S3-T1 · P1: Add structured backup/restore with versioned metadata, ordered content and timing evidence.
+- [ ] E13-S3-T2 · P1: Implement account-scoped device drafts and explicit recovery after interrupted/failed saves.
+
+AC: Backup includes current titles/flags/unknown timing but no auth session or key. Restore validates shape/limits and creates a new stable plan identity. A's draft cannot be uploaded under B. Failed cloud save can be exported even if browser storage is denied. Legacy local data remains until acknowledged migration. No full background offline-sync guarantee is advertised before conflict/retry validation.
+
+## E14 — Independent cloud QA and release · P0 · Todo
+
+### E14-S1 — Prove database ownership and concurrency · P0 · Todo
+
+Dependencies: E10-S2; run throughout implementation.
+
+- [ ] E14-S1-T1 · P0: Apply migrations reproducibly and test A/B/anonymous allow/deny paths, RPCs, immutable owner and malformed documents.
+- [ ] E14-S1-T2 · P0: Test known-ID direct access, direct-write bypass, stale revisions, transaction rollback and duplicate operation IDs.
+- [ ] E14-S1-T3 · P0: Verify private channel authorization and no cross-user notifications on staging.
+
+AC: Tests demonstrate expected allowed operations and denied cross-owner/anonymous operations, not just policy text inspection. Concurrent commits yield an explicit conflict. No partial imports/reorders or duplicated retry data. Any definer/Realtime policies have least-privilege evidence; no broad authenticated-user policy is copied from tutorials. Mocks alone cannot close this story.
+
+### E14-S2 — Verify auth, editing, sync and accessibility · P0 · Todo
+
+Dependencies: E10-S3, E11-S2–S3, E12-S1–S2, E13-S1–S3.
+
+- [ ] E14-S2-T1 · P0: Add deterministic mocked model/repository/browser checks for errors, storage denial, races and account transitions.
+- [ ] E14-S2-T2 · P0: Use staging and disposable users for real chosen auth flow, reload/logout, isolation, two-session edits, reconnect and conflicts.
+- [ ] E14-S2-T3 · P1: Review mobile/desktop/short/200% reflow, keyboard/focus, dialogs/status announcements and multilingual names.
+
+AC: Create/open/rename two plans, edit sections/add songs, filter/copy/search/import and reload restore correct content. New local changes render without reload; measure the under-100ms fixture target separately from staging network convergence. Failed saves/auth keep usable recovery. Remote events don't hijack editors or focus. A's late results never enter B's workspace. Existing 54 website/offline workflows continue passing; cloud tests use separate online contexts. Actual screen-reader/native zoom observations are distinguished from reflow simulations.
+
+### E14-S3 — Release connected single HTML and preserve offline parity · P0 · Todo
+
+Dependencies: E14-S1–S2 plus E10-S1's build contract.
+
+- [ ] E14-S3-T1 · P0: Finalize build:connected script, double-click/file-origin instructions, staging email-code configuration and artifact identity.
+- [ ] E14-S3-T2 · P0: Run type/model/package tests, all builds, offline request audit/reproducibility and SDK/public-config scans.
+- [ ] E14-S3-T3 · P1: Record staging measurements/screenshots/limitations, update setup/README/backlog and prepare reviewed migrations/deployment.
+
+AC: Connected HTML has no required sibling assets and authenticates/saves/synchronizes against staging in the downloadable workflow established by E10-S0; any required callback/helper infrastructure is explicitly agreed and documented. Offline HTML still opens without login/network and makes no automatic Supabase requests. No secret key/token/private test data enters commits/artifacts/logs/screenshots. Document unsupported file-origin/provider cases rather than claim parity. No existing production schema is reset to make tests pass. All P0 gates have real evidence; production deployment is a separately authorized action.
