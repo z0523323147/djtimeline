@@ -85,3 +85,7 @@ The orchestrator owns order/scope; UI/UX owns modal, plan navigation and ruler p
 ## First release acceptance
 
 Sign in → deliberately open/create a plan → Add track with Now start and manual genre → see its automatically derived section → receive a cloud save acknowledgement → reload and restore. Add a track with an explicit early end and verify the real gap. Go offline, reopen a cached plan, add a track, reload, reconnect and save without duplicates or another account's data. Browse All tracks without opening an editor. Import the provided default set once as a new cloud plan, then export/restore a lossless backup.
+
+## R9 — Sticky section navigation (supersedes hip-hop annotation lanes)
+
+Remove dedicated In/Out annotation lanes and dotted intervals. Each proportional genre bar selects that section; retain large genre controls for narrow touch targets. On selection hide minute labels, retain whole-hour anchors, show only selected start/end evidence (ranges prefixed ~, unknown ending explicit) and scroll its heading below the sticky ruler. Full scale restores the default time labels. While All tracks or search/filter results scroll, mark the section at the top reading edge without changing results or saving data. Keep ruler sticky for the entire open plan; clean up observers on plan switch.

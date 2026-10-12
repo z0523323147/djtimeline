@@ -2,91 +2,69 @@
   import { onMount } from 'svelte';
   import {formatTime} from '../lib/documents';
   import type { Model } from '../lib/parser';
-  import { annotationLanes, boundary, clock, fullClock, color, hipChanges, isHip, overviewRuns, peakRuns, position } from '../lib/timeline';
+  import { boundary, changeTime, fullClock, color, isHip, position } from '../lib/timeline';
   export let model: Model;
   export let selected: number;
-  export let active: boolean;
+  export let focused = false;
+  export let resetScale: () => void = () => {};
   export let select: (id: number, trackId?: number) => void;
   let mapWidth = 1000;
-  let measure: ((text: string) => number) | undefined;
+  let dock: HTMLElement;
   onMount(() => {
-    const context = document.createElement('canvas').getContext('2d');
-    if (context) {
-      context.font = '12px system-ui, sans-serif';
-      measure = text => context.measureText(text).width + 4;
-    }
+    const parent = dock.closest<HTMLElement>('.cloud-plan');
+    const update = () => parent?.style.setProperty('--timeline-offset', (dock.getBoundingClientRect().height + 16) + 'px');
+    const observer = new ResizeObserver(update);observer.observe(dock);update();
+    return () => {observer.disconnect();parent?.style.removeProperty('--timeline-offset');};
   });
   $: width = Math.max(100, mapWidth - 12);
   $: start = model.blocks[0]?.start ?? 0;
   $: end = Math.max(start,...model.blocks.map(b=>b.end),...model.sections.map(s=>s.end));
-  $: flow = overviewRuns(model);
-  $: peaks = peakRuns(model);
-  $: changes = hipChanges(model);
-  $: annotations = annotationLanes(changes.map(c => ({ anchor: position(c.section.start, start, end, width), width: measure ? measure(c.label) : c.label.length * 8 })), width);
-  $: lanes = Math.max(0, ...annotations.map(a => a.lane + 1));
   $: gridStep = Math.max(5,Math.ceil((end-start)/2000/5)*5);
   $: hourStep = Math.max(60,Math.ceil(52/Math.max(.01,width/Math.max(1,end-start))/60)*60);
   $: step = width < 600 ? 10 : 5;
   $: minuteStep = Math.max(step,Math.ceil(14/Math.max(.01,width/Math.max(1,end-start))/step)*step);
+  $: ticks = !model.blocks.length ? [] : [start, ...Array.from({length:Math.max(0,Math.ceil(end/gridStep)-Math.floor(start/gridStep)-1)},(_,i)=>(Math.floor(start/gridStep)+i+1)*gridStep).filter(t=>t>start&&t<end),...(end>start?[end]:[])];
   $: hours = ticks.filter(t=>t===start||t===end||t%hourStep===0).filter(t=>t===start||t===end||position(t,start,end,width)>42&&width-position(t,start,end,width)>42);
   $: minutes = ticks.filter(t=>t!==start&&t!==end&&t%60!==0&&t%minuteStep===0);
-  $: rulerHeight = 58;
-  $: chartHeight = rulerHeight+34+lanes*24;
-  $: ticks = !model.blocks.length ? [] : [start, ...Array.from({ length: Math.max(0, Math.ceil(end / gridStep) - Math.floor(start / gridStep) - 1) }, (_, i) => (Math.floor(start / gridStep) + i + 1) * gridStep).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
-  $: current = !active ? model.sections.find(s => s.id === selected) : undefined;
+  $: current = model.sections.find(s=>s.id===selected);
+  $: display = model.clock24?formatTime:fullClock;
+  $: next = current ? model.sections[current.id+1] : undefined;
+  $: ending = current ? next?.start===current.end?changeTime(next):current.end>current.start?(current.tracks.at(-1)?.explicitEnd!==undefined?'':'~')+display(current.end):'not recorded' : '';
 </script>
-<section class="overview" aria-labelledby="overview-heading">
+<section class="timeline-dock" bind:this={dock} aria-labelledby="overview-heading">
   <div class="timeline-head">
     <h2 id="overview-heading" tabindex="-1">Party timeline</h2>
     <div class="legend" aria-label="Genre colors"><span><i class="dot" style="--color:var(--cyan)"></i>Other genres</span><span><i class="dot" style="--color:var(--hip)"></i>Hip-hop</span><span><i class="dot" style="--color:var(--fire)"></i>Peak</span></div>
   </div>
   <div class="party-summary" bind:clientWidth={mapWidth}>
-    <svg viewBox={`-6 0 ${width + 12} ${chartHeight}`} style={`height:${chartHeight}px`} role="img" aria-label={`Estimated whole-party time scale, ${model.blocks[0]?.time ?? 'Time not noted'} to ${model.blocks.at(-1)?.time ?? 'Time not noted'}. ${changes.map(c => `${c.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(c.section)}`).join('; ')}. Ending not recorded.`}>
+    <svg viewBox={'-6 0 '+(width+12)+' 66'} style="height:66px" role="group" aria-label="Party time ruler">
       {#if !model.blocks.length}<text class="tick" x="0" y="13">Time not noted</text>{/if}
-      {#if end>start&&width/(end-start)>=4}{#each Array.from({length:Math.max(0,Math.ceil(end)-Math.floor(start))},(_,i)=>Math.floor(start)+i).filter(t=>t>start&&t<end&&t%5!==0) as minute}<line class="minor-grid" x1={position(minute,start,end,width)} x2={position(minute,start,end,width)} y1={rulerHeight-6} y2={chartHeight}/>{/each}{/if}
-      {#each ticks as time}
-       <line class="ruler-grid" x1={position(time,start,end,width)} x2={position(time,start,end,width)} y1={rulerHeight-6} y2={chartHeight}/>
-      {/each}
-      {#each hours as time}
-        <text class="tick ruler-label hour-label" data-minute={time} x={position(time,start,end,width)} y="13" text-anchor={time===end?'end':'start'}>{model.clock24?formatTime(time):fullClock(time)}</text>
-      {/each}
-      {#each minutes as time}
-        <text class="tick ruler-label minute-label" data-minute={time} x={position(time,start,end,width)} y="33" text-anchor="middle">{String(Math.floor(time)%60).padStart(2,'0')}</text>
-      {/each}
-      {#each flow as run}
-        <rect x={position(run.start,start,end,width)} y={rulerHeight+3} width={position(run.end,start,end,width)-position(run.start,start,end,width)} height="12" fill={color(run.genre)} opacity=".65" />
-      {/each}
-      {#each peaks as peak}
-        <rect x={position(peak.start,start,end,width)} y={rulerHeight+17} width={Math.max(2,position(peak.end,start,end,width)-position(peak.start,start,end,width))} height="3" fill="var(--fire)" />
-      {/each}
-      {#if current}
-        <rect class="overview-selection" data-selected={current.id} x={Math.max(0,position(current.start,start,end,width)-1)} y={rulerHeight+2} width={Math.max(2,position(current.end,start,end,width)-position(current.start,start,end,width))} height="14" rx="2" fill={color(current.genre)} />
-      {/if}
-      {#each changes as change, i}
-        {@const a = annotations[i]}
-        {@const anchor = position(change.section.start,start,end,width)}
-        <g class="hip-change" data-entering={change.entering} aria-label={`${change.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(change.section)}`}>
-          <title>{change.entering ? 'Into' : 'Out of'} hip-hop · {boundary(change.section)}{change.section.start === change.section.end ? ' · ending not noted' : ''}</title>
-          {#if !change.section.exact}
-            <rect class="uncertain-range" x={position(change.section.boundStart,start,end,width)} y={rulerHeight+1} width={Math.max(2,position(change.section.boundEnd,start,end,width)-position(change.section.boundStart,start,end,width))} height="16" />
-          {:else}<line class="switch-marker" x1={anchor} x2={anchor} y1={rulerHeight+1} y2={rulerHeight+20} />{/if}
-          <path class="switch-guide" d={`M${anchor},${rulerHeight+21} V${rulerHeight+26+a.lane*24} L${a.left+a.width/2},${rulerHeight+26+a.lane*24}`} />
-          <text class="switch-label" x={a.left} y={rulerHeight+42+a.lane*24}>{change.label}</text>
+      {#each ticks as time}<line class="ruler-grid" x1={position(time,start,end,width)} x2={position(time,start,end,width)} y1="34" y2="66"/>{/each}
+      {#if end>start&&width/(end-start)>=4}{#each Array.from({length:Math.max(0,Math.ceil(end)-Math.floor(start))},(_,i)=>Math.floor(start)+i).filter(t=>t>start&&t<end&&t%5!==0) as minute}<line class="minor-grid" x1={position(minute,start,end,width)} x2={position(minute,start,end,width)} y1="34" y2="66"/>{/each}{/if}
+      {#each hours.filter(t=>!focused||t%60===0) as time}<text class="tick ruler-label hour-label" data-minute={time} x={position(time,start,end,width)} y="13" text-anchor={time===end?'end':'start'}>{display(time)}</text>{/each}
+      {#if !focused}{#each minutes as time}<text class="tick ruler-label minute-label" data-minute={time} x={position(time,start,end,width)} y="29" text-anchor="middle">{String(Math.floor(time)%60).padStart(2,'0')}</text>{/each}{/if}
+      {#each model.sections as section}
+        {@const left=position(section.start,start,end,width)}
+        {@const barWidth=Math.max(4,position(section.end,start,end,width)-left)}
+        <g class="ruler-section" class:lit={selected===section.id} data-ruler-section={section.id} role="button" tabindex="0" aria-label={section.genre+', '+boundary(section)+', open '+section.tracks.length+' tracks'} aria-pressed={selected===section.id} onclick={()=>select(section.id)} onkeydown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(section.id);}}}>
+          <title>{section.genre} · {boundary(section)} · {section.tracks.length} tracks</title>
+          <rect class="ruler-hit" x={Math.min(width-4,left)} y="34" width={barWidth} height="32" fill="transparent"/>
+          <rect class="ruler-bar" x={Math.min(width-4,left)} y="39" width={barWidth} height="22" rx="2" fill={color(section.genre)}/>
+          {#if section.tracks.some(t=>t.isBanger)}<line x1={left} x2={Math.min(width,left+barWidth)} y1="62" y2="62" stroke="var(--fire)" stroke-width="2"/>{/if}
         </g>
       {/each}
-      {#if model.sections.some(s => s.end === s.start)}<text class="open-end" x={width} y={rulerHeight+13} text-anchor="end"><title>Ending not recorded</title>→</text>{/if}
     </svg>
   </div>
+  {#if focused&&current}<div class="ruler-focus"><span dir="auto">{current.genre}</span><span class="selected-times" dir="ltr">In {changeTime(current)} · Out {ending}</span><button class="scale-reset" aria-label="Show full time scale" onclick={resetScale}>Full scale</button></div>{/if}
+</section>
+<section class="overview" aria-label="Genre sections">
   <h3 class="sequence-heading">Genre sequence</h3>
   <div class="section-buttons" role="group" aria-label="Genre sequence">
     {#each model.sections as s}
-      <button data-section={s.id} class:wide={s.genre.length > 15 || s.genre === 'Unspecified'} class:terminal-section={s.start === s.end} class:lit={!active && selected === s.id} style={`--genre:${color(s.genre)}`} aria-label={`${s.genre}, ${boundary(s)}, open ${s.tracks.length} tracks`} aria-pressed={!active && selected === s.id} title={`${boundary(s)}${s.start === s.end ? ' · ending not noted' : ''}`} onclick={() => select(s.id)}>
-        <span class="genre-name" dir="auto">{isHip(s.genre) ? 'Hip-hop' : s.genre}</span><span class="section-count" aria-label={s.tracks.length+' tracks'}>{s.tracks.length}</span>
+      <button data-section={s.id} class:wide={s.genre.length>15||s.genre==='Unspecified'} class:terminal-section={s.start===s.end} class:lit={selected===s.id} style={'--genre:'+color(s.genre)} aria-label={s.genre+', '+boundary(s)+', open '+s.tracks.length+' tracks'} aria-pressed={selected===s.id} title={boundary(s)+(s.start===s.end?' · ending not noted':'')} onclick={()=>select(s.id)}>
+        <span class="genre-name" dir="auto">{isHip(s.genre)?'Hip-hop':s.genre}</span><span class="section-count" aria-label={s.tracks.length+' tracks'}>{s.tracks.length}</span>
       </button>
     {/each}
   </div>
-  <details><summary>Jump to a section or recorded time</summary>
-    <p class="timing-key">Dotted outline: hip-hop changes somewhere within that time range. The notes do not give an exact minute.</p>
-    <div class="time-jumps" role="group" aria-label="Every exact time marker from the notes">{#each model.blocks.filter(b => b.tracks.length) as b}<button onclick={() => select(b.tracks[0].sectionId,b.tracks[0].id)}>{b.time}</button>{/each}</div>
-  </details>
+  <details><summary>Jump to a section or recorded time</summary><div class="time-jumps" role="group" aria-label="Every exact time marker from the notes">{#each model.blocks.filter(b=>b.tracks.length) as b}<button onclick={()=>select(b.tracks[0].sectionId,b.tracks[0].id)}>{b.time}</button>{/each}</div></details>
 </section>

@@ -9,8 +9,8 @@ A track-first DJ planner built with Astro and Svelte. Open a plan, see the whole
 - Empty initial workspace with searchable My plans, desktop rail/collapse and mobile plan switcher.
 - Compact **Add track** dialog: name, manual genre with existing-genre suggestions, current-time default you can override, and optional ending.
 - Automatic contiguous genre sections. No manual Add section step. An explicit ending before the next track leaves a real blank gap; omitted endings follow the next known start.
-- Two-row ruler: full hours above, minute numbers below on one line. Five-minute desktop / ten-minute phone labels, full hip-hop entry/exit times, and a full-height grid with finer lines when space permits.
-- Genre buttons show track counts; track rows show exact/estimated times without numbering. Icon copy/edit/Google download search/remove controls retain accessible names and tooltips. All tracks, filters, undo and a floating Back to timeline action remain available.
+- Compact sticky ruler stays visible above tracks. Every genre interval is clickable; selection shows whole-hour anchors and the selected start/end times, then scrolls to its tracks. All tracks scrolling highlights the visible genre section. Full scale restores five-minute desktop / ten-minute phone minute labels. Estimated boundaries retain ~ and unknown endings stay explicit.
+- Genre buttons show track counts; track rows show exact/estimated times without numbering. Icon copy/edit/Google download search/remove controls retain accessible names and tooltips. All tracks, filters and undo remain available; the persistent ruler replaces the floating return button.
 - Supabase email/password login and private plans. Committed edits save automatically with revisions, stable retry IDs and recoverable conflict copies.
 - Cached complete plans and pending changes reopen offline in the connected HTML. Reconnect retries under the original account; denied/quota-limited storage is reported honestly.
 - Original pasted/.txt notes import with preview. **Import original party** creates a new plan from the 126-track set.

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { tick, onMount } from 'svelte';
   import type { Model, Track } from '../lib/parser';
   import { sectionRange,trackTiming } from '../lib/timeline';
   import { filterActive, googleSearch, matches, type Filters } from '../lib/search';
@@ -17,11 +17,27 @@
   export let updateFlags: ((id:number,flags:{isBanger:boolean;isToDownload:boolean;isMyIdea:boolean})=>void) | undefined = undefined;
   export let removeSong: ((id:number)=>void) | undefined = undefined;
   export let editTrack:((track:Track)=>void)|undefined=undefined;
+  export let onSectionVisible: (id:number)=>void = ()=>{};
   let draftPeak=false,draftDownload=false,draftIdea=false;
   let editing: number | null = null;
   let draft = '';
   let editor: HTMLInputElement;
   let list: HTMLOListElement;
+  onMount(() => {
+    let frame=0;
+    const update=()=>{
+      frame=0;
+      const dock=list.closest('.cloud-plan')?.querySelector('.timeline-dock');
+      const threshold=(dock?.getBoundingClientRect().bottom??0)+16;
+      if(list.getBoundingClientRect().top>threshold||list.getBoundingClientRect().bottom<threshold)return;
+      // Ignore a subpixel remnant of the preceding row at the reading edge.
+      const row=[...list.querySelectorAll<HTMLElement>('[data-section-id]')].find(el=>el.getBoundingClientRect().bottom>threshold+1);
+      if(row&&row.getBoundingClientRect().top<window.innerHeight)onSectionVisible(Number(row.dataset.sectionId));
+    };
+    const schedule=()=>{if(!frame)frame=requestAnimationFrame(update);};
+    window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
+    return()=>{window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);cancelAnimationFrame(frame);};
+  });
   $: active = filterActive(filters);
   $: browsing = allTracks || active;
   $: section = model.sections[selected];
@@ -61,7 +77,7 @@
   <ol id="tracks" class="track-list" bind:this={list}>
     {#each visible as t (t.id)}
       {@const timing=trackTiming(t)}
-      <li class="track" data-track={t.id}>
+      <li class="track" data-track={t.id} data-section-id={t.sectionId}>
         <div><p class="title" dir="auto">{t.title}</p><div class="tags">
           <span class="track-time" dir="ltr" title={timing.estimated?'Estimated from the track count between recorded times; ~ means estimated.':undefined}>{timing.text}</span>{#if timing.estimated}<span class="estimate-tag">Estimated</span>{/if}{#if browsing}<span dir="auto">{t.genre}</span>{/if}
           {#if t.isBanger}<span class="peak">🔥 Peak</span>{/if}

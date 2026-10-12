@@ -170,3 +170,18 @@ dialog .dialog-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex
 .track{grid-template-columns:minmax(0,1fr) auto;gap:12px}.edit-form{grid-column:1/-1}.actions{gap:4px}.actions button,.actions a.action{width:44px;height:44px;min-height:44px;padding:10px;display:inline-flex;align-items:center;justify-content:center}.actions svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.section-count{font-size:12px;min-width:22px;border-radius:5px;padding:1px 5px;background:var(--raised);color:var(--muted);font-variant-numeric:tabular-nums}.section-buttons button.lit .section-count{color:inherit;background:color-mix(in srgb,var(--panel) 16%,transparent)}
 @media(max-width:850px){.track{grid-template-columns:minmax(0,1fr)}.actions{grid-column:1;gap:6px;margin-top:2px}.section-buttons button{padding-top:20px}.section-count{position:absolute;top:3px;right:4px;font-size:11px;min-width:18px;padding:0 4px}}
 @media(max-width:850px){.account-area:has(.cloud-plan){padding:0}}
+.timeline-dock{position:sticky;top:0;z-index:30;min-width:0;padding:10px 16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 12px var(--shadow)}
+.timeline-dock .timeline-head{margin-bottom:6px}
+.timeline-dock .timeline-head h2{font-size:16px}
+.ruler-section{cursor:pointer;outline:none}
+.ruler-bar{opacity:.65;stroke:var(--panel);stroke-width:1}
+.ruler-section:hover .ruler-bar{opacity:1}
+.ruler-section.lit .ruler-bar{opacity:1;stroke:var(--text);stroke-width:2;filter:drop-shadow(0 0 2px var(--cyan))}
+.ruler-section:focus-visible .ruler-bar{stroke:var(--text);stroke-width:3}
+.ruler-focus{display:flex;gap:6px 12px;align-items:center;flex-wrap:wrap;font-size:12px;line-height:1.35;margin-top:4px}
+.ruler-focus>span:first-child{font-weight:600}
+.selected-times{font-variant-numeric:tabular-nums;color:var(--muted)}
+.scale-reset{min-height:32px;padding:4px 8px;margin-inline-start:auto;font-size:12px}
+.cloud-plan #detail-title,.cloud-plan #detail,.cloud-plan .track{scroll-margin-top:var(--timeline-offset,160px)}
+.cloud-plan .track-list{max-height:none;overflow:visible;padding-bottom:12px}
+@media(max-width:600px){.timeline-dock{padding:8px 10px}.timeline-dock .legend{font-size:10px;gap:6px}.ruler-focus{gap:4px 8px}}

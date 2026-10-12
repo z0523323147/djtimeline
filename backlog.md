@@ -962,3 +962,12 @@ AC: Direct requests cannot bypass password policy; ordinary users can verify/rec
 AC: Hosted login runs over HTTPS, malicious notes/titles cannot execute script, and no private signing/admin key ships to clients. Do not claim HttpOnly cookies for the existing browser-storage/file-origin design or add an unapproved application server.
 
 E20-S3 verification: 33 unit/database/packaging and 54 browser checks pass. Actual imported plan clock was corrected to 00:30–04:00 through the signed-in UI and restored after reload. Full times sit above a single minute row. E19 save acknowledgement now compares canonical documents and has a jsonb-order regression.
+
+## E22 — Compact sticky timeline navigation · P1
+
+- E22-S1 · P1 · Done: Clickable ruler sections. T1 remove note lanes/dotted areas; T2 keyboard/touch intervals and large alternatives; T3 selected start/end evidence and full-scale reset. AC: every section reachable; unknown/estimated times stay honest; no label overlap or horizontal page overflow.
+- E22-S2 · P1 · Done: Persistent ruler. T1 sticky dock; T2 measured scroll offsets; T3 click-to-tracks; T4 remove redundant floating return button. AC: ruler remains visible through the final track; track heading is visible below it on phone/short windows.
+- E22-S3 · P1 · Done: Scroll-follow highlight. T1 passive frame-throttled tracking; T2 preserve All tracks/search/filters; T3 cleanup on plan switch. AC: forward/back scrolling updates the section without filtering, editing, saving or changing scroll position.
+- E22-S4 · P1 · Done: QA/delivery. T1 desktop/phone/short regressions; T2 direct-file checks; T3 docs/screenshots/GitHub. AC: focused hours, click/keyboard navigation, sticky persistence, gaps and unknown endings verified; builds/checks pass.
+
+E22 delivery evidence: 60 Chromium workflows pass at desktop/phone/short sizes across site/offline/connected outputs; 33 Node/model/database/packaging checks pass. Zero Svelte errors/warnings; all three builds succeed. The signed-in original plan was opened and the ruler selected Hip hop at 01:50–01:57, scrolled its heading below the top dock, and hid minute labels. UI-only navigation did not alter cloud tracks. Full-size genre controls remain available for narrow bars. Native screen-reader review remains tracked under the wider release gates.
