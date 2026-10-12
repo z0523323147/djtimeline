@@ -72,3 +72,6 @@ Activation steps are in [supabase-setup.md](supabase-setup.md): user applies the
 
 ## Auth schema permission repair — 2026-10-12
 User reports permission denied for schema auth when creating a plan. Prepared an additive migration granting only auth schema USAGE and auth.uid EXECUTE to authenticated and party_map_plan_writer, and made those caller grants explicit in the initial migration. No table grants, policies or user data changed. SQL reviewed locally; no administrative database connection is available, so application and runtime validation remain pending.
+
+## Persistent permission error investigation — 2026-10-12
+Public Auth settings rechecked: Email enabled, signup enabled, confirmation not required for project aemfewsfcrcmtafnypxa. User reports the schema-auth error persists after the grant repair. Prepared read-only catalog diagnostic for function owners/definitions, effective privileges, policies and triggers. No live admin access exists; diagnostic SQL has been reviewed but not executed against PostgreSQL. No additional grants or remote changes made.

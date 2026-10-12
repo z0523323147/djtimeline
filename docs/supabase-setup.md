@@ -35,7 +35,16 @@ Signed-in browser users may SELECT only their own metadata. Direct INSERT/UPDATE
 
 Run [202610120002_auth_identity_permissions.sql](../supabase/migrations/202610120002_auth_identity_permissions.sql) in a new Supabase SQL Editor query. It grants only schema lookup and execution of `auth.uid()` to the signed-in role and the restricted plan-function role. It does not grant access to `auth.users`, alter RLS, or change existing plans. The four verification flags should all return true. Then retry **Create plan**; no new HTML build or account is needed. Do not rerun the initial table-creation migration.
 
-This repairs the missing-grant error reported on 2026-10-12. Its application and a successful real create/reload are still pending; the browser publishable key cannot apply grants.
+This is the targeted repair for the missing-grant error reported on 2026-10-12. The user reports that the error persists, so successful repair is not established; the browser publishable key cannot apply or inspect administrative grants.
+
+### When the error persists after the repair
+
+1. Confirm the dashboard project reference is **aemfewsfcrcmtafnypxa**, matching the connected page. In the SQL Editor select the **postgres** role and primary database.
+2. Run the full [read-only setup diagnostic](../supabase/diagnostics/private_plan_setup.sql) in a new query. Copy the single `setup_report` result. It contains app function definitions/owners, role permissions, plan RLS policies and triggers; it contains no account rows, passwords or session tokens.
+3. Expected: `party_map_plan_writer` exists with login/bypass RLS false; both it and `authenticated` have Auth schema usage and execute permission on `auth.uid()`. Create has arguments `p_id uuid, p_name text, p_owner_id uuid`, is SECURITY DEFINER, and is owned by `party_map_plan_writer`. Rename has the same owner/security mode. Table RLS is enabled/forced and policies restrict `owner_id` to `auth.uid()`.
+4. Do not grant all Auth tables, disable RLS, expose the Auth schema through Data API, or change function ownership to postgres as a workaround. Inspect the report before another repair. If SQL Editor itself fails, copy its full error including DETAIL/CONTEXT instead of rerunning the initial migration.
+
+Required setup order for a **new empty project**: enable Email/signup with confirmation off, run `202610120001_private_plans.sql` once, then `202610120002_auth_identity_permissions.sql`. On this existing project, run the diagnostic first; the initial migration intentionally fails if objects already exist. Data API must serve the `public` schema used by the app; Auth is not an exposed data schema requirement. No SMTP, Google OAuth, Storage bucket, Realtime configuration or redirect URL is needed for this initial password-login/plan-name feature.
 
 ## 4. Public configuration
 

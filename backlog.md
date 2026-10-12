@@ -655,3 +655,5 @@ This update supersedes earlier email-code/template/SMTP requirements for the ini
 Cloud stories remain In progress until their full acceptance criteria have real evidence. Earlier instructions requiring SMTP for the initial auth gate are superseded, not a blocker for this selected flow.
 
 - E10-S2 · P0 · In progress: repair reported Auth schema permission failure with migration 202610120002. AC: identity permission flags true; real plan create and reload succeed; A/B isolation remains enforced. Prepared locally; user application and runtime verification pending.
+
+- E10-S2 · P0: User reports Auth schema error persists after targeted repair. Run read-only supabase/diagnostics/private_plan_setup.sql against the matching project; compare actual RPC owners/definitions, caller/writer grants, RLS and triggers before further mutations. AC: actual failure path identified and real create/reload verified. Pending diagnostic output.
