@@ -653,3 +653,5 @@ This update supersedes earlier email-code/template/SMTP requirements for the ini
 - E11-S2: create/list plan names implemented; opening/renaming full cloud plans remains pending. E11/E12/E13 song documents/editing/save/live sync are not complete.
 
 Cloud stories remain In progress until their full acceptance criteria have real evidence. Earlier instructions requiring SMTP for the initial auth gate are superseded, not a blocker for this selected flow.
+
+- E10-S2 · P0 · In progress: repair reported Auth schema permission failure with migration 202610120002. AC: identity permission flags true; real plan create and reload succeed; A/B isolation remains enforced. Prepared locally; user application and runtime verification pending.

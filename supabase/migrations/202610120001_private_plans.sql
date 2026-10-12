@@ -7,6 +7,9 @@ create role party_map_plan_writer nologin noinherit nobypassrls;
 grant party_map_plan_writer to postgres;
 grant usage on schema public, auth to party_map_plan_writer;
 grant execute on function auth.uid() to party_map_plan_writer;
+-- The caller also evaluates auth.uid() through its SELECT policy.
+grant usage on schema auth to authenticated;
+grant execute on function auth.uid() to authenticated;
 
 create table public.club_plans (
   id uuid primary key,

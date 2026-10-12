@@ -69,3 +69,6 @@ Activation steps are in [supabase-setup.md](supabase-setup.md): user applies the
 - Read-only Auth settings show Email enabled, signup enabled, confirmation disabled. User reports SQL applied. Real account signup/login and two-user database tests remain pending; no real accounts were created by the agent.
 - This supersedes the historical code-template/SMTP activation instructions above. Basic password auth needs no email sending with confirmation off; email ownership is unverified and mail-based recovery is not implemented.
 - Live read-only anonymous request to club_plans with select=id and limit=0 returned HTTP 401 / PostgreSQL 42501 (permission denied). No rows were read or changed. This confirms anonymous denial only, not authenticated A/B ownership isolation.
+
+## Auth schema permission repair — 2026-10-12
+User reports permission denied for schema auth when creating a plan. Prepared an additive migration granting only auth schema USAGE and auth.uid EXECUTE to authenticated and party_map_plan_writer, and made those caller grants explicit in the initial migration. No table grants, policies or user data changed. SQL reviewed locally; no administrative database connection is available, so application and runtime validation remain pending.

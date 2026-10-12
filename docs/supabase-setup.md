@@ -31,6 +31,12 @@ The browser publishable key cannot execute schema migrations or configure authen
 
 Signed-in browser users may SELECT only their own metadata. Direct INSERT/UPDATE/DELETE privileges are withheld. The two RPCs run as a dedicated `NOLOGIN`, `NOBYPASSRLS` role with an empty search path and grants only for owner-scoped table operations. Anonymous users cannot read or execute those operations. [Supabase RLS guidance](https://supabase.com/docs/guides/database/postgres/row-level-security), [database function security](https://supabase.com/docs/guides/database/functions).
 
+### If creating a plan reports `permission denied for schema auth`
+
+Run [202610120002_auth_identity_permissions.sql](../supabase/migrations/202610120002_auth_identity_permissions.sql) in a new Supabase SQL Editor query. It grants only schema lookup and execution of `auth.uid()` to the signed-in role and the restricted plan-function role. It does not grant access to `auth.users`, alter RLS, or change existing plans. The four verification flags should all return true. Then retry **Create plan**; no new HTML build or account is needed. Do not rerun the initial table-creation migration.
+
+This repairs the missing-grant error reported on 2026-10-12. Its application and a successful real create/reload are still pending; the browser publishable key cannot apply grants.
+
 ## 4. Public configuration
 
 Use the project base URL `https://aemfewsfcrcmtafnypxa.supabase.co`, without `/rest/v1/`, and the supplied **publishable** key in ignored local build configuration:
