@@ -75,3 +75,6 @@ User reports permission denied for schema auth when creating a plan. Prepared an
 
 ## Persistent permission error investigation — 2026-10-12
 Public Auth settings rechecked: Email enabled, signup enabled, confirmation not required for project aemfewsfcrcmtafnypxa. User reports the schema-auth error persists after the grant repair. Prepared read-only catalog diagnostic for function owners/definitions, effective privileges, policies and triggers. No live admin access exists; diagnostic SQL has been reviewed but not executed against PostgreSQL. No additional grants or remote changes made.
+
+## Received database diagnostic — 2026-10-12
+Supplied report confirms writer Auth schema usage false, auth.uid execute true, both RPC owners/security-definer modes correct, authenticated read-only and anonymous denial, and expected owner policies/forced RLS. Prepared migration 003 using an invoker claim helper matching the supplied auth.uid expression; no Auth grant workaround or elevated writer. Includes transactional synthetic writer-role assertions. Local SQL review only; user application/real create and cross-account runtime evidence remain pending.

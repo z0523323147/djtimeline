@@ -657,3 +657,5 @@ Cloud stories remain In progress until their full acceptance criteria have real 
 - E10-S2 · P0 · In progress: repair reported Auth schema permission failure with migration 202610120002. AC: identity permission flags true; real plan create and reload succeed; A/B isolation remains enforced. Prepared locally; user application and runtime verification pending.
 
 - E10-S2 · P0: User reports Auth schema error persists after targeted repair. Run read-only supabase/diagnostics/private_plan_setup.sql against the matching project; compare actual RPC owners/definitions, caller/writer grants, RLS and triggers before further mutations. AC: actual failure path identified and real create/reload verified. Pending diagnostic output.
+
+- E10-S2 · P0: Diagnostic identifies writer auth_schema_usage=false despite prior repair. Migration 003 replaces Auth-schema dependency with request-subject invoker helper in RPCs/policies, preserving ownership guards. Includes synthetic writer-role assertions. AC: 003 commits and readiness flags true; actual create/reload succeeds; A/B isolation verified. Prepared; application pending.

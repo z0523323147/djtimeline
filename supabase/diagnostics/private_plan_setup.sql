@@ -6,7 +6,7 @@ with app_functions as (
     pg_get_userbyid(p.proowner) as owner_name
   from pg_proc p join pg_namespace n on n.oid = p.pronamespace
   where (n.nspname = 'public' and p.proname in
-    ('create_club_plan', 'rename_club_plan', 'guard_club_plan_identity'))
+    ('create_club_plan', 'rename_club_plan', 'guard_club_plan_identity', 'party_map_user_id'))
     or (n.nspname = 'auth' and p.proname = 'uid')
 ), checked_roles as (
   select r.* from pg_roles r

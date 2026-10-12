@@ -37,14 +37,22 @@ Run [202610120002_auth_identity_permissions.sql](../supabase/migrations/20261012
 
 This is the targeted repair for the missing-grant error reported on 2026-10-12. The user reports that the error persists, so successful repair is not established; the browser publishable key cannot apply or inspect administrative grants.
 
-### When the error persists after the repair
+### Confirmed diagnosis and repair
+
+Diagnostic received 2026-10-12: the RPC owner is correctly party_map_plan_writer, but its auth_schema_usage is false. Execute permission on auth.uid() is true, so schema access remains the blocker. Caller grants, table permissions, policies and RPC signatures match the intended setup in the supplied report. Why the earlier grant did not take effect is not established.
+
+Run the entire [202610120003_plan_request_identity.sql](../supabase/migrations/202610120003_plan_request_identity.sql) as **postgres** in the same SQL Editor. It adds a SECURITY INVOKER helper using the exact subject lookup shown by the installed auth.uid(), then updates the two plan RPCs and three owner policies to use it. Supabase Data API still verifies JWTs; a client-supplied owner ID does not determine identity. Existing plans, restricted RPC ownership/grants, identity trigger and RLS stay intact. No Auth schema grant is required by the writer after this repair.
+
+The migration validates synthetic JSON claims, subject precedence and missing claims as the writer before committing; no accounts or plans are created. Failed assertions roll back the repair. After success, three readiness flags should be true. Retry Create plan, then reload. Real persistence and A/B isolation still need verification. This SQL has been reviewed locally but cannot be executed remotely with the browser key.
+
+### Further diagnostics if 003 fails
 
 1. Confirm the dashboard project reference is **aemfewsfcrcmtafnypxa**, matching the connected page. In the SQL Editor select the **postgres** role and primary database.
 2. Run the full [read-only setup diagnostic](../supabase/diagnostics/private_plan_setup.sql) in a new query. Copy the single `setup_report` result. It contains app function definitions/owners, role permissions, plan RLS policies and triggers; it contains no account rows, passwords or session tokens.
 3. Expected: `party_map_plan_writer` exists with login/bypass RLS false; both it and `authenticated` have Auth schema usage and execute permission on `auth.uid()`. Create has arguments `p_id uuid, p_name text, p_owner_id uuid`, is SECURITY DEFINER, and is owned by `party_map_plan_writer`. Rename has the same owner/security mode. Table RLS is enabled/forced and policies restrict `owner_id` to `auth.uid()`.
 4. Do not grant all Auth tables, disable RLS, expose the Auth schema through Data API, or change function ownership to postgres as a workaround. Inspect the report before another repair. If SQL Editor itself fails, copy its full error including DETAIL/CONTEXT instead of rerunning the initial migration.
 
-Required setup order for a **new empty project**: enable Email/signup with confirmation off, run `202610120001_private_plans.sql` once, then `202610120002_auth_identity_permissions.sql`. On this existing project, run the diagnostic first; the initial migration intentionally fails if objects already exist. Data API must serve the `public` schema used by the app; Auth is not an exposed data schema requirement. No SMTP, Google OAuth, Storage bucket, Realtime configuration or redirect URL is needed for this initial password-login/plan-name feature.
+Required setup order for a **new empty project**: enable Email/signup with confirmation off, run migrations 202610120001, 202610120002 and 202610120003 in order. On this existing project with the received diagnostic, run **003 only**; the initial migration intentionally fails if objects already exist. Data API must serve the `public` schema used by the app; Auth is not an exposed data schema requirement. No SMTP, Google OAuth, Storage bucket, Realtime configuration or redirect URL is needed for this initial password-login/plan-name feature.
 
 ## 4. Public configuration
 
