@@ -1,6 +1,6 @@
 import type { Model, Section } from './parser.ts';
 export const normalize = (text: string) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
-export const isHip = (genre: string) => normalize(genre) === 'hip hop';
+export const isHip = (genre: string) => normalize(genre).replace(/[-\s]/g,'') === 'hiphop';
 export const color = (genre: string) => isHip(genre) ? 'var(--hip)' : 'var(--cyan)';
 
 /** Source boundaries, never estimated track positions, supply switch wording. */
@@ -61,14 +61,14 @@ export function clock(minutes: number) {
   return `${Math.floor(whole / 60) % 12 || 12}:${String(whole % 60).padStart(2, '0')}`;
 }
 export function boundary(section: Section) {
-  if (section.tracks[0]?.time === 'Unscheduled') return 'Time not noted';
+  if ((section.time ?? section.tracks[0]?.time) === 'Unscheduled') return 'Time not noted';
   if (section.exact) return clock(section.start);
   if (section.boundStart === section.boundEnd) return `After ${clock(section.boundStart)} · exact time not noted`;
   return `${clock(section.boundStart)}–${clock(section.boundEnd)} · exact time not noted`;
 }
 /** Short in-bar time label; ranges retain uncertainty rather than inventing minutes. */
 export function changeTime(section: Section) {
-  if (section.tracks[0]?.time === 'Unscheduled') return 'Time not noted';
+  if ((section.time ?? section.tracks[0]?.time) === 'Unscheduled') return 'Time not noted';
   if (section.exact) return clock(section.start);
   if (section.boundStart === section.boundEnd) return `After ${clock(section.boundStart)}`;
   return `~${clock(section.boundStart)}–${clock(section.boundEnd)}`;

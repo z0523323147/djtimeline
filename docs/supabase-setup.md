@@ -4,6 +4,20 @@ Updated 2026-10-12 for Chrome and the double-click connected HTML. Each recipien
 
 The user reports running the prepared SQL. Public Auth settings confirm Email enabled, signup enabled and email confirmation disabled. Real signup/session persistence and two-user database isolation still need verification. The separate offline HTML remains usable without login or network.
 
+## Enable full plan and song storage
+
+The user confirms creating a real plan. The next app build opens plans and edits full content; it needs one additional database upgrade.
+
+1. In project **aemfewsfcrcmtafnypxa**, open SQL Editor → New query as **postgres**.
+2. Run the entire [202610120004_plan_documents.sql](../supabase/migrations/202610120004_plan_documents.sql) **once**, after 003. Existing plan names/IDs/owners are retained and receive blank content documents. The result reports the number of plans with documents. Do not rerun 001.
+3. Open the new connected HTML or refresh the website. In My plans, click your plan, add a genre section/time and song, then **Save to account**.
+4. Wait for **Saved to your account**, reload, and check the song is restored. Create another plan and switch using **My plans**. Check a second ordinary account separately before marking privacy verified.
+5. **More → Import notes** previews content and defaults to creating a new plan atomically. Unchecking Create a new plan explicitly replaces the selected plan's draft; save it afterward. From Local planner, **Save set to account** creates a new cloud copy with current title corrections and leaves local notes intact.
+
+Failed saves retain an account/plan-scoped draft and an export option. Revision conflicts preserve your work: export it, save it as a new plan, or explicitly discard it and load the account version. Saved status requires a server acknowledgement. The app blocks switching/sign-out while a document is unsaved; the separate Local planner view does not discard the mounted cloud workspace.
+
+Migration 004 has been tested in local PostgreSQL (PGlite) with owner/foreign/anonymous sessions, raw-write denial, legacy create/backfill, validation, revision conflicts, receipts and atomic import rollback. Browser workflows use mocked Supabase responses; live hosted migration and full-content verification remain pending. The initial content release uses explicit Save; automatic cross-device notifications are not included yet.
+
 ## 1. Current authentication settings
 
 In Supabase **Authentication → Sign In / Providers**, Email and signup must be enabled, with **Confirm email off** for this SMTP-free flow. These settings are already confirmed for this project; no further provider changes are needed. The app uses `signUp({ email, password })` and `signInWithPassword`. Signup opens the private area only when Supabase returns a session. [Official password authentication guide](https://supabase.com/docs/guides/auth/passwords).
@@ -71,7 +85,7 @@ These values are public client configuration and can be bundled in the connected
 - Create through `create_club_plan(p_id UUID, p_name text, p_owner_id UUID)`. Capture the signed-in user's UUID before starting the request and pass it as `p_owner_id`; the server rejects it if it differs from the token's account. This prevents a delayed account-A create from becoming account B's metadata after an account switch. Generate the plan UUID once and retain it for retries. Repeating that UUID for the same owner returns the existing metadata without renaming it. Names are trimmed and limited to 160 characters.
 - Rename through `rename_club_plan(p_id UUID, p_name text)`. Unknown or another user's IDs receive the same unavailable error. Ownership, ID and creation time cannot change.
 
-This first migration stores **plan names only**. It does not store songs, upload existing local notes, open a cloud timeline, or synchronize edits. Canonical documents, atomic revisioned saves, conflicts and live notifications require the later E11/E13 migrations. Metadata rename currently has no revision/conflict protocol; concurrent renames follow the last successful write. Do not claim those future stories are complete from this migration.
+Migrations 001–003 store **plan names only**. Migration 004 adds full ordered song/section/time documents, revisioned save receipts and atomic import/create. The current app opens and edits those documents after 004 is applied; it does not automatically synchronize other sessions. Live notifications remain the next E13 phase. Metadata rename currently has no revision/conflict protocol; concurrent renames follow the last successful write. Do not claim those future stories are complete from this migration.
 
 ## 6. Verify with two ordinary accounts
 

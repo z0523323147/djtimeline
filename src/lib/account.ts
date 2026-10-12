@@ -1,5 +1,6 @@
+import type { PlanDocument, PlanSnapshot } from './documents';
 export interface AccountUser { id: string; email: string }
-export interface PrivatePlan { id: string; name: string; created_at: string; updated_at: string }
+export interface PrivatePlan { id: string; name: string; created_at: string; updated_at: string; song_count?: number }
 export interface AccountService {
   persistentSession: boolean;
   getUser: () => Promise<AccountUser | null>;
@@ -8,6 +9,10 @@ export interface AccountService {
   signUp: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
   listPlans: (userId: string, page: number) => Promise<PrivatePlan[]>;
+  createPlanDocument: (id:string,name:string,owner:string,document:PlanDocument) => Promise<PrivatePlan>;
+  loadDocument: (planId: string) => Promise<PlanSnapshot>;
+  saveDocument: (planId: string, owner: string, revision: number, operationId: string, document: PlanDocument) => Promise<PlanSnapshot>;
+  renamePlan: (planId: string, name: string) => Promise<void>;
   createPlan: (id: string, name: string, userId: string) => Promise<PrivatePlan>;
 }
 export function accountError(error: unknown): string {

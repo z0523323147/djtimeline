@@ -3,6 +3,7 @@
   import type { Model, Track } from '../lib/parser';
   import { sectionRange } from '../lib/timeline';
   import { filterActive, googleSearch, matches, type Filters } from '../lib/search';
+  export let emptyHint = 'Import notes to begin';
   export let model: Model;
   export let selected: number;
   export let allTracks: boolean;
@@ -13,6 +14,9 @@
   export let save: (id: number, title: string) => void;
   export let copy: (track: Track) => void;
   export let heading: HTMLHeadingElement | undefined = undefined;
+  export let updateFlags: ((id:number,flags:{isBanger:boolean;isToDownload:boolean;isMyIdea:boolean})=>void) | undefined = undefined;
+  export let removeSong: ((id:number)=>void) | undefined = undefined;
+  let draftPeak=false,draftDownload=false,draftIdea=false;
   let editing: number | null = null;
   let draft = '';
   let editor: HTMLInputElement;
@@ -22,7 +26,7 @@
   $: section = model.sections[selected];
   $: visible = browsing ? model.tracks.filter(t => matches(t, filters)) : section?.tracks ?? [];
   async function edit(track: Track) {
-    editing = track.id; draft = track.title;
+    editing = track.id; draft = track.title;draftPeak=track.isBanger;draftDownload=track.isToDownload;draftIdea=track.isMyIdea;
     await tick(); editor.focus(); editor.select();
   }
   async function close(id: number) {
@@ -34,7 +38,7 @@
   <div class="pane-head">
     <div class="detail-heading"><div>
       <h2 id="detail-title" bind:this={heading} tabindex="-1">{active ? 'Matching tracks' : allTracks ? 'All tracks' : section?.genre ?? 'Tracks'}</h2>
-      <p>{browsing ? 'Entire party · source order' : section ? sectionRange(section, model) : 'Import notes to begin'}</p>
+      <p>{browsing ? 'Entire party · source order' : section ? sectionRange(section, model) : emptyHint}</p>
     </div><div class="detail-nav">
       <button aria-label="Previous section" disabled={browsing || selected === 0} onclick={() => select(selected - 1)}>←</button>
       <button aria-label="Next section" disabled={browsing || selected >= model.sections.length - 1} onclick={() => select(selected + 1)}>→</button>
@@ -68,16 +72,17 @@
           <button aria-label={`Copy ${t.title}`} onclick={() => copy(t)}>Copy</button>
           <button class="edit-button" aria-label={`Edit ${t.title}`} onclick={() => edit(t)}>Edit</button>
           <a class="action" href={googleSearch(t.title)} target="_blank" rel="noopener noreferrer" aria-label={`Search Google for ${t.title} download`}>Download ↗</a>
-        </div>
+        {#if removeSong}<button aria-label={`Remove ${t.title}`} onclick={()=>removeSong?.(t.id)}>Remove</button>{/if}</div>
         {#if editing === t.id}
-          <form class="edit-form" onsubmit={e => { e.preventDefault(); if (draft.trim()) { save(t.id, draft.trim()); close(t.id); } else { editor.setCustomValidity('Enter a track name.'); editor.reportValidity(); } }}>
+          <form class="edit-form" onsubmit={e => { e.preventDefault(); if (draft.trim()) { save(t.id, draft.trim());updateFlags?.(t.id,{isBanger:draftPeak,isToDownload:draftDownload,isMyIdea:draftIdea}); close(t.id); } else { editor.setCustomValidity('Enter a track name.'); editor.reportValidity(); } }}>
             <label for={`edit-${t.id}`}>Correct track name</label>
             <input id={`edit-${t.id}`} bind:this={editor} bind:value={draft} dir="auto" required maxlength="500" oninput={() => editor.setCustomValidity('')} onkeydown={e => { if (e.key === 'Escape') { e.preventDefault(); close(t.id); } }} />
+            {#if updateFlags}<div class="song-flags"><label><input type="checkbox" bind:checked={draftPeak}/>Peak</label><label><input type="checkbox" bind:checked={draftDownload}/>Download</label><label><input type="checkbox" bind:checked={draftIdea}/>Idea</label></div>{/if}
             <button type="submit">Save</button><button type="button" onclick={() => close(t.id)}>Cancel</button>
           </form>
         {/if}
       </li>
-    {:else}<li class="empty">No tracks match. Reset filters to {allTracks ? 'see all tracks' : 'return to your selected section'}.</li>{/each}
+    {:else}<li class="empty">{#if !model.tracks.length}{emptyHint}.{:else}No tracks match. Reset filters to {allTracks ? 'see all tracks' : 'return to your selected section'}.{/if}</li>{/each}
   </ol>
   <p class="result-bar" role="status">{visible.length} tracks shown · {active ? 'Filters combine together' : allTracks ? 'Entire party' : 'Select another section in the overview'}{storageAvailable ? '' : ' · Edits are session-only'}</p>
 </section></div>

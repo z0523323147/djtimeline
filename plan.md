@@ -1,12 +1,12 @@
 # Project plan
 
-Updated: 2026-10-12. User confirms a real private plan was created. The next milestone is full database-backed plan management: list/open existing plans, add/edit songs and sections, and persist their complete content. The current app stores plan names only; full cloud editing is not implemented yet.
+Updated: 2026-10-12. User confirms a real private plan was created. The next milestone is full database-backed plan management: list/open existing plans, add/edit songs and sections, and persist their complete content. The first full-content app slice is implemented locally and tested; migration 004 must be applied to activate it in the user's database. Cross-device notifications and the remaining release gates are pending.
 
 ## Current milestone: complete plans in Supabase
 
 Success means: sign in → see my existing plans from the database → open one → add a genre/time section and songs → see the timeline update → receive a database save acknowledgement → reload or open another device and see the same content. A plan name alone is not completion. Song data means titles, flags, order, genre context and timing evidence; audio files remain outside this milestone.
 
-Current evidence: the user reported successful real plan creation after the permission repair. Listing/creation exist in AccountArea, but its rows do not open documents, AccountService has no document read/save methods, and PartyApp still edits one local set. This confirms the create path only; reload, full contents and A/B isolation still need proof.
+Current evidence: the user reported successful real plan creation after the permission repair. AccountArea now opens database documents in CloudPlanWorkspace. The account adapter supports load/save/atomic import/rename, and the canonical source-event model feeds the same timeline and tracks views as the local planner. This confirms the create path only; reload, full contents and A/B isolation still need proof.
 
 ### Implementation sequence
 
@@ -306,3 +306,9 @@ This update supersedes earlier email-code/template/SMTP requirements for the ini
 - E11-S2: create/list plan names implemented; opening/renaming full cloud plans remains pending. E11/E12/E13 song documents/editing/save/live sync are not complete.
 
 Cloud stories remain In progress until their full acceptance criteria have real evidence. Earlier instructions requiring SMTP for the initial auth gate are superseded, not a blocker for this selected flow.
+
+## Full-content slice implementation — 2026-10-12
+
+Implemented: stable event UUIDs/shared derivation with empty sections; prepared additive migration 004; backfill and legacy-create trigger; owner-scoped document reads and revisioned/idempotent saves; plan opening/restoration/switching; add sections/songs; title/flag edits; removal/undo; rename; explicit Save; failed-draft recovery/export/conflict copies; atomic note import and corrected local-set migration. No backend reset or remote migration occurred.
+
+Local PostgreSQL tests pass for ownership/raw-write denial, missing writer Auth schema access, backfill, retries/conflicts, validation and import rollback. Browser checks are intercepted fixtures, including connected file-origin tests. Hosted application and a real add/save/reload journey remain the next user gate. E13 live notifications, plan-list search/count refinements, authored range editing, reorder/archive and full structured backup restore remain pending.

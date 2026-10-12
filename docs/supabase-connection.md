@@ -17,6 +17,6 @@ Open the newly built connected HTML, choose Sign in → New here? Create account
 
 No SMTP is required for this basic password flow with confirmation disabled. Email addresses are unverified and email-based password recovery is not implemented. [Supabase password authentication](https://supabase.com/docs/guides/auth/passwords).
 
-The initial area stores plan names only; songs remain in the local planner. Canonical song documents, opening cloud timelines, revisioned saving and live sync remain later backlog tasks. Full connection completion requires those gates, real file-origin session persistence and database isolation evidence.
+The full-content app slice is now implemented locally: opening/switching plans, section/song editing, revisioned saving, import/rename and draft recovery. Apply migration 004 after 003 to enable these content APIs. Existing metadata plans are preserved and receive blank documents. Live notifications remain later work. Full connection completion requires those gates, real file-origin session persistence and database isolation evidence.
 
 Use [supabase-setup.md](supabase-setup.md) for setup and verification details. The network-free offline edition remains separate.

@@ -8,11 +8,14 @@
   import PartyPage from '../views/PartyPage.svelte';
   import TracksPage from '../views/TracksPage.svelte';
   import AccountArea from '../views/AccountArea.svelte';
+  import { documentFromNotes, type PlanDocument } from '../lib/documents';
   import type { AccountService, AccountUser } from '../lib/account';
   import '../styles/tokens.css';
   import '../styles/app.css';
   export let cloud: AccountService | undefined = undefined;
   export let setupError = '';
+  let pendingLocal:PlanDocument|undefined=undefined;
+  function migrateLocal(){const doc=documentFromNotes(raw);let i=0;doc.events=doc.events.map(e=>e.kind==='song'?{...e,title:model.tracks[i++].title}:e);pendingLocal=doc;accountMode=true;}
   let accountMode = false;
   let accountUser: AccountUser | null = null;
   let raw = example;
@@ -96,12 +99,13 @@
   <header><div><h1><span class="logo">◈</span> Party map</h1><p>{accountMode ? 'Private account' : `${model.blocks[0]?.time ?? 'No time'} → ${model.blocks.at(-1)?.time ?? 'No time'} · ${model.tracks.length} tracks`}</p></div>
     <div class="header-actions">
       {#if cloud}<button onclick={switchArea}>{accountMode ? 'Local planner' : accountUser ? 'My plans' : 'Sign in'}</button>{/if}
+      {#if !accountMode && accountUser}<button onclick={migrateLocal}>Save set to account</button>{/if}
       {#if !accountMode}<button onclick={() => { importError = ''; dialog.showModal(); }}>Import notes</button>{/if}
     </div>
   </header>
   <main>
     {#if setupError}<p role="alert">{setupError}</p>{/if}
-    {#if cloud}<AccountArea service={cloud} active={accountMode} onUser={next => { const changed = next?.id !== accountUser?.id; accountUser = next; if (next && changed) accountMode = true; }} />{/if}
+    {#if cloud}<AccountArea service={cloud} active={accountMode} initialDocument={pendingLocal} onImported={()=>pendingLocal=undefined} onUser={next => { const changed = next?.id !== accountUser?.id; accountUser = next; if(changed)pendingLocal=undefined; if (next && changed) accountMode = true; }} />{/if}
     {#if !accountMode}
     {#if cloud}<p class="local-mode-note">Local planner · notes and corrections stay on this browser</p>{/if}
     <PartyPage {model} {selected} active={allTracks || filterActive(filters)} {select} />

@@ -109,3 +109,26 @@ dialog .dialog-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex
 .account-empty{padding-block:20px;color:var(--muted)}
 .account-error{color:#ffb7b7;margin-top:16px;overflow-wrap:anywhere}.account-status{color:var(--cyan);margin-top:16px}
 @media(max-width:600px){.account-area{padding:18px;margin-block:8px}.new-plan-form{flex-direction:column;align-items:stretch}.account-head{flex-wrap:wrap}}
+.account-area:has(.cloud-plan){max-width:none;width:100%}
+.cloud-plan{display:flex;flex-direction:column;gap:18px;min-width:0}
+.plan-toolbar{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:16px 0}
+.plan-toolbar p{color:var(--muted);font-size:14px;margin-top:6px}
+.plan-toolbar h2{font-size:24px;overflow-wrap:anywhere}
+.plan-editors{display:grid;grid-template-columns:1fr 1fr;gap:20px;border:1px solid var(--line);border-radius:12px;padding:18px}
+.plan-editors .account-form{margin:0;max-width:none}
+.song-flags{display:flex;flex-wrap:wrap;gap:16px}
+.song-flags label{display:flex;align-items:center;gap:8px;min-height:44px}
+.song-flags input{width:20px;height:20px}
+.account-plans li>button{display:flex;gap:16px;justify-content:space-between;width:100%;text-align:start;white-space:normal}
+@media(max-width:600px){.plan-editors{grid-template-columns:1fr}.plan-toolbar .header-actions{flex-wrap:wrap}.cloud-plan .overview{padding-inline:8px}.account-area:has(.cloud-plan){padding:12px}}
+.plan-editors details{min-width:0}
+.plan-editors summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600;padding:4px 0}
+.plan-editors details[open] summary{margin-bottom:12px}
+.edit-form .song-flags{width:100%}
+.account-head.plan-open h2{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+.plan-actions{position:relative;border:0;margin:0}
+.plan-actions summary{border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--text)}
+.plan-actions>div{position:absolute;right:0;top:100%;z-index:10;display:flex;flex-direction:column;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;min-width:170px;box-shadow:0 8px 24px #0008}
+.plan-editors{display:flex;flex-wrap:wrap;padding:6px 12px;gap:12px}
+.plan-editors details{flex:1 1 120px;border:0;margin:0}
+.plan-editors:has(details[open]){display:grid;padding:18px}

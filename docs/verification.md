@@ -82,3 +82,12 @@ Supplied report confirms writer Auth schema usage false, auth.uid execute true, 
 ## User-confirmed plan creation — 2026-10-12
 
 The user reports that a real plan was created successfully. This establishes success for the tested metadata-create path after the permission investigation. It does not establish full song/document storage, reload persistence, cross-account isolation or live sync. Updated plan/backlog prioritize the additive document upgrade, repository/save flow, opening existing plans and full song editing. Documentation-only changes; no new database migration was applied or app feature implemented in this turn.
+
+## Full-content implementation verification — 2026-10-12
+
+- Astro/Svelte checks: zero errors/warnings; three pre-existing clipboard deprecation hints. Website/offline/connected builds pass.
+- 19 Node tests pass. Local PostgreSQL/PGlite executes migration upgrade with existing plans, restricted writer without Auth schema access, document backfill/legacy-create trigger, owner/foreign/anonymous read/write checks, revision conflicts, retry receipts/payload mismatch, malformed/duplicate-ID rejection and atomic import rollback. This is actual local database execution, not hosted Supabase proof.
+- 86 Chromium workflows pass on the recorded build: original 54 offline/site regressions plus 32 mocked account/content flows across website/connected-file and desktop/phone. Includes open/add/edit/save/reload, independent plans, account clearing, draft recovery after failure, conflict retention, import/rename/flags/removal/undo and corrected local-set migration. Final destination-selection and scoped-undo checks pass across all four account/content projects (32 checks); the unaffected 54 baseline checks passed in the preceding full run.
+- Offline HTML: 108,878 bytes, reproducible SHA-256 121a3534dde134a6ed57d0138ea0ca414e9456564c11cd2ad5a037d6081d7ce6. Connected HTML: 326,001 bytes, no required sibling assets. Offline request audits remain network-free.
+- party-map-cloud.png and party-map-cloud-mobile.png show the cloud workspace using synthetic test data, not the user's live account or plans.
+- Migration 004 is prepared and tested locally; no remote database writes/configuration changes were made. The user must apply it and verify actual Chrome file-origin add/save/reload and account isolation. Live notifications/range editing and other remaining backlog items are not marked complete.

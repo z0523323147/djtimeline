@@ -25,7 +25,7 @@
   $: lanes = Math.max(0, ...annotations.map(a => a.lane + 1));
   $: chartHeight = 54 + lanes * 24;
   $: step = width < 600 ? 60 : 30;
-  $: ticks = [start, ...Array.from({ length: Math.max(0, Math.ceil(end / 10) - Math.floor(start / 10) - 1) }, (_, i) => (Math.floor(start / 10) + i + 1) * 10).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
+  $: ticks = !model.blocks.length ? [] : [start, ...Array.from({ length: Math.max(0, Math.ceil(end / 10) - Math.floor(start / 10) - 1) }, (_, i) => (Math.floor(start / 10) + i + 1) * 10).filter(t => t > start && t < end), ...(end > start ? [end] : [])];
   $: current = !active ? model.sections.find(s => s.id === selected) : undefined;
 </script>
 <section class="overview" aria-labelledby="overview-heading">
@@ -35,6 +35,7 @@
   </div>
   <div class="party-summary" bind:clientWidth={mapWidth}>
     <svg viewBox={`-6 0 ${width + 12} ${chartHeight}`} style={`height:${chartHeight}px`} role="img" aria-label={`Estimated whole-party time scale, ${model.blocks[0]?.time ?? 'Time not noted'} to ${model.blocks.at(-1)?.time ?? 'Time not noted'}. ${changes.map(c => `${c.entering ? 'Into' : 'Out of'} hip-hop, ${boundary(c.section)}`).join('; ')}. Ending not recorded.`}>
+      {#if !model.blocks.length}<text class="tick" x="0" y="13">Time not noted</text>{/if}
       {#each ticks as time}
         {@const x = position(time, start, end, width)}
         {@const labeled = time === start || time === end || time % step === 0 && x > 55 && width - x > 55 && !changes.some(c => c.section.exact && c.section.start === time)}

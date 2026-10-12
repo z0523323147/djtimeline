@@ -1,10 +1,18 @@
 <script lang="ts">
+  import type { PlanDocument } from '../lib/documents';
+  import CloudPlanWorkspace from './CloudPlanWorkspace.svelte';
   import { onMount } from 'svelte';
   import { accountError, type AccountService, type AccountUser, type PrivatePlan } from '../lib/account';
+  export let initialDocument:PlanDocument|undefined=undefined;
+  export let onImported:()=>void=()=>{};
   export let service: AccountService;
   export let active: boolean;
   export let onUser: (user: AccountUser | null) => void;
+  $: if(initialDocument && opened)backToPlans();
+  let opened: PrivatePlan | null = null, dirtyPlan = false;
   let user: AccountUser | null = null;
+  function openPlan(plan:PrivatePlan) { status='';error='';opened=plan; try {localStorage.setItem('party-map-active-'+user!.id,plan.id);} catch {} }
+  function backToPlans() { opened=null; if(user)try{localStorage.removeItem('party-map-active-'+user.id);}catch{} void loadPlans(); }
   let checking = true, busy = false, loading = false;
   let persistentSession = service.persistentSession;
   let email = '', password = '', signup = false, error = '', status = '';
@@ -17,7 +25,10 @@
     loading = true; error = '';
     try {
       const result = await service.listPlans(owner, page);
-      if (alive && version === generation && query === request) plans = result;
+      if (alive && version === generation && query === request) {
+        plans = result;
+        if (!opened) { try { const id=localStorage.getItem('party-map-active-'+owner); const plan=plans.find(p=>p.id===id);if(plan)opened=plan;}catch{} }
+      }
     } catch (e) { if (alive && version === generation && query === request) error = accountError(e); }
     finally { if (alive && version === generation && query === request) loading = false; }
   }
@@ -25,7 +36,7 @@
     if (!alive) return;
     checking = false; persistentSession = service.persistentSession;
     if (next?.id === user?.id) { user = next; onUser(next); return; }
-    generation++; request++; user = next; plans = []; page = 0; name = ''; operationId = null;
+    generation++; request++; opened=null;dirtyPlan=false; user = next; plans = []; page = 0; name = ''; operationId = null;
     busy = false; loading = false; password = ''; email = ''; error = ''; status = ''; signup = false;
     onUser(next);
     if (next) void loadPlans();
@@ -61,8 +72,8 @@
     if (!operationId || operationName !== title) { operationId = crypto.randomUUID(); operationName = title; }
     busy = true; error = ''; status = '';
     try {
-      await service.createPlan(operationId, title, owner);
-      if (alive && version === generation) { name = ''; operationId = null; page = 0; status = 'Plan created in your account.'; await loadPlans(); }
+      const created = initialDocument ? await service.createPlanDocument(operationId,title,owner,initialDocument) : await service.createPlan(operationId, title, owner);
+      if (alive && version === generation) { name = ''; operationId = null; page = 0; status = 'Plan created in your account.'; await loadPlans(); onImported(); openPlan(created); }
     } catch (e) { if (alive && version === generation) error = accountError(e); }
     finally { if (alive && version === generation) busy = false; }
   }
@@ -70,18 +81,23 @@
 <section class="account-area" hidden={!active} aria-labelledby="account-title">
   {#if checking}<h2 id="account-title" tabindex="-1">Checking your account…</h2>
   {:else if user}
-    <div class="account-head"><div><h2 id="account-title" tabindex="-1">My plans</h2><p class="account-subtitle">{user.email}</p></div><button disabled={busy} onclick={signOut}>Sign out</button></div>
+    <div class="account-head" class:plan-open={!!opened}><div><h2 id="account-title" tabindex="-1">My plans</h2><p class="account-subtitle">{user.email}</p></div><button disabled={busy || dirtyPlan} onclick={signOut}>Sign out</button></div>
+    {#if opened}
+      {#key user.id + opened.id}<CloudPlanWorkspace {service} {user} plan={opened} onOpen={openPlan} onBack={backToPlans} onDirty={value=>dirtyPlan=value}/>{/key}
+    {:else}
     <p class="account-subtitle">Your private club plans</p>
+    {#if initialDocument}<p role="status">Create a new plan with {initialDocument.events.filter(e=>e.kind==='song').length} songs from your local set, including title corrections.</p><button onclick={onImported}>Cancel local set import</button>{/if}
     <form class="new-plan-form" onsubmit={e => { e.preventDefault(); void createPlan(); }}>
       <div><label for="plan-name">New plan name</label><input id="plan-name" dir="auto" bind:value={name} disabled={busy} required maxlength="120" placeholder="Friday at the club" /></div>
       <button disabled={busy || !name.trim()} type="submit">{busy ? 'Creating…' : 'Create plan'}</button>
     </form>
     {#if loading}<p role="status">Loading your plans…</p>
     {:else if plans.length}
-      <ul class="account-plans">{#each plans as plan (plan.id)}<li><strong dir="auto">{plan.name}</strong><span>Created {new Date(plan.created_at).toLocaleDateString()}</span></li>{/each}</ul>
-      <p class="account-subtitle">Plan names are stored in your account. Tracks in the local planner stay on this browser.</p>
+      <ul class="account-plans">{#each plans as plan (plan.id)}<li><button onclick={()=>openPlan(plan)} aria-label={`Open ${plan.name}`}><strong dir="auto">{plan.name}</strong><span>Open plan →</span></button><span>Updated {new Date(plan.updated_at).toLocaleDateString()}</span></li>{/each}</ul>
+      <p class="account-subtitle">Open a plan to manage its songs and timeline.</p>
     {:else if !error}<p class="account-empty">No plans yet. Create your first club plan above.</p>{/if}
     <div class="account-pagination"><button disabled={loading || page === 0} onclick={() => { page--; void loadPlans(); }}>Previous plans</button><button disabled={loading || plans.length < 50} onclick={() => { page++; void loadPlans(); }}>Next plans</button><button disabled={loading} onclick={loadPlans}>Refresh plans</button></div>
+    {/if}
   {:else}
     <h2 id="account-title" tabindex="-1">Your own party space</h2>
     <p class="account-subtitle">Sign in or create an account with your email. Your club plans belong to you.</p>
