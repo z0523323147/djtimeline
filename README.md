@@ -30,6 +30,8 @@ Without a global pnpm installation, prefix commands with npm exec --yes --packag
 
 ## Build and download
 
+The generated `dist/` folder is tracked in Git so the downloadable HTML files and static website are available from this repository. Rebuild and commit the updated outputs with source changes. Connected builds contain public Supabase configuration; passwords, sessions and private keys must never be included.
+
 ~~~sh
 pnpm build:site
 pnpm build:offline
