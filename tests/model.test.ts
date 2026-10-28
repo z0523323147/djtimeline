@@ -73,6 +73,19 @@ test('corrections preserve legacy keys and reject malformed stored shapes', () =
 });
 
 // Protect source evidence separately from approximate diagram placement.
+test('filter counts include overlapping flags, repeated genres and empty plans', async () => {
+  const { trackCounts, matches, emptyFilters } = await import('../src/lib/search.ts');
+  const tracks = parseNotes('1:00\n(House)\nA --- הפגזות\nB ///\n(Hip hop)\nC --\n(House)\nD').tracks;
+  const counts = trackCounts(tracks);
+  assert.equal(counts.total, 4);
+  assert.equal(counts.peaks, 1);
+  assert.equal(counts.downloads, 2);
+  assert.equal(counts.ideas, 1);
+  assert.deepEqual([...counts.genres], [['House', 3], ['Hip hop', 1]]);
+  assert.equal(tracks.filter(t => matches(t, {...emptyFilters(), isToDownload:true}))[1].id, 3);
+  assert.equal(trackCounts([]).total, 0);
+});
+
 test('hip-hop changes retain all recorded pairs and uncertain entries', async () => {
   const { hipChanges, position, annotationLanes } = await import('../src/lib/timeline.ts');
   const m = parseNotes(readFileSync('src/data/example-notes.txt', 'utf8'));

@@ -10,7 +10,8 @@ A track-first DJ planner built with Astro and Svelte. Open a plan, see the whole
 - Compact **Add track** dialog: name, manual genre with existing-genre suggestions, current-time default you can override, and optional ending.
 - Automatic contiguous genre sections. No manual Add section step. An explicit ending before the next track leaves a real blank gap; omitted endings follow the next known start.
 - Compact sticky ruler stays visible above tracks. Every genre interval is clickable; selection shows whole-hour anchors and the selected start/end times, then scrolls to its tracks. All tracks scrolling highlights the visible genre section. Full scale restores five-minute desktop / ten-minute phone labels and stays enabled while scrolling. Start/end labels sit beside the highlighted interval. Estimated boundaries retain ~ and unknown endings stay explicit.
-- Genre buttons show track counts; track rows show exact/estimated times without numbering. Icon copy/edit/Google download search/remove controls retain accessible names and tooltips. All tracks, filters, undo and the floating ↑ Top button remain available.
+- Tracks are numbered in plan order and grouped into continuous chapters: keep scrolling to reach the next genre section while the sticky ruler follows. Filtering preserves those plan-wide numbers. Peaks, Downloads, Ideas and genre filters show whole-plan counts.
+- Expand Genre sections for large controls with visible start times/ranges and track counts. The compact opening brings tracks closer; mobile My plans opens the list directly. Copy/edit/Find Google search/remove controls retain accessible names, and Full scale has a 44px target. Both themes keep readable status tags.
 - Supabase email/password login and private plans. Committed edits save automatically with revisions, stable retry IDs and recoverable conflict copies.
 - Cached complete plans and pending changes reopen offline in the connected HTML. Reconnect retries under the original account; denied/quota-limited storage is reported honestly.
 - Original pasted/.txt notes import with preview. **Import original party** creates a new plan from the 126-track set.
@@ -93,6 +94,11 @@ See [verification](docs/verification.md) for current counts and evidence. Browse
 
 ## Project documents
 
+- [Authoritative current state](docs/current-state.md), [decisions](docs/decisions.md), and [engineering workflow](docs/agentic-workflow.md)
+- Local workflow gate: `node scripts/workflow/runner.mjs gate TASK-ID tooling`; see [gate categories and limitations](docs/workflow-gates.md).
+
+- [Reusable eight-pillar architecture starter](AGENTIC-ARCHITECTURE-STARTER.md)
+- [Workflow adoption plan](docs/agentic-adoption-plan.md) and [adoption backlog](docs/agentic-adoption-backlog.md) — E23–E27 evidence and capability limits
 - [Track-first requirements](docs/track-first-requirements.md)
 - [Implementation plan](plan.md)
 - [Prioritized backlog](backlog.md)

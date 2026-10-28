@@ -63,8 +63,8 @@ details{border-top:1px solid var(--line);margin-top:12px}
 .title{font-size:16px;font-weight:600;overflow-wrap:anywhere;unicode-bidi:plaintext;text-align:left}
 .tags{font-size:12px;display:flex;gap:10px;flex-wrap:wrap;margin-top:5px;color:var(--muted)}
 .peak{color:var(--fire)}
-.idea{color:#d7baff}
-.download{color:#c1e8a2}
+.idea{color:var(--idea)}
+.download{color:var(--download)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-self:center}
 .actions button,a.action{font-size:14px;min-height:44px;padding:8px 13px;background:transparent;border-color:transparent;border-radius:6px}
 .actions button:hover,a.action:hover{background:var(--raised);border-color:var(--line)}
@@ -181,7 +181,7 @@ dialog .dialog-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex
 .ruler-focus{display:flex;gap:6px 12px;align-items:center;flex-wrap:wrap;font-size:12px;line-height:1.35;margin-top:4px}
 .ruler-focus>span:first-child{font-weight:600}
 .selected-times{font-variant-numeric:tabular-nums;color:var(--muted)}
-.scale-reset{min-height:32px;padding:4px 8px;margin-inline-start:auto;font-size:12px}
+.scale-reset{min-height:44px;padding:8px 12px;margin-inline-start:auto;font-size:12px}
 .cloud-plan #detail-title,.cloud-plan #detail,.cloud-plan .track{scroll-margin-top:var(--timeline-offset,160px)}
 .cloud-plan .track-list{max-height:none;overflow:visible;padding-bottom:12px}
 @media(max-width:600px){.timeline-dock{padding:8px 10px}.timeline-dock .legend{font-size:10px;gap:6px}.ruler-focus{gap:4px 8px}}
@@ -189,3 +189,48 @@ dialog .dialog-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex
 .boundary-guide{stroke:var(--muted);stroke-width:1;opacity:.6;pointer-events:none}
 .section-boundaries{pointer-events:none}
 .ruler-focus .selected-times{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* Continuous numbered chapters and compact plan navigation. */
+.account-head.plan-open{display:none}
+.account-area:has(.cloud-plan){padding-block:0}
+.desktop-plan-toggle{margin-bottom:10px}
+.genre-sequence{margin:0;padding:0 16px}
+.genre-sequence>summary{display:flex;align-items:center;gap:8px;color:var(--text);font-size:14px;min-height:46px;padding:10px 0;list-style:revert}
+.genre-sequence>summary::before{content:'▸';color:var(--muted)}
+.genre-sequence[open]>summary::before{content:'▾'}
+.sequence-hint{margin-inline-start:auto;color:var(--muted);font-size:12px}
+.genre-sequence[open]{padding-bottom:12px}
+.genre-label{display:flex;flex-direction:column;gap:3px;min-width:0}
+.genre-time{font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.lit .genre-time{color:inherit}
+.filter-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;padding:1px 5px;border-radius:5px;background:var(--raised);color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.toggles button{display:inline-flex;gap:6px;align-items:center}
+.chapter-marker{list-style:none}
+.chapter-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:16px;padding:18px 0 10px;border-bottom:1px solid var(--line);scroll-margin-top:var(--timeline-offset,180px)}
+.chapter-time{font-size:12px;font-weight:400;color:var(--muted)}
+.track{grid-template-columns:32px minmax(0,1fr) auto}
+.track-number{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:3px;direction:ltr}
+.track-content{min-width:0}
+.actions .search-action{width:auto;gap:5px;min-width:68px}
+.search-action span{font-size:12px}
+.empty-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+.detail .pane-head{padding:14px 18px}
+.cloud-plan{gap:12px}
+@media(max-width:850px){
+ .track{grid-template-columns:28px minmax(0,1fr);gap:8px}
+ .track .actions{grid-column:2}
+ .genre-sequence .section-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .genre-sequence .section-buttons .wide{grid-column:auto}
+ .genre-sequence .section-buttons button{padding:8px 10px;justify-content:start;min-height:60px}
+ .genre-sequence .section-count{position:static;margin-inline-start:auto}
+ .genre-sequence .genre-name{text-align:start}
+ .sequence-hint{font-size:11px}
+ .plan-toolbar h2{font-size:20px}
+ .plan-toolbar{gap:10px;padding-bottom:10px}
+ .detail .pane-head{padding:12px}
+ .filters{margin-top:10px}
+ .filters{grid-template-columns:minmax(0,1fr) 150px}
+ .filters select{font-size:14px;padding-inline:8px}
+ .toggles{gap:6px}
+ .toggles button{padding-inline:8px}
+}

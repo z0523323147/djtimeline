@@ -10,3 +10,6 @@ test-results/
 # JWT signing material stays server-side and must never be distributed.
 **/*private*.pem
 **/jwt-private.key
+
+# Local sanitized workflow evidence; never part of app artifacts.
+.workflow-evidence/

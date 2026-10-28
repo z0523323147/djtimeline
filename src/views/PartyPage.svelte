@@ -73,14 +73,14 @@
   </div>
   {#if highlighted&&current}<div class="ruler-focus"><span dir="auto">{current.genre}</span><span class="selected-times" dir="ltr">In {changeTime(current)} · Out {ending}</span><button class="scale-reset" aria-label={focused?'Show full time scale':'Show section times only'} onclick={resetScale}>{focused?'Full scale':'Section times'}</button></div>{/if}
 </section>
-<section class="overview" aria-label="Genre sections">
-  <h3 class="sequence-heading">Genre sequence</h3>
+<details class="overview genre-sequence" aria-label="Genre sections">
+  <summary>Genre sections <span class="filter-count">{model.sections.length}</span><span class="sequence-hint">Choose a section</span></summary>
   <div class="section-buttons" role="group" aria-label="Genre sequence">
     {#each model.sections as s}
       <button data-section={s.id} class:wide={s.genre.length>15||s.genre==='Unspecified'} class:terminal-section={s.start===s.end} class:lit={selected===s.id} style={'--genre:'+color(s.genre)} aria-label={s.genre+', '+boundary(s)+', open '+s.tracks.length+' tracks'} aria-pressed={selected===s.id} title={boundary(s)+(s.start===s.end?' · ending not noted':'')} onclick={()=>select(s.id)}>
-        <span class="genre-name" dir="auto">{isHip(s.genre)?'Hip-hop':s.genre}</span><span class="section-count" aria-label={s.tracks.length+' tracks'}>{s.tracks.length}</span>
+        <span class="genre-label"><span class="genre-name" dir="auto">{isHip(s.genre)?'Hip-hop':s.genre}</span><span class="genre-time" dir="ltr">{changeTime(s)}</span></span><span class="section-count" aria-label={s.tracks.length+' tracks'}>{s.tracks.length}</span>
       </button>
     {/each}
   </div>
   <details><summary>Jump to a section or recorded time</summary><div class="time-jumps" role="group" aria-label="Every exact time marker from the notes">{#each model.blocks.filter(b=>b.tracks.length) as b}<button onclick={()=>select(b.tracks[0].sectionId,b.tracks[0].id)}>{b.time}</button>{/each}</div></details>
-</section>
+</details>

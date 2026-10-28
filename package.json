@@ -18,7 +18,11 @@
     "check:offline": "node scripts/check-offline.mjs dist/party-map.html",
     "test": "node --experimental-strip-types --test tests/*.test.ts scripts/offline.test.mjs",
     "test:e2e": "playwright test",
-    "build:connected": "node scripts/build-offline.mjs --connected"
+    "build:connected": "node scripts/build-offline.mjs --connected",
+    "test:workflow": "node --test scripts/workflow/workflow.test.mjs",
+    "check:docs": "node scripts/workflow/docs.mjs",
+    "check:privacy": "node scripts/workflow/privacy.mjs",
+    "workflow:gate": "node scripts/workflow/runner.mjs gate"
   },
   "dependencies": {
     "@astrojs/svelte": "9.0.1",

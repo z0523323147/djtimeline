@@ -1,0 +1,19 @@
+# Current project state
+
+Authority: this concise index and [decisions](decisions.md) resolve current behavior; dated sections in [plan](../plan.md), [backlog](../backlog.md) and [verification](verification.md) preserve history. Updated 2026-10-26 by repository inspection; this update does not establish new hosted behavior.
+
+Active source is shared Astro/Svelte in `src/`. Astro owns routes/shell; Svelte owns views; DOM-independent parsing/model/filter/persistence modules remain separate. `dj-set-timeline-v2.html` and other root HTML iterations are preserved history. Outputs are `dist/site/`, `dist/party-map.html` (local, no automatic network) and `dist/party-map-connected.html` (Supabase, inline SDK/public config). Both downloadable editions have inline CSS/JS and no required sibling assets. Builds share components; generated dist is tracked.
+
+Inspected contracts: [package scripts](../package.json), [offline builder](../scripts/build-offline.mjs), [parser](../src/lib/parser.ts), [documents](../src/lib/documents.ts), [sync](../src/lib/plan-sync.ts), [cloud workspace](../src/views/CloudPlanWorkspace.svelte), [timeline](../src/views/PartyPage.svelte).
+
+Current product is track-first: empty workspace/My plans; Add track dialog with genre/start/optional end; automatic contiguous genre sections and real gaps; full-width sticky ruler above tracks on desktop/mobile. Sections have large alternative controls, keyboard activation, scroll-follow selection, pinned Full scale, boundary labels and Top. No Party/Tracks tabs or detail toggle. Preserve copy/edit/encoded Google search, import/cancel, filters, multilingual text and themes.
+
+2026-10-26 UI refinement: numbered tracks use current plan order and keep their numbers through filtering. Sections are chapters in one continuous list; selecting a section jumps/focuses its heading, and continued user scrolling updates the ruler without replacing the list. Genre sections are expandable large alternatives with visible start/range evidence. Whole-plan filter counts, theme-aware tags, a visible Find search action, direct mobile plan-list navigation and compact account chrome are implemented. See [task evidence](tasks/ui-ux-fixes.md); older no-numbering/section-only descriptions are superseded.
+
+Auth uses managed Supabase email/password; browser client keys are public. Confirmation-off ownership is unverified. Committed edits save automatically using expected revisions, stable operation IDs, recovery and conflict copies. LocalStorage caches complete account-scoped snapshots/outbox, with explicit unavailable-storage feedback. Current update fallback polls every 15 seconds/on focus; private Realtime and IndexedDB are future work.
+
+Legacy notes preserve inherited genre/time, parentheses, markers, Hebrew/Russian/English, sequential twelve-hour rollover and unknown endings. Equal diagram spacing supplies estimates, never exact transition evidence. Authored v2 timing uses explicit 24-hour/day-offset evidence; ambiguous source clocks need a chosen interpretation before mixing current-time tracks.
+
+Historical evidence: 2026-10-12 records original account import/reload/export and user-confirmed migration 005; later local ruler checks are in verification. They do not establish hosted A/B/anonymous isolation, all real v2 edit/reconnect paths, native screen-reader/zoom, server password/rate-limit/recovery policy, HTTPS/CSP, or private push. Existing E14/E15/E16 gates remain open. No deployment or hosted configuration change is authorized by workflow adoption.
+
+Engineering workflow: [instructions](agentic-workflow.md), [integrations](integrations.md), [adoption record](tasks/workflow-adoption.md), [pilot](tasks/pilot-doc-links.md). Local command wrappers are implemented; automatic runtime-hook interception and refreshed session skill discovery are unverified. No agent infrastructure or telemetry belongs in the DJ app.

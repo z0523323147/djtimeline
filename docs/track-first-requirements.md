@@ -71,7 +71,7 @@ Updated: 2026-10-12. Status: core implementation complete locally; migration 005
 
 - Use Linear-inspired hierarchy: one navigation rail/drawer, one active-plan header, timeline above generous track rows, restrained borders and progressive disclosure. Remove persistent editor panels and repetitive instructional paragraphs. Keep primary actions visible.
 - Support Dark, Light and System, default System with explicit user override retained on this browser. Preserve hip-hop pink and peak amber meaning in both themes; selected state and grid contrast need separate theme tokens. Respect reduced motion and automatic text direction for Hebrew/Russian/English; time fields are LTR.
-- Copy/edit/Google download search/remove use icon controls with accessible names/tooltips and 44px targets. Track rows have no visible numbering. Genre buttons show their track counts rather than section ordinals.
+- Copy/edit/Google download search/remove retain accessible names/tooltips and 44px targets; Google search has a search icon and visible Find label. As requested on 2026-10-26, tracks display their current plan-order numbers, preserved when filtered. Genre controls show visible start/range evidence and track counts. Filter badges and genre options show whole-plan category counts.
 - Test 1280×900, 1280×600, 390×844 and 200% reflow with keyboard, touch, dialog focus, error/status announcements and both themes. Measure first-track visibility and no horizontal page overflow. Plan rails may scroll independently; timeline should not acquire internal scrolling to hide dense labels.
 
 ## Role review and sources

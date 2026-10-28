@@ -1,5 +1,13 @@
 # Project plan
 
+Current authority: [current state](docs/current-state.md) and [accepted decisions](docs/decisions.md). Dated sections below retain historical evidence; obsolete manual-section/explicit-save/mail-code/annotation-lane guidance is superseded. Unverified hosted/security/native accessibility gates remain open.
+
+## Engineering workflow adoption — 2026-10-26
+
+UI follow-up on the same date: [continuous numbered chapters and UI corrections](docs/tasks/ui-ux-fixes.md). Section selection jumps within the full track list, continued scrolling follows the next chapter, filters show whole-plan counts and rows retain plan-wide numbering. Expandable timed genre controls and compact account chrome address the UI review. This supersedes earlier no-numbering/section-only browsing wording below; hosted/native gates remain separate.
+
+The eight-pillar agentic workflow has a dedicated [adoption plan](docs/agentic-adoption-plan.md) and [backlog](docs/agentic-adoption-backlog.md), with E23–E27 reserved for this work. Status: local workflow implemented with explicit runtime limits; see [adoption evidence](docs/tasks/workflow-adoption.md). The [portable starter](AGENTIC-ARCHITECTURE-STARTER.md) can initialize the same workflow in a future project. This engineering queue preserves the product/source/offline contracts and does not change existing feature or release evidence below.
+
 ## Track-first implementation evidence — 2026-10-12
 
 The active M6–M10 slices are implemented locally: document v2 stores per-track timing/genre alongside legacy source events, sections/gaps derive automatically, a compact Add track modal replaces section forms, plan navigation is persistent/empty-first, saves are automatic, complete cached snapshots and retry queues survive direct-file offline reload, original notes and JSON backups import, and light/dark/system themes share tokens.
@@ -13,7 +21,7 @@ Remaining gates: real hosted v2 edits/reconnect and A/B/anonymous API tests; pri
 
 ## Active direction — track-first plans, automatic sections and offline recovery
 
-This update supersedes the earlier manual Add section/Add song workflow and explicit-save-only milestone. Detailed requirements and unresolved responsive ruler tradeoff: [track-first requirements](docs/track-first-requirements.md). Existing implementation evidence below is historical; these changes are planned, not shipped.
+This update supersedes the earlier manual Add section/Add song workflow and explicit-save-only milestone. Detailed requirements and unresolved responsive ruler tradeoff: [track-first requirements](docs/track-first-requirements.md). The following numbered sequence is the historical implementation plan; the current implementation evidence above supersedes its planned wording.
 
 1. **M6 / E16 — model and additive migration (P0).** Introduce document v2 with stable track UUIDs, genre, exact/range/unknown start evidence, optional explicit end and day offset. Preserve v1 source events/provenance and stable identities; produce a pure interval/section adapter, validation and compatibility matrix. Keep existing documents/older clients working and reject a legacy save that would erase v2 timing. Never rewrite an estimated imported start as exact. Resolve overlap, same-minute and midnight cases before UI implementation.
 2. **M7 / E17 + E18 — workspace and focused editor (P1, interaction regression P0).** Empty connected home plus persistent searchable plans rail/mobile drawer. Track modal owns independent state; replace section creation with title/genre/Now start/optional end. Automatic grouping and gap-aware timeline derive from committed tracks. Preserve copy/edit/search/multilingual behavior. The next reviewable UI slice includes plan switching, Add track, All tracks independence and bright selection.
@@ -31,7 +39,7 @@ No account passwords or service-role keys are needed for import. The exact cloud
 
 Updated: 2026-10-12. User confirms a real private plan was created. The next milestone is full database-backed plan management: list/open existing plans, add/edit songs and sections, and persist their complete content. The first full-content app slice is implemented locally and tested; migration 004 must be applied to activate it in the user's database. Cross-device notifications and the remaining release gates are pending.
 
-## Previous milestone — full-content foundation
+## Historical milestone — full-content foundation
 
 Success means: sign in → see my existing plans from the database → open one → add a genre/time section and songs → see the timeline update → receive a database save acknowledgement → reload or open another device and see the same content. A plan name alone is not completion. Song data means titles, flags, order, genre context and timing evidence; audio files remain outside this milestone.
 

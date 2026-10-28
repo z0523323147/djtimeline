@@ -1,6 +1,8 @@
-# Five recommended project skills
+# Project skills: packages and recommendations
 
-These are prioritized skill specifications, not installed `SKILL.md` packages. Each can become a focused skill folder with a `SKILL.md` containing `name`, `description`, and the workflow below. Keep runtime configuration separate from this recommendation document.
+Two packages now exist in the supported repository location: [set-notes-parser](.agents/skills/set-notes-parser/SKILL.md) and [standalone-html-release](.agents/skills/standalone-html-release/SKILL.md). Packaged/metadata-validated is distinct from discovered by the host. This session's catalog discovery is unverified; manual reading/application is the fallback. The release package was manually applied to the [pilot](docs/tasks/pilot-doc-links.md). The parser package was inspected/validated; no parser change or behavioral invocation is claimed. [Integration evidence](docs/integrations.md) records the official discovery source and observable next check. No global installation occurred.
+
+The five specifications below are historical recommendations; the two linked packages supersede their corresponding specifications for current use. The other three remain proposed, not installed. Keep runtime discovery evidence separate from packaging.
 
 ## 1. party-map-ux
 
@@ -74,7 +76,7 @@ Workflow:
 
 Expected output: accessible interaction changes or a prioritized review with reproducible evidence.
 
-Reuse applicable guidance from the available `hebrew-rtl-web` skill. Its React/Tailwind-specific conventions should be adapted to this plain HTML app; do not add that stack solely to use the skill.
+Reuse applicable guidance from the available `hebrew-rtl-web` skill. Adapt its React/Tailwind conventions to shared Astro/Svelte; do not add another stack solely to use the skill.
 
 ## 5. standalone-html-release
 
@@ -96,4 +98,4 @@ Expected output: a verified portable artifact, reproducible checks, and accurate
 
 ## Adoption order
 
-Start with `party-map-ux` and `set-notes-parser`, then `browser-local-set-data`, `multilingual-web-accessibility`, and `standalone-html-release`. Keep skills short and add scripts only for concrete repeated checks. Installing or registering them is a separate implementation step.
+Current packages prioritize `set-notes-parser` and `standalone-html-release`. Other skills remain candidates. Keep skills short and add scripts only for concrete repeated checks. Runtime discovery requires observation rather than an installation claim from this document.

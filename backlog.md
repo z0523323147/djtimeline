@@ -1,5 +1,13 @@
 # Product backlog
 
+Current authority: [current state](docs/current-state.md) and [accepted decisions](docs/decisions.md). Dated sections below retain historical evidence; obsolete manual-section/explicit-save/mail-code/annotation-lane guidance is superseded. Unverified hosted/security/native accessibility gates remain open.
+
+## Engineering workflow queue — 2026-10-26
+
+- E22-S6 · P1 · Implemented locally: UI-review corrections, continuous chapter scrolling, plan-order track numbers and whole-plan filter counts. Evidence/check results: [task record](docs/tasks/ui-ux-fixes.md). Includes direct mobile plan navigation, timed expandable genre controls, theme-aware tags, 44px scale reset and visible Find search. Hosted/native release acceptance remains open.
+
+[Eight-pillar adoption backlog](docs/agentic-adoption-backlog.md): E23 grounding/intake → E24 skills/tools/integrations → E25 lifecycle evidence → E26 quality gates → E27 real-task pilot. Implementation status and evidence are recorded in the adoption backlog; runtime limitations remain explicit. See the [adoption plan](docs/agentic-adoption-plan.md) for dependencies and completion evidence. Workflow adoption does not complete any existing product/release story.
+
 ## Track-first delivery evidence — 2026-10-12
 
 Implemented locally and covered by model/database/browser checks: E16 v2 timing/genre derivation and prepared additive 005; E17 empty-first navigation/rail/mobile switcher; E18 masked Add track/Now override/genre suggestions; E19 automatic saves, complete LocalStorage snapshots/outbox/reconnect/conflict copies; E20 two-row ruler/themes; E21 original import and selected/all-own-plan JSON export/restore. Actual original-set import/reload and own-account export are verified through the signed-in UI; the user confirms 005 applied. No account backup or session credential is committed.
@@ -901,7 +909,7 @@ Dependencies: E14-S1–S2 plus E10-S1's build contract.
 
 AC: Connected HTML has no required sibling assets and authenticates/saves/synchronizes against staging in the downloadable workflow established by E10-S0; any required callback/helper infrastructure is explicitly agreed and documented. Offline HTML still opens without login/network and makes no automatic Supabase requests. No secret key/token/private test data enters commits/artifacts/logs/screenshots. Document unsupported file-origin/provider cases rather than claim parity. No existing production schema is reset to make tests pass. All P0 gates have real evidence; production deployment is a separately authorized action.
 
-## Initial email/account implementation evidence — 2026-10-12
+## Historical initial email/account implementation evidence — 2026-10-12
 
 Account adapter/UI and connected build are implemented; metadata SQL is reported applied by the user. E10-S0–S3/E11-S2 remain In progress because their server/real-login acceptance criteria are not met. Public settings confirm Email Auth and signup are enabled; a real file:// GET reaches Auth settings with HTTP 200. Cloud account tests use intercepted synthetic responses, not real users or email.
 

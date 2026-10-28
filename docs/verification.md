@@ -1,4 +1,24 @@
-# Verification — updated 2026-10-12
+# Verification — current workflow evidence 2026-10-26
+
+## Local workflow adoption — E23–E27
+
+Scope: project documentation, two local skill packages, fixed command wrappers, synthetic tooling tests and additive CI checks. [Implementation task](tasks/workflow-adoption.md) and [real pilot](tasks/pilot-doc-links.md) record all eight pillars. [Current state](current-state.md) and [decisions](decisions.md) supersede obsolete historical manual-section/explicit-save/mail-code/annotation guidance. Older app evidence below remains dated history.
+
+Observed checks on Windows/Node 24.14.1:
+
+- Ten workflow tests pass: paired events, payload exclusion, stdout/stderr suppression, logging/report failures, missing checks, real failing child exit propagation, spawn error/timeout, privacy positives/negatives, bounded retention, skill metadata and recursive local-link coverage.
+- Docs/privacy/tooling aggregate gates pass. Pilot PASS report: `a7ea8406-f35e-4751-83b9-c9c5e7942c95-report.json` in ignored local evidence. Required operations each exited 0; reports list other checks as category exclusions, not executed successes.
+- Real disposable broken-link probe in docs/tasks returned FAIL/exit 1 through the wrapper (`5c90aac0-9c93-4613-ab07-a82adad1344d-post.json`). Removed the probe and reran the gate successfully. This proves observed command failure propagation in addition to synthetic aggregate tests.
+- Supplemental pinned-pnpm test wrapper failed/exit 1 (`91f40409-d6b4-4048-84a4-d9d5324ec0e4-post.json`); `npm exec --offline` confirmed pnpm 12.11.2 absent from cache, while global pnpm is 11.25.0. Changed package-backed wrappers to offline npm exec to avoid implicit download/retry delay; observed prompt nonzero failure again (`bd88385f-9897-404e-831a-67bbda368fd5-post.json`). No package-backed wrapper PASS is claimed here.
+- Supported fallback `node --experimental-strip-types --test tests/*.test.ts scripts/offline.test.mjs` passed all 33 existing model/database/auth/packaging checks. This direct execution is outside wrapper coverage and preserves the failed wrapper result honestly.
+- Bundled Python skill validator could not run because `python` was unavailable. Focused Node frontmatter/name/description/scaffold validation passed for both packages; this is a limited validator, not host discovery evidence.
+- `git diff --check` passed; no diffs in src/, dist/ or historical HTML. Local evidence exclusion verified with `git check-ignore`. Reviewed local documentation links and status/dependency consistency. No new app builds/browser/direct-file run required by this workflow-only scope; no remote CI run claimed.
+
+Corrections: fixed scanner false positive on the Svelte autocomplete ternary and slow timeout cleanup, adding regressions; extended link inventory to nested real task records. Privacy signatures scan selected text plus dist and report rule IDs/paths, not matched values. They cannot prove universal absence of secrets/private prose. Evidence is allowlisted, ignored, bounded and outside shipped assets; direct tool calls are not intercepted.
+
+Evaluative reviewer: primary Codex integrator, **self-review**, no independent reviewer. [PASS] for local workflow adoption with limits: scope, evidence, practical commands, privacy and product/build boundaries satisfy the task. Required docs/tooling checks pass; the failed supplemental package invocation is disclosed with a passing direct-test alternative, not waived as a successful run. E23-S1/S2, E24-S1/S2/S3, E25-S1, E26-S1/S2 and E27-S1 meet their local AC. Runtime host skill discovery is unavailable/unverified; manual reading/application is observed. Independent review, hosted E14/E15/E16/security and native accessibility remain unverified. Fresh-session catalog observation and explicitly prepared pinned-pnpm cache are observable next steps; neither blocks the delivered local fallback workflow.
+
+## Historical application verification — 2026-10-12 and dated updates below
 
 E9-S1–S5 are implemented in the shared Astro/Svelte app. One proportional time overview sits above a chronological genre sequence and the track workspace. Both outputs use the same components and styles.
 
@@ -115,3 +135,9 @@ The user reports that a real plan was created successfully. This establishes suc
 The current suite has 60 passing Chromium workflows and 33 passing Node/model/database/packaging checks. New responsive cases verify each section is keyboard-accessible, selection removes minute labels while retaining whole-hour anchors, selected ranges remain marked ~, the terminal ending stays unknown, and the track heading lands below the sticky dock. All-track scrolling forward/back updates section highlighting without filtering the 126 results; full-scale reset restores minute labels. Dock height is under 180px in the checked initial desktop/phone layouts. Website and both HTML builds pass; Svelte check reports zero errors/warnings. Real signed-in UI navigation verifies 01:50–01:57 selection and top-positioned dock without database writes. Previous screenshots and floating-return descriptions are superseded by this dock. Native assistive-technology and hosted account-isolation release gates remain unchanged.
 
 E22-S5 verification: 60 browser workflows pass, including scrolling after enabling Full scale, switching back to section times, visible start/end labels without overlap on phone/desktop, and Top returning to scrollY 0. Packaging tests pass; Svelte check has zero errors/warnings; website and both self-contained builds succeed. Real signed-in UI shows full minute labels retained after scrolling, boundary labels and the restored Top control. No account data was edited.
+
+## E22-S6 — Continuous numbered chapters and UI corrections (2026-10-26)
+
+34 Node/model/database/packaging tests and all 66 Chromium workflows pass across website/offline/connected outputs and desktop/phone/short projects. Static checks, three builds, offline structure and reproducibility pass. Eleven workflow tests and final docs/privacy/tooling gate pass after fixing deleted tracked-file inventory handling. The earlier UI aggregate remains recorded as FAIL solely for that scanner error; its application checks passed. See [full evidence and correction history](tasks/ui-ux-fixes.md).
+
+Numbering is plan-wide and survives filtering; genre and flag counts describe the complete plan. Section selection focuses/jumps to a chapter in the continuous list; wheel scrolling into the next chapter changes ruler highlighting without filtering or saving. Browser regressions cover terminal Space selection, pinned Full scale, counted filters, readable light labels and direct mobile plan navigation. Live mobile first-track top improved from about 1322px to 761px. Synthetic refreshed screenshots show the compact opening; no private screenshot was committed. Hosted/native release gates remain open.

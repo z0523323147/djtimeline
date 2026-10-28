@@ -4,7 +4,7 @@
   import {validateBackup,downloadBackup,type BackupPlan} from '../lib/backups';
   import {readCachedPlan,cacheKey,reconnectPlans} from '../lib/plan-sync';
   import CloudPlanWorkspace from './CloudPlanWorkspace.svelte';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { accountError, type AccountService, type AccountUser, type PrivatePlan } from '../lib/account';
   export let initialDocument:PlanDocument|undefined=undefined;
   export let onImported:()=>void=()=>{};
@@ -19,7 +19,8 @@
   let importDialog:HTMLDialogElement,importText='',importName='Imported party',importError='',preview:BackupPlan[]|null=null,importIds:string[]=[],importedIds=new Set<string>();
   let user: AccountUser | null = null;
   function openPlan(plan:PrivatePlan){if(dirtyPlan)return;status='';error='';opened=plan;drawer=false;}
-  function backToPlans(){if(dirtyPlan)return;opened=null;void loadPlans();}
+  async function revealPlans(create=false){drawer=true;railCollapsed=false;await tick();document.getElementById(create?'plan-name':'plan-search')?.focus();}
+  function backToPlans(){if(dirtyPlan)return;opened=null;void loadPlans();void revealPlans();}
   let checking = true, busy = false, loading = false;
   let persistentSession = service.persistentSession;
   let email = '', password = '', signup = false, error = '', status = '';
@@ -116,17 +117,18 @@
     <button class="mobile-plans" aria-expanded={drawer} onclick={()=>drawer=!drawer}>My plans · {opened?.name??'Choose a plan'}</button>
     <div class="account-layout" class:rail-collapsed={railCollapsed}>
      <aside id="plans-navigation" class:drawer-open={drawer} class="plans-rail" aria-label="My plans">
-      <input type="search" aria-label="Search plans" placeholder="Search plans…" bind:value={planQuery}/>
+      <input id="plan-search" type="search" aria-label="Search plans" placeholder="Search plans…" bind:value={planQuery}/>
       <form class="new-plan-form" onsubmit={e=>{e.preventDefault();void createPlan();}}><div><label for="plan-name">New plan name</label><input id="plan-name" bind:value={name} required maxlength="120" dir="auto" placeholder="Friday at the club"/></div><button type="submit" disabled={busy||!name.trim()}>Create plan</button></form>
       {#if initialDocument}<p>{initialDocument.events.filter(e=>e.kind==='song').length} local tracks ready to import.</p><button onclick={onImported}>Cancel local set import</button>{/if}
       {#if loading}<p role="status">Loading plans…</p>{/if}
       <ul class="account-plans">{#each plans.filter(p=>p.name.toLocaleLowerCase().includes(planQuery.toLocaleLowerCase())) as p(p.id)}<li><button disabled={dirtyPlan} class:current-plan={opened?.id===p.id} aria-label={'Open '+p.name} aria-pressed={opened?.id===p.id} onclick={()=>openPlan(p)}><strong dir="auto">{p.name}</strong><span>{p.song_count??'—'} tracks</span></button><span>Updated {new Date(p.updated_at).toLocaleDateString()}</span></li>{/each}</ul>
       {#if !plans.length&&!loading}<p class="account-empty">No plans yet.</p>{/if}
+      {#if plans.length&&planQuery&&!plans.some(p=>p.name.toLocaleLowerCase().includes(planQuery.toLocaleLowerCase()))}<p class="account-empty">No plans match your search.</p>{/if}
       <div class="rail-actions"><button disabled={busy} onclick={()=>beginImport()}>Import notes / backup</button><button disabled={busy} onclick={()=>beginImport(true)}>Import original party</button><button disabled={busy||!plans.length||loading} onclick={exportAll}>Export all plans</button><button disabled={loading} onclick={loadPlans}>Refresh plans</button></div>
      </aside>
      <div class="plan-main">
       {#if opened}{#key user.id+opened.id}<CloudPlanWorkspace {service} {user} plan={opened} knownGenres={genres} onChanged={refreshRail} onOpen={openPlan} onBack={backToPlans} onDirty={value=>dirtyPlan=value}/>{/key}
-      {:else}<div class="plan-empty"><h2>Choose a plan</h2><p>Your timeline and tracks appear here.</p><button onclick={()=>beginImport()}>Import notes</button></div>{/if}
+      {:else}<div class="plan-empty"><h2>{plans.length?'Choose a plan':'Start your party plan'}</h2><p>Your timeline and tracks appear here.</p><div class="empty-actions">{#if plans.length}<button onclick={()=>revealPlans()}>Choose a plan</button>{/if}<button class="primary" onclick={()=>revealPlans(true)}>New plan</button><button onclick={()=>beginImport()}>Import notes</button></div></div>{/if}
      </div>
     </div>
   {:else}

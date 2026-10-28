@@ -2,6 +2,8 @@
 
 Applies to this entire project. Read [README.md](README.md), [plan.md](plan.md), and [backlog.md](backlog.md) before substantial work.
 
+For substantial work, follow the [project workflow](docs/agentic-workflow.md), start from [current state](docs/current-state.md), and keep a privacy-safe [task record](docs/task-record-template.md). Trivial edits need proportional checks only. The workflow does not authorize delegation, deployment or external mutations. Local packages under `.agents/skills` are distinct from recommended roles/skills and require actual discovery evidence before claiming host activation.
+
 ## Product
 
 - Build a DJ preparation tool: see the whole party first, then inspect tracks.

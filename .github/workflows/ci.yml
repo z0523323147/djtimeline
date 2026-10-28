@@ -16,6 +16,8 @@ jobs:
           node-version: '24.14.1'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm check:docs
+      - run: pnpm test:workflow
       - run: pnpm check
       - run: pnpm build
       - run: pnpm build:connected
@@ -24,6 +26,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - run: node scripts/check-reproducible.mjs
+      - run: pnpm check:privacy
       - uses: actions/upload-artifact@v4
         with:
           name: party-map

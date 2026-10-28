@@ -1,5 +1,11 @@
 # Five recommended subagent roles
 
+## Assignment and handoff contract
+
+Single-agent integration is the default. These roles do not authorize dispatch, deployment, external writes or messages to other chats. If delegation is explicitly authorized, every assignment records objective, input evidence, owned files, dependencies, prohibited actions, output contract, acceptance checks and recovery. Handoff records changed files, executed/unrun checks, assumptions and unresolved risks. No credentials or private plans in inputs/outputs.
+
+Example only (no agents launched): integrator owns shared root/source/build and final task record; authorized parser specialist owns only `src/lib/parser.ts` plus `tests/model.test.ts`; an authorized docs specialist owns only `docs/current-state.md`. They can work in parallel only after shared semantics are agreed. A read-only reviewer runs sequentially after integration and checks the integrated result. Specialists never overwrite shared files; proposals for unowned files go to the integrator. At most one unchanged transient retry; deterministic failures require diagnosis/correction before another attempt. Preserve recoverable edits and report failure instead of silently skipping dependent checks. See [tools/recovery contracts](docs/integrations.md).
+
 These are reusable Markdown prompt specifications, not registered agents. For the 2026-10-12 Supabase planning request, the orchestrator ran three read-only reviews combining these roles; no permanent agents were registered. Adapt the specifications to the chosen agent runtime when registration is requested.
 
 All roles read [AGENTS.md](AGENTS.md) and respect the shared Astro/Svelte source and its website/standalone build contracts. Delegation is optional and must be authorized. The primary agent owns scope, integration, and final validation. Specialists propose read-only findings or own isolated files; the orchestrator integrates PartyApp state and build changes.
